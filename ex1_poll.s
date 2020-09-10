@@ -82,34 +82,37 @@
 	      .type   _reset, %function
         .thumb_func
 _reset: 
-	bl GPIO_CLOCK_ENABLE
+        bl GPIO_CLOCK_ENABLE
+
+        // Load the base adresses for PA and PC into registers
+        ldr r1, = GPIO_PA_BASE
+        ldr r2, = GPIO_PC_BASE
+
+        //LED
+        // Set high drive strength
+        mov r4, #0x2
+        str r4, [r1, #GPIO_CTRL]
+
+        // Set pins 8-15 to output
+        ldr r3, = 0x55555555
+        str r3, [r1, #GPIO_MODEH]
+        
+        //BUTTONS
+	// Set pins 0-7 to input
+        ldr r3, = 0x33333333
+        str r3, [r2, #GPIO_MODEL]
+
+        // Enable internal pull-up
+        ldr r3, = 0xff
+        str r3, [r2, #GPIO_DOUT]
 	
-	//set the base adress for PA and PC registers
-	ldr r1,=GPIO_PA_BASE 
-	ldr r2,=GPIO_PC_BASE
-	
-	//LED
-	//set high drive strength
-	mov r4, #2
-	str r4, [r1, #GPIO_CTRL]
-	//
-	ldr r3,= 0x55555555
-	str r3, [r1, #GPIO_MODEH]
-	
-	//BUTTONS
-	ldr r3,= 0x33333333
-	str r4, [r2, #GPIO_MODEL]
-	//
-	ldr r3,=0xff
-	str r4,[r2,#GPIO_DOUT]
-	
-	ldr r3, [r1, #GPIO_DOUT]
-	ldr r4,[r2, #GPIO_DIN]
-	loop:
-		ldr r5, r4
-		lsl r5, r5, #8
-		str r5, r6
-		
+	// Polling: Load value from input port to register, shift it into right position and store the value in output port 
+		Loop:
+			ldr r5, [r2, #GPIO_DIN]
+			lsl r5, r5, #8
+        	str r5, [r1, #GPIO_DOUT]
+     		b Loop
+
 	      b .  // do nothing
 	
 	/////////////////////////////////////////////////////////////////////////////
@@ -117,19 +120,18 @@ _reset:
   // GPIO handler
   // The CPU will jump here when there is a GPIO interrupt
 	//
-
+	/////////////////////////////////////////////////////////////////////////////
 GPIO_CLOCK_ENABLE:
-	//set up clock
-	ldr r1,=CMU_BASE
-	ldr r2,[r1,#CMU_HFPERCLKEN0]
-	mov r3, #1
-	lsl r3, r3, #CMU_HFPERCLKEN0_GPIO
-	orr r2, r3, r2
-	str r2, [r1, #CMU_HFPERCLKEN0]
-	mov r15,r14
-	
-	
-    .thumb_func
+        // Set up clock
+        ldr r1, = CMU_BASE
+        ldr r2, [r1, #CMU_HFPERCLKEN0]
+        mov r3, #1
+        lsl r3, r3, #CMU_HFPERCLKEN0_GPIO
+        orr r2, r2, r3
+        str r2, [r1, #CMU_HFPERCLKEN0]
+        mov r15, r14
+
+        .thumb_func
 gpio_handler:  
 
 	      b .  // do nothing
@@ -139,4 +141,3 @@ gpio_handler:
         .thumb_func
 dummy_handler:  
         b .  // do nothing
-
