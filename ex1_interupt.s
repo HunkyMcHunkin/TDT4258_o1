@@ -92,11 +92,8 @@ _reset:
    	 bl button_set_up
    	 bl enable_interrupt
    	 bl enable_sleep
-   	 //bl power_down_RAM_blocks
+   	 bl power_down_RAM_blocks
    	 
-   	 mov r5,  #0b0000000001111111
-   	 lsl r5, r5, #8
-    	str r5, [r1, #GPIO_DOUT]
    	 
    	 loop:
    		 wfi
@@ -119,6 +116,8 @@ LED_set_up:
     	str r4, [r1, #GPIO_CTRL]
     	ldr r3, = 0x55555555                   	/* Set pins 8-15 to output */
     	str r3, [r1, #GPIO_MODEH]
+    	mov r5, #0b1111111100000000   				 /* start leds off */
+   	 str r5, [r1, #GPIO_DOUT]
     	mov r15, r14                           	/* Move the value of lr into pc */
 
 button_set_up:
@@ -151,7 +150,7 @@ power_down_RAM_blocks:
    	 ldr r9, = EMU_BASE
    	 mov r10, #7
    	 str r10, [r9, #EMU_MEMCTRL]
-	     	mov r15, r14    
+	 	mov r15, r14    
 
 
     /////////////////////////////////////////////////////////////////////////////
@@ -229,6 +228,14 @@ knapp4:
    	 and r5, r5, #0b1111011100000000
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
+knapp8:
+   	 ldr r5, [r1, #GPIO_DOUT]
+   	 and r7, r5, #0b1000000000000000
+   	 cmp r7, #0b0000000000000000
+   	 beq turn_off
+   	 mov r5, #0b0000000000000000   		 //turn all led on
+   	 str r5, [r1, #GPIO_DOUT]
+   	 bx r14
 shift_right:
    	 ldr r5, [r1, #GPIO_DOUT]
    	 and r7, r5, #0b1000000000000000
@@ -259,28 +266,31 @@ turn_off:
    	 mov r5, #0b1111111100000000
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
-blink:
-    mov r7, #0b0101010100000000   	 
-    str r7, [r1, #GPIO_DOUT]
-    push {r14}   						 //store value of program counter outside of blink
-    bl wait
-    mov r7, #0b1010101000000000
-    str r7, [r1, #GPIO_DOUT]
-    bl wait
-    ldr r5, [r2, GPIO_DIN]
-    cmp r5, #0b0000000011011111
-	beq blink
-	pop {r15}   						 //get the stored value of pc back
-    bx r14
-wait:
-    mov r7, #1000
-    mov r5, #1000
-    mul r7, r7, r5   					 //define wait, need large number for human eye to see
-wait_loop:
-    subs r7, #1
-    bne wait_loop   					 //count down to 0
-    bx r14
 
+wait_loop:
+   	 subs r7, #1
+   	 bne wait_loop   					 //count down to 0
+   	 mov r15, r14   	 
+blink:
+   	 mov r7, #0b0101010100000000   	 
+   	 str r7, [r1, #GPIO_DOUT]
+   	 mov r7, #1000
+   	 mov r5, #1000
+   	 mul r7, r7, r5
+   	 mov r6, r14
+   	 bl wait_loop    
+   	 mov r7, #0b1010101000000000
+   	 str r7, [r1, #GPIO_DOUT]
+   	 mov r7, #1000
+   	 mov r5, #1000
+   	 mul r7, r7, r5
+   	 bl wait_loop
+   	 mov r14, r6
+   	 ldr r5, [r2, GPIO_DIN]
+   	 cmp r5, #0b0000000011011111
+   	 beq blink
+   	 bx r14
+   	 
     
 
    	 
@@ -289,3 +299,4 @@ wait_loop:
     	.thumb_func
 dummy_handler:  
 b . // do nothing
+
