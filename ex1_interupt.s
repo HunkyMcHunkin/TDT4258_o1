@@ -182,7 +182,7 @@ gpio_handler:
    	 cmp r5, #0b0000000011111011
    	 beq knapp3
    	 cmp r5, #0b0000000011110111
-   	 beq knapp4
+   	 beq turn_off
    	 cmp r5, #0b0000000011101111
    	 beq shift_left
    	 cmp r5, #0b0000000011011111
@@ -200,7 +200,7 @@ knapp1:
    	 ldr r5, [r1, #GPIO_DOUT]
    	 and r7, r5, #0b0000000100000000    	 //check the only bit we are intrested in
    	 cmp r7, #0b0000000000000000   			 //check if led is on
-   	 beq turn_off
+   	 beq turn_off_1
    	 and r5, r5, #0b1111111000000000   		 //turn led on
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
@@ -208,7 +208,7 @@ knapp2:
    	 ldr r5, [r1, #GPIO_DOUT]
    	 and r7, r5, #0b0000001000000000
    	 cmp r7, #0b0000000000000000
-   	 beq turn_off
+   	 beq turn_off_2
    	 and r5, r5, #0b1111110100000000
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
@@ -216,16 +216,8 @@ knapp3:
    	 ldr r5, [r1, #GPIO_DOUT]
    	 and r7, r5, #0b0000010000000000
    	 cmp r7, #0b0000000000000000
-   	 beq turn_off
+   	 beq turn_off_3
    	 and r5, r5, #0b1111101100000000
-   	 str r5, [r1, #GPIO_DOUT]
-   	 bx r14
-knapp4:
-   	 ldr r5, [r1, #GPIO_DOUT]
-   	 and r7, r5, #0b0000100000000000
-   	 cmp r7, #0b0000000000000000
-   	 beq turn_off
-   	 and r5, r5, #0b1111011100000000
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
 knapp8:
@@ -266,7 +258,18 @@ turn_off:
    	 mov r5, #0b1111111100000000
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
-
+turn_off_1:
+   	 orr r5, r5, #0b0000000100000000
+   	 str r5, [r1, #GPIO_DOUT]
+   	 bx r14
+turn_off_2:
+   	 orr r5, r5, #0b0000001000000000
+   	 str r5, [r1, #GPIO_DOUT]
+   	 bx r14
+turn_off_3:
+   	 orr r5, r5, #0b0000010000000000
+   	 str r5, [r1, #GPIO_DOUT]
+   	 bx r14
 wait_loop:
    	 subs r7, #1
    	 bne wait_loop   					 //count down to 0
