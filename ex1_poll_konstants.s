@@ -100,29 +100,24 @@
 _reset: 
         bl GPIO_CLOCK_ENABLE
 
-        // Load the base adresses for PA and PC into registers
-        ldr r1, = GPIO_PA_BASE
+        ldr r1, = GPIO_PA_BASE				/* Load the base adress for PA and PC into registers */
         ldr r2, = GPIO_PC_BASE
 
-        //LED
-        // Set high drive strength
-        mov r4, #DRIVE_STRENGTH_LOW
+        /* LED */
+        mov r4, #DRIVE_STRENGTH_LOW			/* Set drive strength low */
         str r4, [r1, #GPIO_CTRL]
 
-        // Set pins 8-15 to output
-        mov r3, #OUTPUT_MODE
+        mov r3, #OUTPUT_MODE				/* Set pins 8-15 to output */
         str r3, [r1, #GPIO_MODEH]
         
-        //BUTTONS
-	// Set pins 0-7 to input
-        mov r3, #INPUT_MODE
+        /* BUTTONS */
+        mov r3, #INPUT_MODE				/* Set pins 0-7 to input */
         str r3, [r2, #GPIO_MODEL]
 
-        // Enable internal pull-up
-        mov r3 #INTERNAL_PULLUP
+        mov r3 #INTERNAL_PULLUP				/* Enable internal pull-up */
         str r3, [r2, #GPIO_DOUT]
 	
-	// Polling: Load value from input port to register, shift it into right position and store the value in output port 
+	/* Polling: Load value from input port to register, shift it into right position and store the value in output port */
 		Loop:
 			ldr r5, [r2, #GPIO_DIN]
 			lsl r5, r5, #8
@@ -138,14 +133,13 @@ _reset:
 	//
 	/////////////////////////////////////////////////////////////////////////////
 GPIO_CLOCK_ENABLE:
-        // Set up clock
-        ldr r1, = CMU_BASE
-        ldr r2, [r1, #CMU_HFPERCLKEN0]
-        mov r3, #1
+        ldr r1, = CMU_BASE				/* Load CMU base adress */
+        ldr r2, [r1, #CMU_HFPERCLKEN0]			/* Load value of CMU_HFPERCLKEN0 */
+        mov r3, #1					/* Set bit for GPIO clk */
         lsl r3, r3, #CMU_HFPERCLKEN0_GPIO
         orr r2, r2, r3
-        str r2, [r1, #CMU_HFPERCLKEN0]
-        mov r15, r14
+        str r2, [r1, #CMU_HFPERCLKEN0]			/* Store new value of CMU_HFPERCLKEN0 */
+        mov r15, r14					/* Move the value of lr into pc */
 
         .thumb_func
 gpio_handler:  
