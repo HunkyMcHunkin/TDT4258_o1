@@ -82,28 +82,27 @@
       	.type   _reset, %function
     	.thumb_func
 _reset:
-   	 bl GPIO_clock_enable
+   	bl GPIO_clock_enable
    	 
-   	 ldr r0, = GPIO_BASE             	/* Load the base adress for GPIO into register */
+   	ldr r0, = GPIO_BASE             	/* Load the base adress for GPIO into register */
     	ldr r1, = GPIO_PA_BASE          	/* Load the base adresses for PA and PC into registers */
     	ldr r2, = GPIO_PC_BASE
    	 
-   	 bl LED_set_up
-   	 bl button_set_up
-   	 bl enable_interrupt
-   	 bl enable_sleep
-   	 bl power_down_RAM_blocks
-   	 
-   	 
+   	bl LED_set_up
+   	bl button_set_up
+   	bl enable_interrupt
+   	bl enable_sleep
+   	bl power_down_RAM_blocks
+   	
    	 loop:
    		 wfi
-   	 b loop                       	/* Go to sleep */
+   	 b loop                       		/* Go to sleep */
    	 
     	b .  // do nothing
 
 
 GPIO_clock_enable:
-    	ldr r1, = CMU_BASE                     	/* Load CMU base address */
+    	ldr r1, = CMU_BASE                     	/* Load CMU base address into register */
     	ldr r2, [r1, #CMU_HFPERCLKEN0]         	/* Load value of CMU_HFPERCLKEN0 */
     	mov r3, #1                             	/* Set bit for GPIO clk */
     	lsl r3, r3, #CMU_HFPERCLKEN0_GPIO
@@ -116,7 +115,7 @@ LED_set_up:
     	str r4, [r1, #GPIO_CTRL]
     	ldr r3, = 0x55555555                   	/* Set pins 8-15 to output */
     	str r3, [r1, #GPIO_MODEH]
-    	mov r5, #0b1111111100000000   				 /* start leds off */
+    	mov r5, #0b1111111100000000   		/* start leds off */
    	 str r5, [r1, #GPIO_DOUT]
     	mov r15, r14                           	/* Move the value of lr into pc */
 
@@ -128,14 +127,14 @@ button_set_up:
     	mov r15, r14                           	/* Move the value of lr into pc */
     
 enable_interrupt:
-   	 ldr r6, = 0x22222222                   	/* Set interrupt for port C */
+   	 ldr r6, = 0x22222222                   /* Set interrupt for port C */
    	 str r6, [r0, #GPIO_EXTIPSELL]
    	 ldr r6, = 0xff
-   	 str r6, [r0, #GPIO_EXTIFALL]           	/* Set interrupt on 1->0 transition */
-   	 str r6, [r0, #GPIO_EXTIRISE]           	/* Set interrupt on 0->1 transition */
-   	 str r6, [r0, #GPIO_IEN]                	/* Enable interrupt generation */
+   	 str r6, [r0, #GPIO_EXTIFALL]           /* Set interrupt on 1->0 transition */
+   	 str r6, [r0, #GPIO_EXTIRISE]           /* Set interrupt on 0->1 transition */
+   	 str r6, [r0, #GPIO_IEN]                /* Enable interrupt generation */
    	 
-   	 ldr r6, = 0x802                        	/* Enable interrupt handler */
+   	 ldr r6, = 0x802                        /* Enable interrupt handler */
    	 ldr r7, = ISER0
    	 str r6, [r7]
     	mov r15, r14                           	/* Move the value of lr into pc */
@@ -147,10 +146,10 @@ enable_sleep:
     	mov r15, r14                           	/* Move the value of lr into pc */
    	 
 power_down_RAM_blocks:
-   	 ldr r9, = EMU_BASE
-   	 mov r10, #7
+   	 ldr r9, = EMU_BASE			/* Load the EMU base adress to register */
+   	 mov r10, #7				/* Power down RAM blocks 1-3 */
    	 str r10, [r9, #EMU_MEMCTRL]
-	 	mov r15, r14    
+	 mov r15, r14    
 
 
     /////////////////////////////////////////////////////////////////////////////
@@ -163,17 +162,13 @@ power_down_RAM_blocks:
     	.thumb_func
 gpio_handler:  
    	 
-   	 // Determine the source of the interrupt
+   	 /* Determine the source of the interrupt */
    	 ldr r6, [r0, #GPIO_IF]
 
-   	 // Clear the interrupt
+   	 /* Clear the interrupt */
    	 str r6, [r0, #GPIO_IFC]
-   	 //ldr r7, [r2, #GPIO_DIN]
-   	 //lsl r7, r7, #8
-   	 //str r7, [r1, #GPIO_DOUT]
    	 
-   	 
-   	 //define what happens when you press the specific buttons
+   	 /* Define what happens when you press the specific buttons */
    	 ldr r5, [r2, GPIO_DIN]
    	 cmp r5, #0b0000000011111110
    	 beq knapp1
@@ -198,10 +193,10 @@ gpio_handler:
    	 
 knapp1:
    	 ldr r5, [r1, #GPIO_DOUT]
-   	 and r7, r5, #0b0000000100000000    	 //check the only bit we are intrested in
-   	 cmp r7, #0b0000000000000000   			 //check if led is on
+   	 and r7, r5, #0b0000000100000000    	/* Check the only bit we are intrested in */
+   	 cmp r7, #0b0000000000000000   		/* Check if led is on */
    	 beq turn_off_1
-   	 and r5, r5, #0b1111111000000000   		 //turn led on
+   	 and r5, r5, #0b1111111000000000   	/* Turn led on */
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
 knapp2:
@@ -225,25 +220,25 @@ knapp8:
    	 and r7, r5, #0b1000000000000000
    	 cmp r7, #0b0000000000000000
    	 beq turn_off
-   	 mov r5, #0b0000000000000000   		 //turn all led on
+   	 mov r5, #0b0000000000000000   		/* Turn all led on */
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
 shift_right:
    	 ldr r5, [r1, #GPIO_DOUT]
    	 and r7, r5, #0b1000000000000000
-   	 cmp r7, #0b0000000000000000   		 //check if end led is on
+   	 cmp r7, #0b0000000000000000   		/* Check if end led is on */
    	 beq shift_end_r
-   	 lsl r5, r5, #1   					 //move the led one to the right
-   	 orr r5, r5, #0b0000000100000000   	 //correcting added zero from lsl
+   	 lsl r5, r5, #1   			/* Move the led one to the right */
+   	 orr r5, r5, #0b0000000100000000   	/* Correcting added zero from lsl */
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
 shift_left:
    	 ldr r5, [r1, #GPIO_DOUT]
    	 and r7, r5, #0b0000000100000000
-   	 cmp r7, #0b0000000000000000   		 //check if end LED is on
+   	 cmp r7, #0b0000000000000000   		/* Check if end LED is on */
    	 beq shift_end_l
-   	 lsr r5, r5, #1   					 //move the led one to the left
-   	 orr r5, r5, #0b1000000000000000   	 //correcting added zero from lsr
+   	 lsr r5, r5, #1   			/* Move the led one to the left */
+   	 orr r5, r5, #0b1000000000000000   	/* Correcting added zero from lsr */
    	 str r5, [r1, #GPIO_DOUT]
    	 bx r14
 shift_end_r:
@@ -272,7 +267,7 @@ turn_off_3:
    	 bx r14
 wait_loop:
    	 subs r7, #1
-   	 bne wait_loop   					 //count down to 0
+   	 bne wait_loop   					/* Count down to 0 */
    	 mov r15, r14   	 
 blink:
    	 mov r7, #0b0101010100000000   	 
