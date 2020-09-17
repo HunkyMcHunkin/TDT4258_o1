@@ -13,7 +13,7 @@
 
     OUTPUT_MODE = 0x55555555
     INPUT_MODE = 0x33333333
-    DRIVE_STRENGTH_MEDIUM = 0x2
+    DRIVE_STRENGTH_LOW = 0x3
     INTERNAL_PULLUP = 0xff
 
 
@@ -106,7 +106,7 @@ _reset:
 
         //LED
         // Set high drive strength
-        mov r4, #DRIVE_STRENGTH_MEDIUM
+        mov r4, #DRIVE_STRENGTH_LOW
         str r4, [r1, #GPIO_CTRL]
 
         // Set pins 8-15 to output
