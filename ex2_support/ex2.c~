@@ -19,7 +19,7 @@
  */
 void setupTimer(uint32_t period);
 void setupDAC();
-void setupNVIC();
+//void setupNVIC();
 void MakeSound(int freq, int length);
 
 /*
