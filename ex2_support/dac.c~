@@ -30,14 +30,17 @@ void MakeSound(int freq, int length)
 	
 		*DAC0_CH0DATA= 2000;
 		*DAC0_CH1DATA = 2000;
-		wait(420000)
+		wait(42000000)
 		*DAC0_CH0DATA = 0;
 		DAC0_CH1DATA = 0;
-		wait(420000)
+		wait(42000000)
 	}
 }
 
 void wait(time){
-	
+	counter=0;
+	while(counter < time){
+		counter++
+	}
 }
 
