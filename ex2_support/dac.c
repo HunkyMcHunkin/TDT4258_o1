@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include "efm32gg.h"
 
@@ -18,15 +19,28 @@ void setupDAC()
 	 
 	 *CMU_HFPERCLKEN0 = *CMU_HFPERCLKEN0 | (1<<17);
 	 *DAC0_CTRL = 0x50010;
-	 *DAC0_CH0CTRL = 1;
-	 *DAC0_CH1CRTL = 1;
+	 *DAC0_CH0CTRL |= (1<<1);
+	 *DAC0_CH1CRTL |= (1<<1);
 	 
 }
 
-uint16_t MakeSound(uint16_t freq)
+void MakeSound(int freq, int length)
 { 
-	poolTime(318);
+	while(1){
 	
+		*DAC0_CH0DATA= 2000;
+		*DAC0_CH1DATA = 2000;
+		wait(42000000)
+		*DAC0_CH0DATA = 0;
+		DAC0_CH1DATA = 0;
+		wait(42000000)
+	}
 }
 
-void 
+void wait(time){
+	counter=0;
+	while(counter < time){
+		counter++
+	}
+}
+

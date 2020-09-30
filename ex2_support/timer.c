@@ -23,18 +23,16 @@ void setupTimer(uint16_t period)
 	 *CMU_HFPERCLKEN0 = *CMU_HFPERCLKEN0 | (1<<6);
 	 *TIMER1_TOP = period;
 	 *TIMER1_IEN = 1;
-	 *ISERO = *ISERO | (1<<12);
+	 *ISER0 = *ISER0 | (1<<12);
 	 *TIMER1_CMD = 1; 
 }
 
-void poolTime(uint16_t period)
+/* void poolTime(int timePeriod)
 {
-	if *TIMER1_CNT = period
-	{
-		LETIMER1_CMD = LETIMER1_CMD | (1<<2);
-		dacStop(void);
-	}
-	else{
-		*TIMER1_CMD = 0;
+	int poolcount = *TIMER1_CNT;
+	int count = 1;
+	while (count < timePeriod) {
+*/		
+
 		 
 		

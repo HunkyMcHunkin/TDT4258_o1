@@ -12,14 +12,15 @@
 /*
  * The period between sound samples, in clock cycles 
  */
-#define   SAMPLE_PERIOD 318
+#define SAMPLE_PERIOD 318
 
 /*
  * Declaration of peripheral setup functions 
  */
 void setupTimer(uint32_t period);
 void setupDAC();
-void setupNVIC();
+//void setupNVIC();
+void MakeSound(int freq, int length);
 
 /*
  * Your code will start executing here 
@@ -36,14 +37,16 @@ int main(void)
 	/*
 	 * Enable interrupt handling 
 	 */
-	setupNVIC();
+	//setupNVIC();
 
 	/*
 	 * TODO for higher energy efficiency, sleep while waiting for
 	 * interrupts instead of infinite loop for busy-waiting 
 	 */
 	while (1) ;
-
+		//buttonx=*GPIO_PC_DIN
+		//buttonPressed(buttonx)
+		makesound(220, 56);
 	return 0;
 }
 
