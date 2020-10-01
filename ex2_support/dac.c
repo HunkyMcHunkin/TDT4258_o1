@@ -15,19 +15,28 @@ void setupDAC()
 
 void MakeSound(int freq, int length)
 { 
-	int count = 1;
-	int dacvolt = 0;
+	int count = 1;    //tell antall tiks
+	int dacvolt = 0;  //defines strength of sound
+	length=length*1000; //tonens lengde=spesifisert lengde * 1ms
 	while(count < length){
-		if (count % freq == 0){
-			if(dacvolt== 100){
+		int countperiod = 44100/freq;
+		if (count % (countperiod/2) == 0){   
+			if(dacvolt == 100){
 				dacvolt = 0;
 			} else{
 				dacvolt = 100;
 			}
-			*DAC0_CH0DATA = dacvolt;
+			*DAC0_CH0DATA = dacvolt;  //skriver voltverdien til utgangen
 			*DAC0_CH1DATA = dacvolt;
 		}
+		
 		count++;
+	}
+}
+
+void MakeSong(int *frecVec, int lengthFrecVec, int lengthnote){
+	for (int i = 0; i<lengthFrecVec; i++){
+		MakeSound(frecVec[i],lengthnote);
 	}
 }
 

@@ -16,13 +16,14 @@ void setupDAC();
 void setupGPIO();
 //void setupNVIC();
 void MakeSound(int freq, int length);
+void MakeSong(int *frecVec, int lengthFrecVec, int lengthnote);
 
 /*
  * Your code will start executing here 
  */
 int main(void)
 {
-	//uint32_t button_in;
+	uint32_t button_in;
 	//uint32_t button_out;
 
 	setupGPIO();
@@ -44,14 +45,9 @@ int main(void)
 		*GPIO_PA_DOUT = button_out;
 		*/
 		
-		//button_in=*GPIO_PC_DIN;
-		//buttonPressed(button_in);
-		MakeSound(30, 100000);
-		MakeSound(60, 100000);
-		MakeSound(100, 100000);
-		MakeSound(500, 100000);
-		MakeSound(200, 100000);
-		MakeSound(50, 100000);
+		button_in=*GPIO_PC_DIN;
+		buttonPressed(button_in);
+		
 	}
 }
 
