@@ -17,22 +17,24 @@
 /*
  * Declaration of peripheral setup functions 
  */
-void setupTimer(uint32_t period);
-void setupDAC();
+//void setupTimer(uint32_t period);
+//void setupDAC();
 //void setupNVIC();
-void MakeSound(int freq, int length);
+//void MakeSound(int freq, int length);
 
 /*
  * Your code will start executing here 
  */
 int main(void)
 {
+	uint32_t button_in;
+	uint32_t button_out;
 	/*
 	 * Call the peripheral setup functions 
 	 */
 	setupGPIO();
-	setupDAC();
-	setupTimer(SAMPLE_PERIOD);
+	//setupDAC();
+	//setupTimer(SAMPLE_PERIOD);
 
 	/*
 	 * Enable interrupt handling 
@@ -43,10 +45,16 @@ int main(void)
 	 * TODO for higher energy efficiency, sleep while waiting for
 	 * interrupts instead of infinite loop for busy-waiting 
 	 */
+	 *GPIO_PA_DOUT = 0x0700;
 	while (1) ;
+		*GPIO_PA_DOUT = 0x0700;
+		button_in = *GPIO_PC_DIN;
+		button_out = (button_in); //<< 8);
+		*GPIO_PA_DOUT = button_out;
+		
 		//buttonx=*GPIO_PC_DIN
 		//buttonPressed(buttonx)
-		makesound(220, 56);
+		//makesound(220, 56);
 	return 0;
 }
 

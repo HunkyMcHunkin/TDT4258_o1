@@ -18,30 +18,30 @@ void setupDAC()
 	 *
 	 */
 	 
-	 *CMU_HFPERCLKEN0 = *CMU_HFPERCLKEN0 | (1<<17);
-	 *DAC0_CTRL = 0x50010;
-	 *DAC0_CH0CTRL |= (1<<1);
-	 *DAC0_CH1CRTL |= (1<<1);
+	 //*CMU_HFPERCLKEN0 = *CMU_HFPERCLKEN0 | (1<<17);
+//	 *DAC0_CTRL = 0x50010;
+//	 *DAC0_CH0CTRL |= (1<<1);
+//	 *DAC0_CH1CRTL |= (1<<1);
 	 
 }
 
 void MakeSound(int freq, int length)
 { 
-	while(1){
+	//while(1){
 	
-		*DAC0_CH0DATA= 2000;
-		*DAC0_CH1DATA = 2000;
-		wait(42000000)
-		*DAC0_CH0DATA = 0;
-		DAC0_CH1DATA = 0;
-		wait(42000000)
-	}
+		//*DAC0_CH0DATA= 2000;
+//		*DAC0_CH1DATA = 2000;
+//		wait(42000000)
+//		*DAC0_CH0DATA = 0;
+//		DAC0_CH1DATA = 0;
+//		wait(42000000)
+//	}
 }
 
-void wait(time){
+/*void wait(time){
 	counter=0;
 	while(counter < time){
 		counter++
 	}
-}
+}*/
 
