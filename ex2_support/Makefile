@@ -19,6 +19,16 @@ ex2.elf : ex2.o timer.o dac.o gpio.o interrupt_handlers.o
 
 %.o : %.c
 	${CC} ${CFLAGS} -c $< -o $@
+	
+
+ex2_i.bin : ex2_i.elf
+	${OBJCOPY} -O binary $< $@
+
+ex2_i.elf : ex2_interrupt.o timer.o dac.o gpio.o interrupt_handlers.o
+	${LD} -T ${LINKERSCRIPT} $^ -o $@ ${LDFLAGS} 
+	
+	
+
 
 .PHONY : pretty
 pretty :
@@ -27,6 +37,10 @@ pretty :
 .PHONY : upload
 upload :
 	-eACommander.sh -r --address 0x00000000 -f "ex2.bin" -r
+	
+.PHONY : upload2
+upload2 :
+	-eACommander.sh -r --address 0x00000000 -f "ex2_i.bin" -r
 
 .PHONY : clean
 clean :

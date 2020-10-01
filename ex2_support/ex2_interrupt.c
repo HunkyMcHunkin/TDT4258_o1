@@ -9,26 +9,39 @@
 
 void setupTimer(uint32_t period);
 void setupDAC();
+void setupGPIO();
 void setupNVIC();
 void MakeSound(int freq, int length);
+void Sleep();
 
 
 int main(void)
 {
+	/* interrupt løsning går inn i sleep mode med lavere strøm enn vanlig(ca 1.4uA). trykk på knapp fungerer, holde inne knapp fungerer ikke, avbryte sang fungerer ikke*/
 	setupGPIO();
 	setupDAC();
 	setupTimer(SAMPLE_PERIOD);
 	setupNVIC();
-	*SCR = 6;  //set 
+	Sleep();
 
-	while (1) ;
-		__asm__("WFI");
-	return 0;
+	while (1){
+		__asm("WFI");
+	}
 }
 
 void setupNVIC()
 {
-	 *ISER0 = 0x1802;
+	*GPIO_EXTIPSELL = 0x22222222;
+	*GPIO_EXTIFALL = 0xff;
+	*GPIO_EXTIRISE = 0xff;
+	*GPIO_IEN = 0xff;
+	
+	*ISER0 = 0x802;
+}
+
+void Sleep()
+{
+	*SCR = 6; 
 }
 
 /*
