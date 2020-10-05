@@ -3,6 +3,11 @@
 #include <time.h>
 
 #include "efm32gg.h"
+#include "ex2.h"
+
+
+/*------------SET UP-------------*/
+int wave = 0;  //global variable
 
 void setupDAC()
 {
@@ -20,7 +25,44 @@ void stopDAC()
 	*DAC0_CH1CTRL = 0;
 }
 
-void MakeSound(int freq, int length)   //square wave
+void startUpMelody()
+{
+	wave=0;
+	int song[] = {E, F, G, A, H, C, D, D, C, H, A, G, F, E};
+	ChooseWave(song, 14, 100);
+}
+
+
+/*------------WAVE SELECT---------------*/
+
+void updatewave()
+{
+	wave += 1;
+	*GPIO_PA_DOUT = 0xefff;
+	if (wave==3){
+		wave = 0;
+	}
+}
+
+void ChooseWave(int *frecVec, int lengthFrecVec, int lengthnote)
+{
+	if(wave==0){
+		MakeSong(frecVec, lengthFrecVec, lengthnote);
+	} else if(wave==1){
+		MakeSongS(frecVec, lengthFrecVec, lengthnote);
+	} else if(wave==2){
+		MakeSongT(frecVec, lengthFrecVec, lengthnote);
+	}
+	else {
+		*GPIO_PA_DOUT = 0x00ff;
+	}
+}
+
+
+/*-------------SQARE WAVE-------------------*/
+
+
+void MakeSound(int freq, int length)   
 { 
 	int count = 1;    //tell antall tiks
 	int dacvolt = 0;  //defines strength of sound
@@ -30,10 +72,8 @@ void MakeSound(int freq, int length)   //square wave
 		if (count % (countperiod/2) == 0){   
 			if(dacvolt == 100){
 				dacvolt = 0;
-				*GPIO_PA_DOUT = 0xefff;
 			} else{
 				dacvolt = 100;
-				*GPIO_PA_DOUT = 0xffff;
 			}
 			*DAC0_CH0DATA = dacvolt;  //skriver voltverdien til utgangen
 			*DAC0_CH1DATA = dacvolt;
@@ -44,15 +84,18 @@ void MakeSound(int freq, int length)   //square wave
 }
 
 void MakeSong(int *frecVec, int lengthFrecVec, int lengthnote){
+	*GPIO_PA_DOUT = 0xc3ff;
 	for (int i = 0; i<lengthFrecVec; i++){
-		if(i==lengthFrecVec-1){
-			MakeSound(frecVec[i],lengthnote*2);
-		}
 		MakeSound(frecVec[i],lengthnote);
 	}
+	MakeSound(frecVec[lengthFrecVec-1], lengthnote*2);
+	*GPIO_PA_DOUT = 0xffff;
 }
 
-void MakeSoundS(int freq, int length)  //saberthoot wave - does not work yet
+
+/*---------------SABERTHOOT-------------------*/
+
+void MakeSoundS(int freq, int length) 
 {
 	int count = 1;    
 	int dacvolt = 0;
@@ -72,10 +115,10 @@ void MakeSoundS(int freq, int length)  //saberthoot wave - does not work yet
 	while(count < length){
 		if (count % countperiod == 0){   
 			dacvolt=0;
-			*DAC0_CH0DATA = dacvolt;  
-			*DAC0_CH1DATA = dacvolt;
 		}
-		if (dacUpCount==dacUpTime){
+		*DAC0_CH0DATA = dacvolt;  
+		*DAC0_CH1DATA = dacvolt;
+		if (dacUpCount>=dacUpTime){
 			dacvolt=dacvolt+(1*rate);
 			dacUpCount=0;
 		}
@@ -85,17 +128,21 @@ void MakeSoundS(int freq, int length)  //saberthoot wave - does not work yet
 }
 
 void MakeSongS(int *frecVec, int lengthFrecVec, int lengthnote){
+	*GPIO_PA_DOUT = 0x55ff;
 	for (int i = 0; i<lengthFrecVec; i++){
-		if(i==lengthFrecVec-1){
-			MakeSoundS(frecVec[i],lengthnote*2);
-		}
 		MakeSoundS(frecVec[i],lengthnote);
 	}
+	MakeSoundS(frecVec[lengthFrecVec-1], lengthnote*2);
+	*GPIO_PA_DOUT = 0xffff;
 }
 
-void MakeSoundT(int freq, int length)  //triangle wave  - warning verry LOUD
+
+
+/*------------------TRIANGLE WAVE---------------------*/
+
+void MakeSoundT(int freq, int length) 
 {
-	int count = 1;    
+	int count = 1;
 	int dacVolt = 0;          
 	int dacdir = 1;
 	int countperiod = 44100/freq; 
@@ -113,17 +160,22 @@ void MakeSoundT(int freq, int length)  //triangle wave  - warning verry LOUD
 			rate=2;
 		}
 	}
-	int dacUpCount = 1;
+	int dacUpCount = 0;
 	length=length*1000; 
 	while(count < length){
 		if (count % (countperiod/2) == 0){   
 			dacdir=dacdir*(-1);
-			*DAC0_CH0DATA = dacVolt;  
-			*DAC0_CH1DATA = dacVolt;
 		}
-		if (dacUpCount==dacUpTime){
-			dacVolt=dacVolt+dacdir*rate;
+		*DAC0_CH0DATA = dacVolt;  
+		*DAC0_CH1DATA = dacVolt;
+		if (dacUpCount>=dacUpTime){
 			dacUpCount=0;
+			dacVolt=dacVolt+(dacdir*rate);
+			if (dacVolt>100){
+				dacVolt=100;
+			} else if (dacVolt<0){
+				dacVolt=0;
+			}
 		}
 		count++;
 		dacUpCount++;
@@ -131,12 +183,12 @@ void MakeSoundT(int freq, int length)  //triangle wave  - warning verry LOUD
 }
 
 void MakeSongT(int *frecVec, int lengthFrecVec, int lengthnote){
+	*GPIO_PA_DOUT = 0x1fff;
 	for (int i = 0; i<lengthFrecVec; i++){
-		if(i==lengthFrecVec-1){
-			MakeSoundT(frecVec[i],lengthnote*2);
-		}
 		MakeSoundT(frecVec[i],lengthnote);
 	}
+	MakeSoundT(frecVec[lengthFrecVec-1], lengthnote*2);
+	*GPIO_PA_DOUT = 0xffff;
 }
 
 

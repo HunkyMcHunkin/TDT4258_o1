@@ -2,10 +2,9 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
+#include "ex2.h"
 
 
-void buttonPressed(int buttonX);
-void setupDAC();
 /*
  * TIMER1 interrupt handler 
  */
@@ -30,6 +29,7 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 	 *GPIO_IFC = *GPIO_IF;   //clears interrupt
 	 setupDAC();
 	 buttonPressed(*GPIO_PC_DIN);
+	 stopDAC();
 }
 
 /*
@@ -44,5 +44,6 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 	 *GPIO_IFC = *GPIO_IF;   //clears interrupt
 	 setupDAC();
 	 buttonPressed(*GPIO_PC_DIN);
+	 stopDAC();
 	 
 }

@@ -41,7 +41,7 @@
 #define GPIO_EXTIRISE  ((volatile uint32_t*)(GPIO_PA_BASE + 0x108))
 #define GPIO_EXTIFALL  ((volatile uint32_t*)(GPIO_PA_BASE + 0x10c))
 #define GPIO_IEN       ((volatile uint32_t*)(GPIO_PA_BASE + 0x110))
-#define GPIO_IF        ((volatile uint32_t*)(GPIO_PA_BASE + 0x114))    //vi brukte denne i lab1, men måtte vi legge den til selv?
+#define GPIO_IF        ((volatile uint32_t*)(GPIO_PA_BASE + 0x114))   
 #define GPIO_IFC       ((volatile uint32_t*)(GPIO_PA_BASE + 0x11c))
 
 // CMU
@@ -100,6 +100,7 @@
 #define EMU_BASE2 0x400c6000
 
 #define EMU_CTRL ((volatile uint32_t*)(EMU_BASE2 + 0x000))
+#define EMU_MEMCTRL ((volatile uint32_t*)(EMU_BASE2 + 0x004))
 
 // DAC0
 

@@ -2,14 +2,9 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
+#include "ex2.h"
 
 
-void MakeSound(int freq, int length);
-void MakeSong(int *frecVec, int lengthFrecVec, int lengthnote);
-void MakeSoundT(int freq, int length);
-void MakeSongT(int *frecVec, int lengthFrecVec, int lengthnote);
-void MakeSoundS(int freq, int length);
-void MakeSongS(int *frecVec, int lengthFrecVec, int lengthnote);
 /*
  * function to set up GPIO mode and interrupts
  */
@@ -17,7 +12,7 @@ void setupGPIO()
 {
 
 	*CMU_HFPERCLKEN0 |= CMU2_HFPERCLKEN0_GPIO;	/* enable GPIO clock */
-	*GPIO_PA_CTRL = 3;	/* set low drive strength */
+	*GPIO_PA_CTRL = 1;	/* set lowest drive strength */
 	*GPIO_PA_MODEH = 0x55555555;	/* set pins A8-15 as output */
 	*GPIO_PA_DOUT = 0xffff;	     /* turn all LEDs off*/
 	
@@ -29,33 +24,28 @@ void setupGPIO()
 void buttonPressed(int buttonX)
 {
 	if (buttonX==0xfe) {  
-		MakeSound(30, 100);
-		MakeSound(60, 100);
-		MakeSound(100, 100);
-		MakeSound(500, 100);
-		MakeSound(200, 100);
-		MakeSound(50, 100);
+		updatewave();
 	} else if (buttonX==0xfd) {
-		MakeSoundT(30, 100);
-		MakeSoundT(60, 100);
-		MakeSoundT(100, 100);
-		MakeSoundT(500, 100);
-		MakeSoundT(200, 100);
-		MakeSoundT(50, 100);
+		int song[] = {A, A, A, A, 1, 1, A, G, E, Cl, 1, Cl, A, A, G, F, G};   //pokemon
+		ChooseWave(song, 17, 100);
 	} else if (buttonX==0xfb) {
-		MakeSound(200, 100);
+		int song[] = {E, E, C, C, D, D, C, 1, H, H, A, A, G, G, F};    //twinkle twinkle little star
+		ChooseWave(song, 15, 200);
 	} else if (buttonX==0xf7) {
-		int song[] = {165, 175, 196, 220, 267, 262, 294, 330, 349, 392, 440, 440, 392, 349, 330, 294, 262, 267, 220, 196, 175, 165, 146};
-		MakeSong(song, 22, 100);
+		int song[] = {C, D, C, H, A, H, C, 1, G, A, H, 1, A, H, C, 1, C, D, C, H, A, H, C, 1, G, 1, C, 1, A, F};  //london bridge
+		ChooseWave(song, 30, 70);
 	} else if (buttonX==0xef) {
-		int song[] = {165, 175, 196, 220, 267, 262, 294, 330, 349, 392, 440, 440, 392, 349, 330, 294, 262, 267, 220, 196, 175, 165, 146};
-		MakeSongS(song, 22, 100);
+		int song[] = {D, F, 1, 1, F, E, 1, 1, G, A, H, A, G, F, 1, D, E, G, D, D, E, F, G, C, H, 1, G, A, 1, D, E, F, G, F, E};
+		ChooseWave(song, 35, 150);
 	} else if (buttonX==0xdf) {
-		MakeSoundS(200, 100);
+		int song[] = {E, G, Dl, 1, E, G, Dl, 1, E, G, D, C, G};  //zelda
+		ChooseWave(song, 13, 200);
 	} else if (buttonX==0xbf) {
-		MakeSoundT(200, 100);
+		int song[] = {E, G, Cl, 1, E, G, Cl, 1, F, A, C, A, A, G, 1, E, G, Cl, 1, E, G, Cl, 1, Dl, E, F, Hl, Dl, Cl, Cl};  //mikkel rev
+		ChooseWave(song, 30, 150);
 	} else if (buttonX==0x7f) {
-		int song[] = {165, 175, 196, 220, 267, 262, 294, 330, 349, 392, 440, 440, 392, 349, 330, 294, 262, 267, 220, 196, 175, 165, 146};
-		MakeSongT(song, 22, 100);
+		int song[] = {E, F, G, A, H, C, D, Eh, Fh, Gh, Ah, Ah, Gh, Fh, Eh, D, C, H, A, G, F, E};  //full step
+		MakeSongT(song, 21, 100);
 	}
 }
+

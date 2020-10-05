@@ -2,27 +2,20 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
+#include "ex2.h"
 
-
-#define SAMPLE_PERIOD 318
-
-
-void setupTimer(uint32_t period);
-void setupDAC();
-void setupGPIO();
-void setupNVIC();
-void MakeSound(int freq, int length);
-void Sleep();
 
 
 int main(void)
 {
-	/* interrupt løsning går inn i sleep mode med lavere strøm enn vanlig(ca 1.4uA). trykk på knapp fungerer, holde inne knapp fungerer ikke, avbryte sang fungerer ikke*/
+	//setUpDisableRam();
 	setupGPIO();
 	setupDAC();
 	setupTimer(SAMPLE_PERIOD);
+	startUpMelody();
 	setupNVIC();
 	Sleep();
+	
 
 	while (1){
 		__asm("WFI");
@@ -42,6 +35,11 @@ void setupNVIC()
 void Sleep()
 {
 	*SCR = 6; 
+}
+
+void setUpDisableRam()
+{
+	*EMU_MEMCTRL = 7;
 }
 
 /*

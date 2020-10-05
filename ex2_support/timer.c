@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
+#include "ex2.h"
 
 /*
  * function to setup the timer 
@@ -13,13 +14,7 @@ void setupTimer(uint16_t period)
 	 *TIMER1_IEN = 1;
 	 *TIMER1_CMD = 1; 
 }
-
-/* void poolTime(int timePeriod)
-{
-	int poolcount = *TIMER1_CNT;
-	int count = 1;
-	while (count < timePeriod) {
-*/		
+	
 
 		 
 		
