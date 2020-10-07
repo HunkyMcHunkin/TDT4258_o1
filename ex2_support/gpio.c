@@ -47,8 +47,40 @@ void buttonPressed(int buttonX, int *wave)
 	if(buttonX == BUTTON1){
 		updatewave(&wave);
 	}else{
+		setLigths(buttonX);
 		playSong(buttonX, *wave);
+		turnOffLigths();
 	}
+}
+
+void setLigths(buttonX){
+	switch(buttonX){
+		case BUTTON2:
+			*GPIO_PA_DOUT = LED2;
+			break;
+		case BUTTON3:
+			*GPIO_PA_DOUT = LED3;
+			break;
+		case BUTTON4:
+			*GPIO_PA_DOUT = LED4;
+			break;
+		case BUTTON5:
+			*GPIO_PA_DOUT = LED5;
+			break;
+		case BUTTON6:
+			*GPIO_PA_DOUT = LED6;
+			break;
+		case BUTTON7:
+			*GPIO_PA_DOUT = LED7;
+			break;
+		case BUTTON8:
+			*GPIO_PA_DOUT = LED8;
+			break;
+	}
+}
+
+void turnOffLigths(buttonX){
+	*GPIO_PA_DOUT = 0xffff;
 }
 
  /*
