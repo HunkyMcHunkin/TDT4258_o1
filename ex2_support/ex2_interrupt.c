@@ -19,7 +19,7 @@ int main2(void)
 	setup_GPIO();
 	setup_DAC();
 	setup_timer(SAMPLE_PERIOD);
-	setup_interrupt();
+	setup_NVIC();
 	setup_sleep();
 	
 	startUpMelody(*wave); //TODO
@@ -36,7 +36,7 @@ purpose: enable interrupt
 argument(s): none
 return value: none
 */
-void setup_interrupt()
+void setup_NVIC()
 {
 
 	//enable interrupt
