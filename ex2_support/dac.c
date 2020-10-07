@@ -6,8 +6,6 @@
 #include "ex2.h"
 
 /*------------SET UP-------------*/
-//Global variable
-int wave = 0; //Hva er dette TODO, bør være i main filen?
 
 /*
 name: setup_DAC
