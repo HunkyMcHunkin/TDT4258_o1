@@ -37,7 +37,7 @@ void playSong(int buttonX, int wave);
 void setup_timer(uint16_t period);
 
 /*interrupt*/
-void setup_interrupt();
+void setup_NVIC();
 void setup_interruptGPIO();
 void setup_Sleep();
 void setup_disableRam();
