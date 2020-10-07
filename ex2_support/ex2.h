@@ -29,8 +29,8 @@ void makeSongSin(int *frecVec, int lengthFrecVec, int lengthnote);
  /*GPIO*/ 
 void setup_GPIO();
 void buttonPressed(int buttonX, int *wave);
+void setLigths(int buttonX);
 void turnOffLigths();
-void 
 void playSong(int buttonX, int wave);
 
 /*timer*/
