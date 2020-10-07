@@ -29,6 +29,8 @@ void makeSongSin(int *frecVec, int lengthFrecVec, int lengthnote);
  /*GPIO*/ 
 void setup_GPIO();
 void buttonPressed(int buttonX, int *wave);
+void turnOffLigths();
+void 
 void playSong(int buttonX, int wave);
 
 /*timer*/
@@ -65,5 +67,15 @@ void setup_disableRam();
 #define BUTTON6 0xdf
 #define BUTTON7 0xbf
 #define BUTTON8 0x7f
+
+//led ligth
+#define LED1 0xfeff
+#define LED2 0xfdff
+#define LED3 0xfbff
+#define LED4 0xf7ff
+#define LED5 0xefff
+#define LED6 0xdfff
+#define LED7 0xbfff
+#define LED8 0x7fff
 
 #endif
