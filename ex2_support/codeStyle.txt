@@ -1,0 +1,12 @@
+Kodestil:
+
+1) Alle funksjoner starter med liten bokstav.
+2) Alle variabler og parametere skrives med liten bokstav
+3) Globale variabler skrives med stor første bokstavf.eks. VarNavn
+4) Alle funksjoner har kommentarer knyttet til seg
+5) Ingen variabler har navnet i, a eller liknende
+6) Alle delsekvenser i en funksjon kommenterers
+7) KONSTANTER skrives med store bokstaver
+8) Alt skrives på engelsk
+9) Ingen magiske tall
+10) Alle kommentarer starter med små bokstaver

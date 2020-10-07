@@ -1,35 +1,46 @@
 #ifndef ex2
 #define ex2
 
-#define SAMPLE_PERIOD 318   		//The period between sound samples, in clock cycles 
+#define SAMPLE_PERIOD 318	//The period between sound samples, in clock cycles
 
 /*dac*/
-void setupDAC();
+void setup_DAC();
+void startDAC();
 void stopDAC();
-void startUpMelody();
-void updatewave();
-void ChooseWave(int *frecVec, int lengthFrecVec, int lengthnote);
-void MakeSound(int freq, int length);
-void MakeSong(int *frecVec, int lengthFrecVec, int lengthnote);
-void MakeSoundT(int freq, int length);
-void MakeSongT(int *frecVec, int lengthFrecVec, int lengthnote);
-void MakeSoundS(int freq, int length);
-void MakeSongS(int *frecVec, int lengthFrecVec, int lengthnote);
-void updatewave();
+void startUpSong(int wave);
+void updatewave(int *wave);
+//void ChooseWave(int *frecVec, int lengthFrecVec, int lengthnote);
+void makeSound(int freqency, int length, int wave);
+void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector, int wave);
 
-/*GPIO*/
-void setupGPIO();
-void buttonPressed(int buttonX);
+void makeSound_square(int freqency, int length);
+void makeSound_saberthoot(int freqency, int length);
+void makeSound_triangle(int freqency, int length);
+void makeSound_sinus(int freqency, int length);
+
+/*
+void makeSongT(int *frecVec, int lengthFrecVec, int lengthnote);
+void makeSoundS(int freqency, int length);
+void makeSongS(int *frecVec, int lengthFrecVec, int lengthnote);
+void makeSoundSin(int freqency, int length);
+void makeSongSin(int *frecVec, int lengthFrecVec, int lengthnote);
+*/
+
+ /*GPIO*/ 
+void setup_GPIO();
+void buttonPressed(int buttonX, int *wave);
+void playSong(int buttonX, int wave);
 
 /*timer*/
-void setupTimer(uint16_t period);
+void setup_timer(uint16_t period);
 
 /*interrupt*/
-void setupNVIC();
-void Sleep();
-void setUpDisableRam();
+void setup_interrupt();
+void setup_interruptGPIO();
+void setup_Sleep();
+void setup_disableRam();
 
-/*songs*/
+/*notes used in songs*/
 #define Hl 123
 #define Cl 131
 #define Dl 147
@@ -44,5 +55,15 @@ void setUpDisableRam();
 #define Fh 349
 #define Gh 392
 #define Ah 440
+
+//button push
+#define BUTTON1 0xfe
+#define BUTTON2 0xfd
+#define BUTTON3 0xfb
+#define BUTTON4 0xf7
+#define BUTTON5 0xef
+#define BUTTON6 0xdf
+#define BUTTON7 0xbf
+#define BUTTON8 0x7f
 
 #endif

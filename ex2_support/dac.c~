@@ -193,3 +193,43 @@ void MakeSongT(int *frecVec, int lengthFrecVec, int lengthnote){
 
 
 
+/*---------------SINUS WAVE-------------------*/
+
+
+void MakeSound(int freq, int length)   
+{ 
+	int sinusVec = [100, 95, 80, 57, 32, 12, 1, 2, 14, 36, 60, 83, 97];
+	int sinus_table_index = 0
+	int count = 1;    //tell antall tiks
+	int dacvolt = 0;  //defines strength of sound
+	length=length*1000; //tonens lengde=spesifisert lengde * 1ms
+	while(count < length){
+		int countperiod = 44100/freq;
+		if (count % (countperiod/13) == 0){
+			if(sinus_table_index == sinusVecLength){
+				sinus_table_index = 0;
+				}
+			else {
+				sinus_table_index++;
+			}
+			dacvolt = sinusVec[sinus_table_index];
+			*DAC0_CH0DATA = dacvolt;  //skriver voltverdien til utgangen
+			*DAC0_CH1DATA = dacvolt;
+			
+		}
+		
+		count++;
+	}
+}
+
+void MakeSong(int *frecVec, int lengthFrecVec, int lengthnote){
+	*GPIO_PA_DOUT = 0xc3ff;
+	for (int i = 0; i<lengthFrecVec; i++){
+		MakeSound(frecVec[i],lengthnote);
+	}
+	MakeSound(frecVec[lengthFrecVec-1], lengthnote*2);
+	*GPIO_PA_DOUT = 0xffff;
+}
+
+
+

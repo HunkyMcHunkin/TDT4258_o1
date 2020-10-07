@@ -4,46 +4,51 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
-
 /*
- * TIMER1 interrupt handler 
- */
+name: TIMER1_IRQHandler
+purpose: handles interrupt provoked by the timer
+argument(s): none
+return value: none
+*/
+
 void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 {
-	/*
-	 * TODO feed new samples to the DAC remember to clear the pending
-	 * interrupt by writing 1 to TIMER1_IFC 
-	 */
-	 *TIMER1_IFC = 1;
+	//clear interrupt
+	*TIMER1_IFC = 1;
+
 }
 
 /*
- * GPIO even pin interrupt handler 
+name: GPIO_EVEN_IRQHandler
+purpose: handles interrupt provoked by the even GPIO pins, and run a functionality accorrding to which pin that is/was pressed.
+argument(s): none
+return value: none
  */
-void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
+void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler(int *wave)
 {
-	/*
-	 * TODO handle button pressed event, remember to clear pending
-	 * interrupt 
-	 */
-	 *GPIO_IFC = *GPIO_IF;   //clears interrupt
-	 setupDAC();
-	 buttonPressed(*GPIO_PC_DIN);
-	 stopDAC();
+	//clear interrupt
+	*GPIO_IFC = *GPIO_IF;
+	
+	//run functionality specified by pushed button
+	startDAC(); //*** set up eller start?
+	buttonPressed(*GPIO_PC_DIN, wave); //*** Navn
+	stopDAC();
 }
 
+
 /*
- * GPIO odd pin interrupt handler 
+name: GPIO_EVEN_IRQHandler
+purpose: handles interrupt provoked by the odd GPIO pins, and run a functionality accorrding to which pin that is/was pressed.
+argument(s): none
+return value: none
  */
-void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
+void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler(int *wave)
 {
-	/*
-	 * TODO handle button pressed event, remember to clear pending
-	 * interrupt 
-	 */
-	 *GPIO_IFC = *GPIO_IF;   //clears interrupt
-	 setupDAC();
-	 buttonPressed(*GPIO_PC_DIN);
-	 stopDAC();
-	 
+	//clrear interrupt
+	*GPIO_IFC = *GPIO_IF;
+	
+	//run functionality specified by pushed button
+	startDAC(); //*** set up eller start?
+	buttonPressed(*GPIO_PC_DIN, wave);
+	stopDAC();
 }
