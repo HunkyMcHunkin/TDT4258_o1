@@ -10,3 +10,4 @@ Kodestil:
 8) Alt skrives på engelsk
 9) Ingen magiske tall
 10) Alle kommentarer starter med små bokstaver
+11) Alle OUTPUT-LEDS kan omgjøres fra xxff til (xx << 8)
