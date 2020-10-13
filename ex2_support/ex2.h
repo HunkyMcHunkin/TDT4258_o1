@@ -3,46 +3,56 @@
 
 #define SAMPLE_PERIOD 318	//The period between sound samples, in clock cycles
 
-/*dac*/
-void setup_DAC();
-void startDAC();
-void stopDAC();
-void startUpSong(int wave);
-void updatewave(int *wave);
-//void ChooseWave(int *frecVec, int lengthFrecVec, int lengthnote);
-void makeSound(int freqency, int length, int wave);
-void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector, int wave);
+// ------------- DAC ------------- //
+//preperation functions
+void setup_DAC ();
+void startDAC ();
+void stopDAC ();
 
-void makeSound_square(int freqency, int length);
-void makeSound_saberthoot(int freqency, int length);
-void makeSound_triangle(int freqency, int length);
-void makeSound_sinus(int freqency, int length);
+//functions that generate sounds
+void makeSound_square (int freqency, int length);
+void makeSound_saberthoot (int freqency, int length);
+void makeSound_triangle (int freqency, int length);
+void makeSound_sinus (int freqency, int length);
 
-/*
-void makeSongT(int *frecVec, int lengthFrecVec, int lengthnote);
-void makeSoundS(int freqency, int length);
-void makeSongS(int *frecVec, int lengthFrecVec, int lengthnote);
-void makeSoundSin(int freqency, int length);
-void makeSongSin(int *frecVec, int lengthFrecVec, int lengthnote);
-*/
+//function that plays the sound
+void makeSound (int freqency, int length, int wave);
 
- /*GPIO*/ 
-void setup_GPIO();
-void buttonPressed(int buttonX, int *wave);
-void setLigths(int buttonX);
-void turnOffLigths();
-void playSong(int buttonX, int wave);
 
-/*timer*/
-void setup_timer(uint16_t period);
+// ------------- ACTIONS ------------- //
+//functions that use the other modules to do some sort of action
+void startUpSong (int wave);
+void updatewave (int *wave);
+void makeSong (int *frecquencyVector, int sizeVectors,
+	       int *lengthFrequencyVector, int wave);
+void playSong (buttonX, wave);
+void buttonPressed (int buttonX, int *wave);
 
-/*interrupt*/
-void setup_NVIC();
-void setup_interruptGPIO();
-void setup_Sleep();
-void setup_disableRam();
 
-/*notes used in songs*/
+// ------------- GPIO ------------- //
+//preperation function
+void setup_GPIO ();
+
+//LEDs functions
+void turnOffLEDs ();
+void setLEDs_songs (int buttonX);
+void setLEDs_waveFormat (int wave);
+
+
+// ------------- TIMER ------------- //
+//preperation function
+void setup_timer (uint16_t period);
+
+
+// ------------- INTERRUPTS ------------- //
+//preperation function
+void setupNVIC ();
+void Sleep ();
+void setUpDisableRam ();
+
+
+
+/*songs*/
 #define Hl 123
 #define Cl 131
 #define Dl 147
@@ -67,6 +77,7 @@ void setup_disableRam();
 #define BUTTON6 0xdf
 #define BUTTON7 0xbf
 #define BUTTON8 0x7f
+
 
 //led ligth
 #define LED1 0xfeff
