@@ -15,19 +15,19 @@ void
 setup_GPIO ()
 {
   //enable high frequency peripheral clock for the timer
-  *CMU_HFPERCLKEN0 |= CMU2_HFPERCLKEN0_GPIO;	/* enable GPIO clock */
+  *CMU_HFPERCLKEN0 |= CMU2_HFPERCLKEN0_GPIO;
 
   //set lowest drive strength
-  *GPIO_PA_CTRL = 1;		/* set lowest drive strength */
+  *GPIO_PA_CTRL = 1;
 
   //set pins A8-15 as output
-  *GPIO_PA_MODEH = 0x55555555;	/* set pins A8-15 as output */
+  *GPIO_PA_MODEH = 0x55555555;
 
   //turn all LEDs off
-  *GPIO_PA_DOUT = 0xffff;	/* turn all LEDs off */
+  *GPIO_PA_DOUT = 0xffff;
 
   //set buttons as output
-  *GPIO_PC_MODEL = 0x33333333;	/*set buttons as output */
+  *GPIO_PC_MODEL = 0x33333333;
 
   //enable internal pull up
   *GPIO_PC_DOUT = 0xff;
@@ -35,11 +35,11 @@ setup_GPIO ()
 
  /*
     name: buttonPressed
-    purpose: Run different prosedures. Either it changes the wave used to play songs, or it plays a song.
+    purpose: Run different procedures. Either it changes the wave used to play songs, or it plays a song.
     argument(s):
-    buttonX:
-    range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
-    purpose: choose which kind of prosedure will run, change wave or play a song
+    		buttonX:
+    			range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
+    			purpose: choose which kind of procedure will run, change wave or play a song
 
     return value: none
   */
@@ -52,18 +52,25 @@ buttonPressed (int buttonX, int *wave)
       setLEDs_waveFormat (*wave);
       updatewave (wave);
 	  Delay_C (10);
-      //playing a song
     }
+  //playing a song
   else
     {
       setLEDs_songs (buttonX);
       playSong (buttonX, *wave);
     }
 }
+/*
+name: setLEDs_waveFormat
+purpose: Lighting LEDs to indicate which waveform is being used.
+argument(s): none
+return value: none
+*/
 
 void
 setLEDs_waveFormat (int wave)
 {
+  // choosing which LEDs to light, and lighting them
   switch (wave)
     {
     case 3:
@@ -84,10 +91,19 @@ setLEDs_waveFormat (int wave)
     }
 }
 
-
+/*
+name: setLEDs_songs
+purpose: Lighting a LED to indicate which song is being played.
+argument(s):
+		buttonX:
+			range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
+			purpose: Identify which song is being played so that the corresponding LED can be lit.
+return value: none
+*/
 void
 setLEDs_songs (int buttonX)
 {
+  // choosing which LED to light, and lighting it
   switch (buttonX)
     {
     case BUTTON2:
@@ -114,6 +130,12 @@ setLEDs_songs (int buttonX)
     }
 }
 
+/*
+name: turnOffLEDs
+purpose: Turn off all the LEDs.
+argument(s): none
+return value: none
+*/
 void
 turnOffLEDs ()
 {
@@ -210,6 +232,16 @@ E };
     }
 }
 
+/*
+name: Time
+purpose: 
+argument(s):
+		uS:
+			range:
+			purpose:
+	
+return value: 
+*/
 void Time (uint32_t uS)
 {
 uint32_t i, s=0;
@@ -217,7 +249,15 @@ uint32_t i, s=0;
 	for (i=0;i<uS;i++)
 		s++;
 }
-
+/*
+name: Delay_C
+purpose: 
+argument(s):
+		mS:
+			range: 
+			purpose: 
+return value: 
+*/
 void Delay_C (uint32_t mS)
 {
 uint32_t i;
