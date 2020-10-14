@@ -171,18 +171,44 @@ makeSong (int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
 
 
 /*-------------SQARE WAVE-------------------*/
-
+/*
+name: makeSound_square
+purpose: generate sound from a square wave
+argument(s):
+	freq:
+		range: 20 to 2000 (which will translate to 20 Hz to 2000 Hz)??????
+		purpose: determend the harmonic frequency for the wave we want to ganerate
+	length:
+		range: 0 to infty. Specified in mili seconds.
+		purpose: determend how long the generated sound wave schould last 
+return value: none
+*/
 void
 makeSound_square (int freq, int length)
 {
-  int count = 1;		//tell antall tiks
-  int dacvolt = 0;		//defines strength of sound
-  length = length * 1000;	//tonens lengde=spesifisert lengde * 1ms
+  //holds the count of number of ticks
+  int count = 1;
+  
+  //holds the strength of the sound 
+  int dacvolt = 0;
+
+  //Number of samples the microcontroller generates per second.
+  int samplesPerSecond = 44100;
+  
+  //Number of tics per periode
+  int countperiod = samplesPerSecond / freq;
+	
+  //turn length into length in milli seconds. length = {determed length} * 1ms
+  length = length * 1000;
+	
+  //Does this loop as long as the wave havent reaches its length.
   while (count < length)
     {
-      int countperiod = 44100 / freq;
+      //Checks if a half periode is reached
       if (count % (countperiod / 2) == 0)
 	{
+	  
+	  //Change output from high to low or low to high
 	  if (dacvolt == 100)
 	    {
 	      dacvolt = 0;
@@ -191,10 +217,13 @@ makeSound_square (int freq, int length)
 	    {
 	      dacvolt = 100;
 	    }
-	  *DAC0_CH0DATA = dacvolt;	//skriver voltverdien til utgangen
+	     
+	  //Give a sample to the DAC 
+	  *DAC0_CH0DATA = dacvolt;
 	  *DAC0_CH1DATA = dacvolt;
 	}
-
+	  
+      //Write a sample to DAC 
       count++;
     }
 }
@@ -245,16 +274,44 @@ makeSound_saberthoot (int freq, int length)
 
 
 /*------------------TRIANGLE WAVE---------------------*/
-
+/*
+name: makeSound_triangle
+purpose: generate sound from a triangle wave
+argument(s):
+	freq:
+		range: 20 to 2000 (which will translate to 20 Hz to 2000 Hz)??????
+		purpose: determend the harmonic frequency for the wave we want to ganerate
+	length:
+		range: 0 to infty. Specified in mili seconds.
+		purpose: determend how long the generated sound wave schould last 
+return value: none
+*/
 void
 makeSound_triangle (int freq, int length)
 {
+
+  //holds the count of number of ticks
   int count = 1;
-  int dacVolt = 0;
+  
+  //holds the strength of the sound 
+  int dacvolt = 0;
+
+  //Number of samples the microcontroller generates per second.
+  int samplesPerSecond = 44100;
+
+  //Number of tics per periode
+  int countperiod = samplesPerSecond / freq;
+	
+  //turn length into length in milli seconds. length = {determed length} * 1ms
+  length = length * 1000;
+
+  //???????
   int dacdir = 1;
-  int countperiod = 44100 / freq;
   int dacUpTime = countperiod / 200;
+  int dacUpCount = 0;
   int rate = 1;
+
+  //Decides the amplitude of how much the samples change from one sample value to next depending on the frequency  
   if (dacUpTime < 1)
     {
       dacUpTime = 1;
@@ -275,14 +332,16 @@ makeSound_triangle (int freq, int length)
 	  rate = 2;
 	}
     }
-  int dacUpCount = 0;
-  length = length * 1000;
+  
+  //Does this loop as long as the wave havent reaches its length.
   while (count < length)
-    {
+    { //MÅ SKRIVE FLERE KOMMENTARER HER TODO!!!!
       if (count % (countperiod / 2) == 0)
 	{
 	  dacdir = dacdir * (-1);
 	}
+	  
+      //Give a sample to the DAC 
       *DAC0_CH0DATA = dacVolt;
       *DAC0_CH1DATA = dacVolt;
       if (dacUpCount >= dacUpTime)
@@ -296,42 +355,74 @@ makeSound_triangle (int freq, int length)
 	    {
 	      dacVolt = 0;
 	    }
-	}
       count++;
       dacUpCount++;
     }
 }
 
 /*---------------SINUS WAVE-------------------*/
-
+/*
+name: makeSound_sinus
+purpose: generate sound from a sinus wave by using a lookup table. The periode to the wave will be divided into 28 parts with equal amount of ticks, where the first part will generate samples of the lookup tables first cell, the second from the lookup table from the second cell, and so on.
+argument(s):
+	freq:
+		range: 20??? to 2000??? (which will translate to 20 Hz to 2000 Hz)??????
+		purpose: determend the harmonic frequency for the wave we want to ganerate 
+	length:
+		range: 0 to infty. Specified in mili seconds.
+		purpose: determend how long the generated sound wave schould last
+return value: none
+*/
 void
 makeSound_sinus (int freq, int length)
 {
+  //aThe size and the array for a lookup table used to generate the sinus wave
   int sinusVecLength = 28;
-  //int sinusVec[28] = {100, 95, 80, 57, 32, 12, 1, 2, 14, 36, 60, 83, 97};
   int sinusVec[28] =
     { 100, 98, 95, 89, 81, 71, 61, 50, 38, 28, 18, 10, 4, 1, 0, 1, 4,
     10, 18, 28, 38, 49, 61, 71, 81, 89, 95, 98
   };
+
+  //To keep track of the index in the sinus lookup table
   int sinus_table_index = 0;
-  int count = 1;		//tell antall tiks
-  int dacvolt = 0;		//defines strength of sound
-  length = length * 1000;	//tonens lengde=spesifisert lengde * 1ms
+
+  //holds the count of number of ticks
+  int count = 1;
+  
+  //holds the strength of the sound 
+  int dacvolt = 0;
+
+  //Number of samples the microcontroller generates per second.
+  int samplesPerSecond = 44100;
+  
+  //Number of tics per periode
+  int countperiod = samplesPerSecond / freq;
+
+  //Does this loop as long as the wave havent reaches its length
   while (count < length)
     {
-      int countperiod = 44100 / freq;
-      if (count % (countperiod / 28) == 0)
+      //checks if current ticks is big enought to change output sample value to the next value in the sinus look up table.
+      if (count % (countperiod / sinusVecLength) == 0)
 	{
+	  //Checks if we have reached the end of the look up table
 	  if (sinus_table_index == sinusVecLength)
 	    {
+	      //If so start form the beginning.
 	      sinus_table_index = 0;
 	    }
+	  //set sample value to the value in the given location in the look up table
 	  dacvolt = sinusVec[sinus_table_index];
+	  
+	  //Change to next cell in the lookup table
 	  sinus_table_index++;
 
 	}
+	  
+	//Write a sample to DAC 
 	*DAC0_CH0DATA = dacvolt;	//skriver voltverdien til utgangen
 	*DAC0_CH1DATA = dacvolt;
+	  
+	//increace the count, for generating next sample ?????
 	count++;
     }
 }
