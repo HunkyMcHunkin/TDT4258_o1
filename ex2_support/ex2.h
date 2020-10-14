@@ -69,6 +69,7 @@ void setUpDisableRam ();
 #define Ah 440
 
 //button push
+#define BUTTON0 0xff
 #define BUTTON1 0xfe
 #define BUTTON2 0xfd
 #define BUTTON3 0xfb
