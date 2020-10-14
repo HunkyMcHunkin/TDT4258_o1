@@ -32,13 +32,13 @@ main (void)
       // Enable the buttonPressed() every time a button is pressed.
       // If the button haven't been pressed before, and it is being pressed..
       // .. enable buttonPressed() and set past_button_state = 0.
-      if (past_button_state == 1 && button_in == 0xff)
+      if (past_button_state == 1 && button_in != 0xff)
       {
 	past_button_state = 0;
 	buttonPressed(button_in, wave);
       }
       // Reset the past state when the button is released
-      if (button_state != 0xff)
+      if (button_state == 0xff)
       {
         past_button_state = 1;
       }
