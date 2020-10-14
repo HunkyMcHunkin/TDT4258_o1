@@ -24,7 +24,7 @@ setup_GPIO ()
   *GPIO_PA_MODEH = 0x55555555;	/* set pins A8-15 as output */
 
   //turn all LEDs off
-  *GPIO_PA_DOUT = 0xffff;	/* turn all LEDs off */
+  *GPIO_PA_DOUT = 0xff;	/* turn all LEDs off */
 
   //set buttons as output
   *GPIO_PC_MODEL = 0x33333333;	/*set buttons as output */
