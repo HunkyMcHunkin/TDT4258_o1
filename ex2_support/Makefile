@@ -14,7 +14,13 @@ LINKERSCRIPT=lib/efm32gg.ld
 ex2.bin : ex2.elf
 	${OBJCOPY} -O binary $< $@
 
-ex2.elf : ex2.o timer.o dac.o gpio.o interrupt_handlers.o
+ex2_i.bin : ex2_interrupt.elf
+	${OBJCOPY} -O binary $< $@
+
+ex2.elf : ex2.o timer.o dac.o gpio.o interrupt_handlers.o 
+	${LD} -T ${LINKERSCRIPT} $^ -o $@ ${LDFLAGS} 
+
+ex2_interrupt.elf : ex2_interrupt.o timer.o dac.o gpio.o interrupt_handlers.o
 	${LD} -T ${LINKERSCRIPT} $^ -o $@ ${LDFLAGS} 
 
 %.o : %.c
@@ -27,6 +33,11 @@ pretty :
 .PHONY : upload
 upload :
 	-eACommander.sh -r --address 0x00000000 -f "ex2.bin" -r
+	
+.PHONY : upload2
+upload2 :
+	-eACommander.sh -r --address 0x00000000 -f "ex2_i.bin" -r
+
 
 .PHONY : clean
 clean :
