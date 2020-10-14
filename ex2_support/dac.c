@@ -76,8 +76,8 @@ startUpSong (int wave)
 {
 
   int sizeVectors = 3;
-  int frequencies[3] = { Hl, Dl, F };
-  int lengthPerfrequency[3] = { 60, 60, 60 };
+  int frequencies[] = { Hl, Dl, F };
+  int lengthPerfrequency[] = { 60, 60, 60 };
 
   makeSong (&frequencies, sizeVectors, &lengthPerfrequency, wave);
 
@@ -164,11 +164,9 @@ makeSong (int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
     {
       makeSound (frecquencyVector[i], lengthFrequencyVector[i], wave);
     }
-    /*
   //make sound to symbolixe the end of the song
   makeSound (frecquencyVector[sizeVectors - 1],
 	     lengthFrequencyVector[sizeVectors - 1] * 2, wave);
-	*/
 }
 
 
@@ -182,9 +180,7 @@ makeSound_square (int freq, int length)
   length = length * 1000;	//tonens lengde=spesifisert lengde * 1ms
   while (count < length)
     {
-      //int countperiod = 44100 / freq;
-      //int countperiod = 14000000 / freq;
-      int countperiod = freq;
+      int countperiod = 44100 / freq;
       if (count % (countperiod / 2) == 0)
 	{
 	  if (dacvolt == 100)
@@ -293,9 +289,9 @@ makeSound_triangle (int freq, int length)
 	{
 	  dacUpCount = 0;
 	  dacVolt = dacVolt + (dacdir * rate);
-	  if (dacVolt>100){
-	        dacVolt=100;
-	  } else 
+	  //if (dacVolt>100){
+	  //      dacVolt=100;
+	  //} else 
 	  if (dacVolt < 0)
 	    {
 	      dacVolt = 0;
@@ -331,12 +327,11 @@ makeSound_sinus (int freq, int length)
 	      sinus_table_index = 0;
 	    }
 	  dacvolt = sinusVec[sinus_table_index];
-	  *DAC0_CH0DATA = dacvolt;	//skriver voltverdien til utgangen
-	  *DAC0_CH1DATA = dacvolt;
 	  sinus_table_index++;
 
 	}
-
-      count++;
+	*DAC0_CH0DATA = dacvolt;	//skriver voltverdien til utgangen
+	*DAC0_CH1DATA = dacvolt;
+	count++;
     }
 }

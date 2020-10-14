@@ -24,7 +24,7 @@ setup_GPIO ()
   *GPIO_PA_MODEH = 0x55555555;	/* set pins A8-15 as output */
 
   //turn all LEDs off
-  *GPIO_PA_DOUT = 0xff;	/* turn all LEDs off */
+  *GPIO_PA_DOUT = 0xffff;	/* turn all LEDs off */
 
   //set buttons as output
   *GPIO_PC_MODEL = 0x33333333;	/*set buttons as output */
@@ -129,16 +129,17 @@ argument(s):
 		purpose: choose song to play
 return value: none
 */
-void playSong (int buttonX, int wave)
+void
+playSong (int buttonX, int wave)
 {
 
   int sizeVectors_fail = 3;
-  int frequencies_fail[3] = { A, F, Hl };
-  int lengths_fail[3] = { 70, 70, 100 };
+  int frequencies_fail[] = { A, F, Hl };
+  int lengths_fail[] = { 70, 70, 100 };
 
   int sizeVectors_win = 9;
-  int frequencies_win[9] = { Hl, Cl, Dl, E, F, G, H, A, D };
-  int lengths_win[9] = { 130, 40, 40, 40, 40, 40, 130, 40, 120 };
+  int frequencies_win[] = { Hl, Cl, Dl, E, F, G, H, A, D };
+  int lengths_win[] = { 130, 40, 40, 40, 40, 40, 130, 40, 120 };
 
   int sizeVectors_twinkleTwinkleLittleStar = 14;
   int frequencies_twinkleTwinkleLittleStar[] =
@@ -147,36 +148,33 @@ void playSong (int buttonX, int wave)
     { 80, 80, 80, 80, 80, 80, 160, 80, 80, 80, 80, 80, 80, 160 };
 
   int sizeVectors_londonBridge = 24;
-  int frequencies_londonBridge[24] =
-    { C, D, C, H, A, H, C, G, A, H, A, H, C, C, D, C, H, A, H, C, G, C, A, F };
-  int lengths_londonBridge[24] =
+  int frequencies_londonBridge[] =
+    { C, D, C, H, A, H, C, G, A, H, A, H, C, C, D, C, H, A, H, C, G, C, A,
+F };
+  int lengths_londonBridge[] =
     { 70, 70, 70, 70, 70, 70, 140, 70, 70, 140, 70, 70, 140, 70, 70, 70, 70,
-70, 70, 140, 95, 95, 70, 100 };
+70, 70, 140, 95, 95, 95 };
 
 
   int sizeVectors_zelda = 11;
   int frequencies_zelda[] = { E, G, Dl, E, G, Dl, E, G, D, C, G };
-  int lengths_zelda[] = { 100, 100, 200, 100, 100, 200, 100, 100, 100, 100, 130 };
+  int lengths_zelda[] = { 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 70 };
 
   int sizeVectors_mikkelRev = 24;
-  int frequencies_mikkelRev[24] =
+  int frequencies_mikkelRev[] =
     { E, G, Cl, E, G, Cl, F, A, C, A, A, G, E, G, Cl, E, G, Cl, Dl, E, F, Hl,
 Dl, Cl, };
-  int lengths_mikkelRev[24] =
+  int lengths_mikkelRev[] =
     { 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 140, 140, 70, 70, 140, 70, 70,
-140, 70, 70, 70, 70, 140, 160 };
-	/*
+140, 70, 70, 70, 70, 140, 140 };
+
   int sizeVectors_fullStep = 22;
-  int frequencies_fullStep[22] =
-    { E, F, G, A, H, C, D, Eh, Fh, Gh, Ah, Ah, Gh, Fh, Eh, D, C, H, A, G, F, E };
-  int lengths_fullStep[22] =
+  int frequencies_fullStep[] =
+    { E, F, G, A, H, C, D, Eh, Fh, Gh, Ah, Ah, Gh, Fh, Eh, D, C, H, A, G, F,
+E };
+  int lengths_fullStep[] =
     { 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
 40, 40, 40, 40 };
-	*/
-  int sizeVectors_harry = 30;
-  int frequencies_harry[] = {E, A, C, H, A, Eh, D, H, A, C, H, G, H, E, A, C, H, A, Eh, Gh, Fh, Fh, C, Fh, Eh, Eh, E, C, A, A};
-  int hs = 70;
-  int lengths_harry[] ={2*hs, 2*hs, hs, hs, 2*hs, hs, 2*hs, 2*hs, hs, hs, hs, 2*hs, hs, 3*hs, hs, 2*hs, hs, hs, 2*hs, hs, hs, 65, 65, hs, 2*hs, hs, hs, 2*hs, hs, 3*hs};
 
 
 
@@ -206,7 +204,7 @@ Dl, Cl, };
 		lengths_mikkelRev, wave);
       break;
     case BUTTON8:
-      makeSong (frequencies_harry, sizeVectors_harry, lengths_harry,
+      makeSong (frequencies_fullStep, sizeVectors_fullStep, lengths_fullStep,
 		wave);
       break;
     }

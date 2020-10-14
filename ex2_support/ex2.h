@@ -25,7 +25,7 @@ void startUpSong (int wave);
 void updatewave (int *wave);
 void makeSong (int *frecquencyVector, int sizeVectors,
 	       int *lengthFrequencyVector, int wave);
-void playSong (buttonX, wave);
+void playSong (int buttonX, int wave);
 void buttonPressed (int buttonX, int *wave);
 
 
@@ -46,9 +46,13 @@ void setup_timer (uint16_t period);
 
 // ------------- INTERRUPTS ------------- //
 //preperation function
-void setupNVIC ();
-void Sleep ();
-void setUpDisableRam ();
+//void setupNVIC ();
+//void Sleep ();
+
+void disableRam ();
+void setup_interruptGPIO (); //setupNVIC
+void setup_interrupt (); //setupNVIC
+void setup_sleep ();
 
 
 
