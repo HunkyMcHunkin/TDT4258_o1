@@ -98,7 +98,7 @@ setup_NVIC ()
 
  /*
     name: setup_sleep
-    purpose: configure registers so low power mode is SLEEPDEEP, and when done handeling interrupt it is set in low power mode
+    purpose: configure registers so low power mode is SLEEPDEEP, and when done handling interrupt it is set in low power mode
     argument(s): none
     return value: none
   */
