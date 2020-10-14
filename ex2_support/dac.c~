@@ -183,7 +183,8 @@ makeSound_square (int freq, int length)
   while (count < length)
     {
       //int countperiod = 44100 / freq;
-      int countperiod = 14000000 / freq;
+      //int countperiod = 14000000 / freq;
+      int countperiod = freq;
       if (count % (countperiod / 2) == 0)
 	{
 	  if (dacvolt == 100)

@@ -293,9 +293,9 @@ makeSound_triangle (int freq, int length)
 	{
 	  dacUpCount = 0;
 	  dacVolt = dacVolt + (dacdir * rate);
-	  //if (dacVolt>100){
-	  //      dacVolt=100;
-	  //} else 
+	  if (dacVolt>100){
+	        dacVolt=100;
+	  } else 
 	  if (dacVolt < 0)
 	    {
 	      dacVolt = 0;
