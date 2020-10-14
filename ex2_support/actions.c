@@ -6,7 +6,6 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
-
 // ------------- ACTIONS ------------- //
 //functions that use the other modules to do some sort of action
 void startUpSong(int wave);
@@ -106,7 +105,6 @@ void playSong(int buttonX, int wave){
 	int sizeVectors_londonBridge = 24;
 	int frequencies_londonBridge[24] = { C, D, C, H, A, H, C, G, A, H, A, H, C, C, D, C, H, A, H, C, G, C, A, F };
 	int lengths_londonBridge [24] = { 70, 70, 70, 70, 70, 70, 140, 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 70, 70, 140, 95, 95, 95};
-
 
 	int sizeVectors_zelda = 11;
 	int frequencies_zelda[11] = { E, G, Dl, E, G, Dl, E, G, D, C, G };

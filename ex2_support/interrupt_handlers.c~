@@ -11,10 +11,10 @@ argument(s): none
 return value: none
 */
 
-void __attribute__ ((interrupt)) TIMER1_IRQHandler ()
+void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 {
-  //clear interrupt
-  *TIMER1_IFC = 1;
+	//clear interrupt
+	*TIMER1_IFC = 1;
 
 }
 
@@ -24,23 +24,19 @@ purpose: handles interrupt provoked by the even GPIO pins, and run a functionali
 argument(s): none
 return value: none
  */
-void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler (int *wave)
+void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler(int *wave)
 {
-  //clear interrupt
-  *GPIO_IFC = *GPIO_IF;
-
-  //prepering DAC in case a song will be played
-  //setup_DAC ();
-  startDAC ();
-
-  //run functionality specified by pushed button
-  buttonPressed (*GPIO_PC_DIN, &wave);
-
-  //prepering to go back to sleep
-  stopDAC ();
-  turnOffLEDs ();
+	//clear interrupt
+	*GPIO_IFC = *GPIO_IF;
+	//prepering DAC in case a song will be played
+	setup_DAC();
+	startDAC();
+	//run functionality specified by pushed button
+	buttonPressed(*GPIO_PC_DIN, wave);
+	//prepering to go back to sleep
+	//stopDAC();
+	turnOffLEDs();
 }
-
 
 /*
 name: GPIO_EVEN_IRQHandler
@@ -48,19 +44,19 @@ purpose: handles interrupt provoked by the odd GPIO pins, and run a functionalit
 argument(s): none
 return value: none
  */
-void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler (int *wave)
+void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler(int *wave)
 {
-  //clrear interrupt
-  *GPIO_IFC = *GPIO_IF;
+	//clrear interrupt
+	*GPIO_IFC = *GPIO_IF;
 
-  //prepering DAC in case a song will be played
-  setup_DAC ();
-  startDAC ();
+	//prepering DAC in case a song will be played
+	setup_DAC();
+	startDAC();
 
-  //run functionality specified by pushed button
-  buttonPressed (*GPIO_PC_DIN, &wave);
+	//run functionality specified by pushed button
+	buttonPressed(*GPIO_PC_DIN, wave);
 
-  //prepering to go back to sleep
-  stopDAC ();
-  turnOffLEDs ();
+	//prepering to go back to sleep
+	//stopDAC();
+	turnOffLEDs();
 }

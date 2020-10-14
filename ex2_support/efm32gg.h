@@ -72,7 +72,6 @@
 
 #define LETIMER_BASE
 
-
 // NVIC
 
 #define ISER0 ((volatile uint32_t*)0xe000e100)

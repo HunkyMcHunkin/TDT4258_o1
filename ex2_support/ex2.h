@@ -3,58 +3,55 @@
 
 #define SAMPLE_PERIOD 318	//The period between sound samples, in clock cycles
 
+
 // ------------- DAC ------------- //
 //preperation functions
-void setup_DAC ();
-void startDAC ();
-void stopDAC ();
+void setup_DAC();
+void startDAC();
+void stopDAC();
 
 //functions that generate sounds
-void makeSound_square (int freqency, int length);
-void makeSound_saberthoot (int freqency, int length);
-void makeSound_triangle (int freqency, int length);
-void makeSound_sinus (int freqency, int length);
+void makeSound_square(int freqency, int length);
+void makeSound_saberthoot(int freqency, int length);
+void makeSound_triangle(int freqency, int length);
+void makeSound_sinus(int freqency, int length);
 
 //function that plays the sound
-void makeSound (int freqency, int length, int wave);
-
+void makeSound(int freqency, int length, int wave);
 
 // ------------- ACTIONS ------------- //
 //functions that use the other modules to do some sort of action
-void startUpSong (int wave);
-void updatewave (int *wave);
-void makeSong (int *frecquencyVector, int sizeVectors,
-	       int *lengthFrequencyVector, int wave);
-void playSong (int buttonX, int wave);
-void buttonPressed (int buttonX, int *wave);
-
+void startUpSong(int wave);
+void updatewave(int *wave);
+void makeSong(int *frecquencyVector, int sizeVectors,
+	      int *lengthFrequencyVector, int wave);
+void playSong(int buttonX, int wave);
+void buttonPressed(int buttonX, int *wave);
 
 // ------------- GPIO ------------- //
 //preperation function
-void setup_GPIO ();
+void setup_GPIO();
+void Time(uint32_t uS);
+void Delay_C(uint32_t mS);
 
 //LEDs functions
-void turnOffLEDs ();
-void setLEDs_songs (int buttonX);
-void setLEDs_waveFormat (int wave);
-
+void turnOffLEDs();
+void setLEDs_songs(int buttonX);
+void setLEDs_waveFormat(int wave);
 
 // ------------- TIMER ------------- //
 //preperation function
-void setup_timer (uint16_t period);
-
+void setup_timer(uint16_t period);
 
 // ------------- INTERRUPTS ------------- //
 //preperation function
 //void setupNVIC ();
 //void Sleep ();
 
-void disableRam ();
-void setup_interruptGPIO (); //setupNVIC
-void setup_interrupt (); //setupNVIC
-void setup_sleep ();
-
-
+void disableRam();
+void setup_interruptGPIO();	//setupNVIC
+void setup_interrupt();		//setupNVIC
+void setup_sleep();
 
 /*songs*/
 #define Hl 123
@@ -82,7 +79,6 @@ void setup_sleep ();
 #define BUTTON6 0xdf
 #define BUTTON7 0xbf
 #define BUTTON8 0x7f
-
 
 //led ligth
 #define LED1 0xfeff

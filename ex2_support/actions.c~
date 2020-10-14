@@ -1,4 +1,4 @@
-
+/*
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -6,7 +6,7 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
-/*
+
 // ------------- ACTIONS ------------- //
 //functions that use the other modules to do some sort of action
 void startUpSong(int wave);
@@ -14,31 +14,32 @@ void updatewave(int *wave);
 void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector, int wave);
 void playSong(buttonX, wave);
 void buttonPressed(int buttonX, int *wave);
-*/
+
 /*
 name: startUpSong
 purpose: plays a song when the microcontrollers is turned on 
 argument(s): none
 return value: none
 */
-
-void startUpSong (int wave)
+/*
+void startUpSong(int wave)
 {
+	
+	int sizeVectors = 3;
+	int frequencies[3] = { Hl, Dl, F };
+	int lengthPerfrequency[3] = { 60, 60, 60};
+	
+	makeSong(&frequencies, sizeVectors, &lengthPerfrequency, wave);
 
-  int sizeVectors = 3;
-  int frequencies[3] = { Hl, Dl, F };
-  int lengthPerfrequency[3] = { 60, 60, 60 };
-
-  makeSong (&frequencies, sizeVectors, &lengthPerfrequency, wave);
 }
-
+*/
 /*
 name: updatewave
 purpose: changes the value of wave so the microcontroller uses another waveformat when playing songs. It also shows which wave that it uses by ligth up leds accordingly
 argument(s): none
 return value: none
 */
-
+/*
 void updatewave(int *wave)
 {
 	//*GPIO_PA_DOUT = 0xffff;
@@ -47,7 +48,7 @@ void updatewave(int *wave)
 		*wave = 0;
 	}
 }
-
+*/
 /*
 name: makeSong
 purpose: makes a song of the frequencies and lengths given
@@ -66,7 +67,7 @@ argument(s):
 		purpose: determend which waveformat the sound will be played in
 return value: none
 */
-
+/*
 void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector, int wave)
 {
 	//play the song
@@ -77,7 +78,7 @@ void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector
 	makeSound(frecquencyVector[sizeVectors - 1], lengthFrequencyVector[sizeVectors-1] * 2, wave);
 }
 
-
+*/
 /*
 name: playSong
 purpose: play a song. Which song is determined by the argument.
@@ -87,7 +88,7 @@ argument(s):
 		purpose: choose song to play
 return value: none
 */
-
+/*
 void playSong(int buttonX, int wave){
 	
 	int sizeVectors_fail = 3;
@@ -111,6 +112,10 @@ void playSong(int buttonX, int wave){
 	int frequencies_zelda[11] = { E, G, Dl, E, G, Dl, E, G, D, C, G };
 	int lengths_zelda[11] = { 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 70 };
 	
+	int sizeVectors_mikkelRev = 24;
+	int frequencies_mikkelRev[24] = { E, G, Cl, E, G, Cl, F, A, C, A, A, G, E, G, Cl, E, G, Cl, Dl, E, F, Hl, Dl, Cl, };
+	int lengths_mikkelRev[24] = { 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 140, 140, 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 140, 140 };
+
 	int sizeVectors_mikkelRev = 24;
 	int frequencies_mikkelRev[24] = { E, G, Cl, E, G, Cl, F, A, C, A, A, G, E, G, Cl, E, G, Cl, Dl, E, F, Hl, Dl, Cl, };
 	int lengths_mikkelRev[24] = { 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 140, 140, 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 140, 140 };
@@ -146,7 +151,7 @@ void playSong(int buttonX, int wave){
 			break;
 	}
 }
-
+*/
  /*
     name: buttonPressed
     purpose: Run different prosedures. Either it changes the wave used to play songs, or it plays a song.
@@ -157,7 +162,7 @@ void playSong(int buttonX, int wave){
 
     return value: none
   */
-
+/*
 void buttonPressed(int buttonX, int *wave)
 {
 	//changing waveformat
@@ -172,4 +177,4 @@ void buttonPressed(int buttonX, int *wave)
 	}
 }
 
-
+*/

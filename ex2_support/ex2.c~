@@ -4,19 +4,30 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
-
+ /*
+    name: main
+    purpose: program the microcontroller runs. Sets up nessesary settings, checks for buttonpresses
+    argument(s): none
+    return value: none
+  */
 int main(void)
 {
+	int *wave;
+	*wave = 0;
 	uint32_t button_in;
 
-	setupGPIO();
-	setupDAC();
-	setupTimer(SAMPLE_PERIOD);
+	//setup configurations
+	setup_GPIO();
+	setup_DAC();
+	startDAC();
+	setup_timer(SAMPLE_PERIOD);
+	startUpSong(*wave);
 
-	while (1){
+	//operate on buttonpress
+	while (1) {
 
-		button_in=*GPIO_PC_DIN;
-		buttonPressed(button_in);
-		
+		button_in = *GPIO_PC_DIN;
+		buttonPressed(button_in, wave);
+
 	}
 }

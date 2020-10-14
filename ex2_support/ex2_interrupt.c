@@ -4,47 +4,39 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
-
 /*
 name: main
 purpose: program the microcontroller runs. Sets up nessesary settings, sleeps if it is not interrupted by interrupt signals.
 argument(s): none
 return value: none
 */
-int
-main (void)
+int main(void)
 {
 
 	//int waveValue = 0;
-  int *wave; // = ¥waveValue;
-  *wave = 0;
-  
+	int *wave;		// = ¥waveValue;
+	*wave = 2;
 
-  //setup configurations
-  //disableRam ();
-  setup_GPIO (); //seupGPIO
-  setup_interruptGPIO (); //setupNVIC
-  setup_interrupt (); //setupNVIC
+	//setup configurations
+	//disableRam ();
+	setup_GPIO();		//seupGPIO
+	setup_interruptGPIO();	//setupNVIC
+	setup_interrupt();	//setupNVIC
 
-  setup_DAC ();
-  setup_timer (SAMPLE_PERIOD);
+	setup_DAC();
+	setup_timer(SAMPLE_PERIOD);
 
-  setup_sleep ();
+	setup_sleep();
 
-  startDAC ();
-  startUpSong (*wave);
-  stopDAC ();
+	startDAC();
+	startUpSong(*wave);
+	stopDAC();
 
-  //sleeps while waiting for interrupts
-  while (1)
-    {
-      __asm ("WFI");
-    }
+	//sleeps while waiting for interrupts
+	while (1) {
+		__asm("WFI");
+	}
 }
-
-
-
-
 
  /*
     name: setup_interrupt
@@ -53,12 +45,11 @@ main (void)
     return value: none
   */
 
-void
-setup_interrupt ()
+void setup_interrupt()
 {
 
-  //enable interrupt
-  *ISER0 = 0x802;
+	//enable interrupt
+	*ISER0 = 0x802;
 }
 
  /*
@@ -67,33 +58,31 @@ setup_interrupt ()
     argument(s): none
     return value: none
   */
-void
-setup_interruptGPIO ()
+void setup_interruptGPIO()
 {
-  //set external interrupt mode on pin 0 to 7 in port B.
-  *GPIO_EXTIPSELL = 0x22222222;
+	//set external interrupt mode on pin 0 to 7 in port B.
+	*GPIO_EXTIPSELL = 0x22222222;
 
-  //enable falling edge trigger on pin 0 to 15
-  *GPIO_EXTIFALL = 0xff;
+	//enable falling edge trigger on pin 0 to 15
+	*GPIO_EXTIFALL = 0xff;
 
-  //enable rising edge trigger on pin 0 to 15     
-  *GPIO_EXTIRISE = 0xff;
+	//enable rising edge trigger on pin 0 to 15     
+	*GPIO_EXTIRISE = 0xff;
 
-  //enable interrupt on pin 0 to 15
-  *GPIO_IEN = 0xff;
+	//enable interrupt on pin 0 to 15
+	*GPIO_IEN = 0xff;
 
 }
 
 //Kan nå erstattes av de to setup-funksjonene over
-void
-setup_NVIC ()
+void setup_NVIC()
 {
-  *GPIO_EXTIPSELL = 0x22222222;
-  *GPIO_EXTIFALL = 0xff;
-  *GPIO_EXTIRISE = 0xff;
-  *GPIO_IEN = 0xff;
+	*GPIO_EXTIPSELL = 0x22222222;
+	*GPIO_EXTIFALL = 0xff;
+	*GPIO_EXTIRISE = 0xff;
+	*GPIO_IEN = 0xff;
 
-  *ISER0 = 0x802;
+	*ISER0 = 0x802;
 }
 
  /*
@@ -102,14 +91,13 @@ setup_NVIC ()
     argument(s): none
     return value: none
   */
-void
-setup_sleep ()
+void setup_sleep()
 {
-  //enable SLEEPONEXIT 
-  *SCR |= (1 << 1);
+	//enable SLEEPONEXIT 
+	*SCR |= (1 << 1);
 
-  //enable SLEEPDEEP
-  *SCR |= (1 << 2);
+	//enable SLEEPDEEP
+	*SCR |= (1 << 2);
 }
 
  /*
@@ -118,11 +106,10 @@ setup_sleep ()
     argument(s): none
     return value: none
   */
-void
-disableRam ()
+void disableRam()
 {
-  //power down RAM blocks 1-3
-  *EMU_MEMCTRL = 7;
+	//power down RAM blocks 1-3
+	*EMU_MEMCTRL = 7;
 }
 
 /*

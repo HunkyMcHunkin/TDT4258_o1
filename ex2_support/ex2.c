@@ -10,26 +10,24 @@
     argument(s): none
     return value: none
   */
-int
-main (void)
+int main(void)
 {
-  int *wave;
-  *wave = 3;
-  uint32_t button_in;
+	int *wave;
+	*wave = 2;
+	uint32_t button_in;
 
-  //setup configurations
-  setup_GPIO ();
-  setup_DAC ();
-  startDAC ();
-  setup_timer (SAMPLE_PERIOD);
-  startUpSong (*wave);
+	//setup configurations
+	setup_GPIO();
+	setup_DAC();
+	startDAC();
+	setup_timer(SAMPLE_PERIOD);
+	startUpSong(*wave);
 
-  //operate on buttonpress
-  while (1)
-    {
+	//operate on buttonpress
+	while (1) {
 
-      button_in = *GPIO_PC_DIN;
-      buttonPressed (button_in, wave);
+		button_in = *GPIO_PC_DIN;
+		buttonPressed(button_in, wave);
 
-    }
+	}
 }
