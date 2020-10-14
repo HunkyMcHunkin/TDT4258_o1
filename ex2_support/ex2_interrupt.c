@@ -11,25 +11,27 @@ purpose: program the microcontroller runs. Sets up nessesary settings, sleeps if
 argument(s): none
 return value: none
 */
-int
-main (void)
+int main (void)
 {
 
   int *wave;
-*wave = 0:
+*wave = 0;
 
   //setup configurations
-  disableRam ();
+  //disableRam ();
   setup_GPIO ();
-  setup_interruptGPIO ();
+  //setup_interruptGPIO ();
   setup_DAC ();
   setup_timer (SAMPLE_PERIOD);
-  setup_interrupt ();
-  setup_sleep ();
-
+  
   startDAC ();
   startUpSong (*wave);
   stopDAC ();
+  
+  setup_NVIC ();
+  setup_sleep ();
+
+
 
   //sleeps while waiting for interrupts
   while (1)
@@ -44,8 +46,7 @@ main (void)
     argument(s): none
     return value: none
   */
-void
-setup_interrupt ()
+void setup_interrupt ()
 {
 
   //enable interrupt
@@ -58,8 +59,7 @@ setup_interrupt ()
     argument(s): none
     return value: none
   */
-void
-setup_interruptGPIO ()
+void setup_interruptGPIO ()
 {
   //set external interrupt mode on pin 0 to 7 in port B.
   *GPIO_EXTIPSELL = 0x22222222;
@@ -76,8 +76,7 @@ setup_interruptGPIO ()
 }
 
 //Kan nå erstattes av de to setup-funksjonene over
-void
-setup_NVIC ()
+void setup_NVIC ()
 {
   *GPIO_EXTIPSELL = 0x22222222;
   *GPIO_EXTIFALL = 0xff;
@@ -93,8 +92,7 @@ setup_NVIC ()
     argument(s): none
     return value: none
   */
-void
-setup_sleep ()
+void setup_sleep ()
 {
   //enable SLEEPONEXIT 
   *SCR |= (1 << 1);
@@ -109,8 +107,7 @@ setup_sleep ()
     argument(s): none
     return value: none
   */
-void
-disableRam ()
+void disableRam ()
 {
   //power down RAM blocks 1-3
   *EMU_MEMCTRL = 7;

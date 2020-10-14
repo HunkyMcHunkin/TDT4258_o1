@@ -129,8 +129,7 @@ argument(s):
 		purpose: choose song to play
 return value: none
 */
-void
-playSong (int buttonX, int wave)
+void playSong (int buttonX, int wave)
 {
 
   int sizeVectors_fail = 3;
@@ -149,16 +148,15 @@ playSong (int buttonX, int wave)
 
   int sizeVectors_londonBridge = 24;
   int frequencies_londonBridge[24] =
-    { C, D, C, H, A, H, C, G, A, H, A, H, C, C, D, C, H, A, H, C, G, C, A,
-F };
+    { C, D, C, H, A, H, C, G, A, H, A, H, C, C, D, C, H, A, H, C, G, C, A, F };
   int lengths_londonBridge[24] =
     { 70, 70, 70, 70, 70, 70, 140, 70, 70, 140, 70, 70, 140, 70, 70, 70, 70,
-70, 70, 140, 95, 95, 95 };
+70, 70, 140, 95, 95, 70, 100 };
 
 
   int sizeVectors_zelda = 11;
-  int frequencies_zelda[11] = { E, G, Dl, E, G, Dl, E, G, D, C, G };
-  int lengths_zelda[11] = { 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 70 };
+  int frequencies_zelda[] = { E, G, Dl, E, G, Dl, E, G, D, C, G };
+  int lengths_zelda[] = { 100, 100, 200, 100, 100, 200, 100, 100, 100, 100, 130 };
 
   int sizeVectors_mikkelRev = 24;
   int frequencies_mikkelRev[24] =
@@ -166,15 +164,19 @@ F };
 Dl, Cl, };
   int lengths_mikkelRev[24] =
     { 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 140, 140, 70, 70, 140, 70, 70,
-140, 70, 70, 70, 70, 140, 140 };
-
+140, 70, 70, 70, 70, 140, 160 };
+	/*
   int sizeVectors_fullStep = 22;
   int frequencies_fullStep[22] =
-    { E, F, G, A, H, C, D, Eh, Fh, Gh, Ah, Ah, Gh, Fh, Eh, D, C, H, A, G, F,
-E };
+    { E, F, G, A, H, C, D, Eh, Fh, Gh, Ah, Ah, Gh, Fh, Eh, D, C, H, A, G, F, E };
   int lengths_fullStep[22] =
     { 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
 40, 40, 40, 40 };
+	*/
+  int sizeVectors_harry = 30;
+  int frequencies_harry[] = {E, A, C, H, A, Eh, D, H, A, C, H, G, H, E, A, C, H, A, Eh, Gh, Fh, Fh, C, Fh, Eh, Eh, E, C, A, A};
+  int hs = 70;
+  int lengths_harry[] ={2*hs, 2*hs, hs, hs, 2*hs, hs, 2*hs, 2*hs, hs, hs, hs, 2*hs, hs, 3*hs, hs, 2*hs, hs, hs, 2*hs, hs, hs, 65, 65, hs, 2*hs, hs, hs, 2*hs, hs, 3*hs};
 
 
 
@@ -204,7 +206,7 @@ E };
 		lengths_mikkelRev, wave);
       break;
     case BUTTON8:
-      makeSong (frequencies_fullStep, sizeVectors_fullStep, lengths_fullStep,
+      makeSong (frequencies_harry, sizeVectors_harry, lengths_harry,
 		wave);
       break;
     }

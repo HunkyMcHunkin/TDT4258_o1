@@ -30,7 +30,7 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler (int *wave)
   *GPIO_IFC = *GPIO_IF;
 
   //prepering DAC in case a song will be played
-  setup_DAC ();
+  //setup_DAC ();
   startDAC ();
 
   //run functionality specified by pushed button
