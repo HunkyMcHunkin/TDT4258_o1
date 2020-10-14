@@ -234,13 +234,13 @@ E };
 
 /*
 name: Time
-purpose: 
+purpose: Count the time specified by uS
 argument(s):
 		uS:
-			range:
-			purpose:
+			range: 0 to 4294967296
+			purpose: Specify the value to count up to
 	
-return value: 
+return value: none
 */
 void Time (uint32_t uS)
 {
@@ -251,17 +251,16 @@ uint32_t i, s=0;
 }
 /*
 name: Delay_C
-purpose: 
+purpose: Delay by mS times 10 milliseconds.
 argument(s):
 		mS:
-			range: 
-			purpose: 
-return value: 
+			range: 0 to 4294967296
+			purpose: Specify the delay in milliseconds.
+return value: none
 */
 void Delay_C (uint32_t mS)
 {
 uint32_t i;
-
 	for (i=0;i<mS;i++)
 	{
 		Time (10000);
