@@ -51,7 +51,7 @@ buttonPressed (int buttonX, int *wave)
     {
       setLEDs_waveFormat (*wave);
       updatewave (wave);
-
+	  Delay_C (10);
       //playing a song
     }
   else
@@ -208,4 +208,22 @@ E };
 		wave);
       break;
     }
+}
+
+void Time (uint32_t uS)
+{
+uint32_t i, s=0;
+
+	for (i=0;i<uS;i++)
+		s++;
+}
+
+void Delay_C (uint32_t mS)
+{
+uint32_t i;
+
+	for (i=0;i<mS;i++)
+	{
+		Time (10000);
+	};
 }
