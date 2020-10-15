@@ -14,7 +14,10 @@
 /*
 name: startUpSong
 purpose: plays a song when the microcontrollers is turned on 
-argument(s): none
+argument(s):
+	wave:
+		range: 0, 1, 2, 3
+		purpose: determine which waveformat to play the song in
 return value: none
 */
 
@@ -32,7 +35,10 @@ void startUpSong(int wave)
 /*
 name: updatewave
 purpose: changes the value of wave so the microcontroller uses another waveformat when playing songs. It also shows which wave that it uses by ligth up leds accordingly
-argument(s): none
+argument(s):
+	*wave:
+		range: 0, 1, 2, 3
+		purpose: determine which waveformat to play the song in
 return value: none
 */
 
@@ -59,7 +65,7 @@ argument(s):
 		purpose: hold the length of the frequencies that will be played in same order as the frequencies that are supposed to be played in that length.
 	wave: 
 		range: 0, 1, 2, 3
-		purpose: determend which waveformat the sound will be played in
+		purpose: determine which waveformat the sound will be played in
 return value: none
 */
 
@@ -112,6 +118,9 @@ argument(s):
 	buttonX:
 		range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
 		purpose: choose song to play
+	wave:
+		range: 0, 1, 2, 3
+		purpose: determine which waveformat to play the song in
 return value: none
 */
 void playSong(int buttonX, int wave)
