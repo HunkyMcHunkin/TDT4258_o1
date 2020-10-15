@@ -189,8 +189,8 @@ void makeSound_square(int freq, int length)
 	//Number of tics per periode
 	int countperiod = samplesPerSecond / freq;
 
-	//turn length into length in milli seconds. length = {determed length} * 1ms
-	length = length * 2000;
+	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
+	length = length * (14000 / 7);
 
 	//Does this loop as long as the wave havent reaches its length.
 	while (count < length) {
@@ -232,7 +232,10 @@ void makeSound_saberthoot(int freq, int length)
 		}
 	}
 	int dacUpCount = 1;
-	length = length * 1100;
+	
+	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
+	length = length * (14000/10);
+	
 	while (count < length) {
 		if (count % countperiod == 0) {
 			dacvolt = 0;
@@ -276,8 +279,8 @@ void makeSound_triangle(int freq, int length)
 	//Number of tics per periode
 	int countperiod = samplesPerSecond / freq;
 
-	//turn length into length in milli seconds. length = {determed length} * 1ms
-	length = length * 1000;
+	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
+	length = length * (14000/11);
 
 	//variable for increacing/decresing dacVolt
 	int dacdir = 1;
@@ -315,8 +318,7 @@ void makeSound_triangle(int freq, int length)
 			dacVolt = dacVolt + (dacdir * rate);
 			if (dacVolt>100){   		//checks if value have gone outside range, and cut the triangle signal if it have
 			      dacVolt=100;
-			} else 
-			if (dacVolt < 0) {
+			} else if (dacVolt < 0) {
 				dacVolt = 0;
 			}
 			count++;
@@ -362,7 +364,8 @@ return value: none
 		//Number of tics per periode
 		int countperiod = samplesPerSecond / freq;
 		
-		length = length * 1300;
+		//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
+		length = length * (14000/9);
 
 		//Does this loop as long as the wave havent reaches its length
 		while (count < length) {

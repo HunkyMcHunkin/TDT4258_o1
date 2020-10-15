@@ -94,10 +94,12 @@ void setup_NVIC()
 void setup_sleep()
 {
 	//enable SLEEPONEXIT 
-	*SCR |= (1 << 1);
+	//*SCR |= (1 << 1);
 
 	//enable SLEEPDEEP
-	*SCR |= (1 << 2);
+	//*SCR |= (1 << 2);
+	
+	*SCR = 6;
 }
 
  /*
