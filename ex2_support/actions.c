@@ -90,7 +90,7 @@ makeSong(int *frequencies, int sizeArrays, int *lengths,
     		purpose: choose which kind of prosedure will run, change wave or play a song. Set ligth to symbolize what waveformat that is currently in use. Turn off all LEDs when finished playing a song.
     	*wave:
 			range: the adress of the wave variable that holdes information of whiche waveformat that is currently in use
-			prupose: depending on which button that is pressed either change waveformat, or determend which waveformat a song will be played in
+			purpose: depending on which button that is pressed either change waveformat, or determend which waveformat a song will be played in
     return value: none
   */
 
