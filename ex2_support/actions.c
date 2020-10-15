@@ -8,76 +8,76 @@
 
 // ------------- ACTIONS ------------- //
 //functions that use the other modules to do some sort of action
-/*
-void startUpSong(int wave);
-void updatewave(int *wave);
-void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector, int wave);
-void playSong(buttonX, wave);
-void buttonPressed(int buttonX, int *wave);
 
 /*
 name: startUpSong
-purpose: plays a song when the microcontrollers is turned on 
-argument(s): none
+purpose: play a song when the microcontrollers is turned on 
+argument(s):
+	wave:
+		range:0, 1, 2, 3
+		purpose: determend which waveformat to play the song in
 return value: none
 */
 
 void startUpSong(int wave)
 {
-
-	int sizeVectors = 5;
+	//define the song
+	int sizeArrays = 5;
 	int frequencies[5] = { Hl, A, Gh, D, E };
-	int lengthPerfrequency[5] = { 80, 80, 80, 80, 80 };
+	int lengths[5] = { 80, 80, 80, 80, 80 };
 
-	makeSong(frequencies, sizeVectors, lengthPerfrequency, wave);
+	//play the song
+	makeSong(frequencies, sizeArrays, lengths, wave);
 
 }
 
 /*
 name: updatewave
-purpose: changes the value of wave so the microcontroller uses another waveformat when playing songs. It also shows which wave that it uses by ligth up leds accordingly
-argument(s): none
+purpose: changes the value of wave so the microcontroller uses another waveformat when playing songs.
+argument(s):
+	*wave:
+		range: the adress of the wave variable that holdes information of whiche waveformat that is currently in use
+		prupose: make it possible to store a new value to the wave variabel so the microcontroller changes waveformat globaly
 return value: none
 */
-
 void updatewave(int *wave)
 {
-	//*GPIO_PA_DOUT = 0xffff;
+	//Change the waveformat by increasing by one
 	*wave += 1;
+	
+	//checks if the value of the wave is outside the range to the variabel, and if so set the value to 0.
 	if (*wave == 4) {
 		*wave = 0;
 	}
 }
+
 /*
 name: makeSong
 purpose: makes a song of the frequencies and lengths given
 argument(s):
-	freqencyVector:
+	frequencies:
 		range: contains 0 to infty frequencies
-		purpose: hold the frequencies that will be played in spesified order
-	sizeVectors:
-		range: the size of the frequencyVector and lengthVector
+		purpose: an array that hold the frequencies that will be played in cronological order
+	sizeArrays:
+		range: the size of the frequencies array and lengths array
 		purpose: contains the size of the vectors so we will play all the frequencies, nothing more, nothing less.
-	lengthVector:
+	lengths:
 		range: contains 0 to infty lengths
-		purpose: hold the length of the frequencies that will be played in same order as the frequencies that are supposed to be played in that length.
+		purpose: an array that hold how long the corresponding frequency in the frequencies array will play
 	wave: 
 		range: 0, 1, 2, 3
-		purpose: determend which waveformat the sound will be played in
+		purpose: determend which waveformat the song will be played in
 return value: none
 */
 
 void
-makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
+makeSong(int *frequencies, int sizeArrays, int *lengths,
 	 int wave)
 {
-	//play the song
-	for (int i = 0; i < sizeVectors; i++) {
-		if (i == sizeVectors - 1){
-			makeSound(frecquencyVector[i], 2*lengthFrequencyVector[i], wave);
-		} else{
-			makeSound(frecquencyVector[i], lengthFrequencyVector[i], wave);
-		}
+
+	//play a song by generating the sounds/frequencies for a given amount of time/length.
+	for (int i = 0; i < sizeArrays; i++) {
+			makeSound(frequencies[i], lengths[i], wave);
 	}
 }
 
@@ -86,28 +86,34 @@ makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
     purpose: Run different prosedures. Either it changes the wave used to play songs, or it plays a song.
     argument(s):
     	buttonX:
-   		 range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
-		 purpose: 
-	wave: 
-		 range: 0, 1, 2, 3
-		 purpose: 
-    purpose: choose which kind of prosedure will run, change wave or play a song
+    		range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
+    		purpose: choose which kind of prosedure will run, change wave or play a song. Set ligth to symbolize what waveformat that is currently in use. Turn off all LEDs when finished playing a song.
+    	*wave:
+			range: the adress of the wave variable that holdes information of whiche waveformat that is currently in use
+			prupose: depending on which button that is pressed either change waveformat, or determend which waveformat a song will be played in
     return value: none
   */
 
 void buttonPressed(int buttonX, int *wave)
 {
+	//set LEDs according to which waveformat that is currentliy in use
+	setLEDs_waveFormat(*wave);
+	
 	//changing waveformat
 	if (buttonX == BUTTON1) {
 		updatewave(wave);
+		
+		//update LEDs to show the new waveformat
 		setLEDs_waveFormat(*wave);
+		
+		//delay so the waveformats dont change in a blink of an eye
 		Delay_C(10);
 	}
-	//playing a song
+	
+	//play a song and turn off all LEDs when finished
 	else {
-		//setLEDs_songs(buttonX);
-		setLEDs_waveFormat(*wave);
 		playSong(buttonX, *wave);
+		turnOffLEDs();
 	}
 }
 
@@ -117,98 +123,97 @@ name: playSong
 purpose: play a song. Which song is determined by the argument.
 argument(s):
 	buttonX:
-		range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
+		range: BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
 		purpose: choose song to play
 	wave:
-		wave: 
 		range: 0, 1, 2, 3
-		purpose: choose wave to use when playing the song
+		purpose: determend which waveformat the song will be played in
 return value: none
 */
 
 void playSong(int buttonX, int wave)
 {
+	//define songs
 	int sizeVectors_fail = 3;
-	int frequencies_fail[] = { A, F, Hl };
-	int lengths_fail[] = { 70, 70, 100 };
+	int frequencies_fail[3] = { A, F, Hl };
+	int lengths_fail[3] = { 70, 70, 200 };
 
 	int sizeVectors_win = 9;
-	int frequencies_win[] = { Hl, Cl, Dl, E, F, G, H, A, D };
-	int lengths_win[] = { 130, 40, 40, 40, 40, 40, 130, 40, 120 };
+	int frequencies_win[9] = { Hl, Cl, Dl, E, F, G, H, A, D };
+	int lengths_win[9] = { 130, 40, 40, 40, 40, 40, 130, 40, 200 };
 
 	int sizeVectors_twinkleTwinkleLittleStar = 14;
-	int frequencies_twinkleTwinkleLittleStar[] =
+	int frequencies_twinkleTwinkleLittleStar[14] =
 	    { E, E, C, C, D, D, C, H, H, A, A, G, G, F };
-	int lengths_twinkleTwinkleLittleStar[] =
-	    { 100, 100, 100, 100, 100, 100, 180, 100, 100, 100, 100, 100, 100, 100 };
+	int lengths_twinkleTwinkleLittleStar[14] =
+	    { 100, 100, 100, 100, 100, 100, 180, 100, 100, 100, 100, 100, 100, 200 };
 
 	int sizeVectors_londonBridge = 24;
-	int frequencies_londonBridge[] =
+	int frequencies_londonBridge[24] =
 	    { C, D, C, H, A, H, C, G, A, H, A, H, C, C, D, C, H, A, H, C, G, C, A, F };
-	int lengths_londonBridge[] =
+	int lengths_londonBridge[24] =
 	    { 85, 80, 80, 80, 80, 80, 110, 80, 80, 110, 80, 80, 110, 80, 80, 80, 80,
-		80, 80, 110, 85, 80, 80, 80 };
+		80, 80, 110, 85, 80, 80, 200 };
 
 	int sizeVectors_zelda = 11;
-	int frequencies_zelda[] = { E, G, Dl, E, G, Dl, E, G, D, C, G };
-	int lengths_zelda[] = { 120, 120, 180, 120, 120, 180, 120, 120, 120, 100, 100 };
+	int frequencies_zelda[11] = { E, G, Dl, E, G, Dl, E, G, D, C, G };
+	int lengths_zelda[11] = { 120, 120, 180, 120, 120, 180, 120, 120, 120, 100, 200 };
 
 	int sizeVectors_mikkelRev = 24;
-	int frequencies_mikkelRev[] =
+	int frequencies_mikkelRev[24] =
 	    { E, G, Cl, E, G, Cl, F, A, C, A, A, G, E, G, Cl, E, G, Cl, Dl, E,
 		F, Hl, Dl, Cl};
-	int lengths_mikkelRev[] =
+	int lengths_mikkelRev[24] =
 	    { 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 140, 140, 70, 70, 140,
-		70, 70, 140, 70, 70, 70, 70, 140, 140};
+		70, 70, 140, 70, 70, 70, 70, 140, 200};
 
 	int sizeVectors_fullStep = 22;
-	int frequencies_fullStep[] =
+	int frequencies_fullStep[22] =
 	    { E, F, G, A, H, C, D, Eh, Fh, Gh, Ah, Ah, Gh, Fh, Eh, D, C, H, A,
 		G, F, E };
-	int lengths_fullStep[] =
+	int lengths_fullStep[22] =
 	    { 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
 		40, 40, 40, 40, 40, 40
 		};
 	int sizeVectors_harry = 30;
-	int frequencies_harry[] = {E, A, C, H, A, Eh, D, H, A, C, H, G, H, E, A, C, H, A, Eh, Gh, Fh, Fh, C, Fh, Eh, Eh, E, C, A, A};
-	int lengths_harry[] ={80, 90, 80, 80, 90, 80, 120, 120, 80, 80, 80, 80, 80, 120, 80, 80, 80, 80, 80, 80, 80, 80, 100, 80, 80, 80, 80, 80, 80, 80};
+	int frequencies_harry[30] = {E, A, C, H, A, Eh, D, H, A, C, H, G, H, E, A, C, H, A, Eh, Gh, Fh, Fh, C, Fh, Eh, Eh, E, C, A, A};
+	int lengths_harry[30] ={80, 90, 80, 80, 90, 80, 120, 120, 80, 80, 80, 80, 80, 120, 80, 80, 80, 80, 80, 80, 80, 80, 100, 80, 80, 80, 80, 80, 80, 200};
 
 	//Chooses which song to play
 	switch (buttonX) {
 	case BUTTON2:
 		makeSong(frequencies_harry, sizeVectors_harry, lengths_harry,
 			 wave);
-		turnOffLEDs();
 		break;
+		
 	case BUTTON3:
 		makeSong(frequencies_win, sizeVectors_win, lengths_win, wave);
-		turnOffLEDs();
 		break;
+		
 	case BUTTON4:
 		makeSong(frequencies_twinkleTwinkleLittleStar,
 			 sizeVectors_twinkleTwinkleLittleStar,
 			 lengths_twinkleTwinkleLittleStar, wave);
-		turnOffLEDs();
 		break;
+		
 	case BUTTON5:
 		makeSong(frequencies_londonBridge, sizeVectors_londonBridge,
 			 lengths_londonBridge, wave);
-		turnOffLEDs();
 		break;
+		
 	case BUTTON6:
 		makeSong(frequencies_zelda, sizeVectors_zelda, lengths_zelda,
 			 wave);
-		turnOffLEDs();
 		break;
+		
 	case BUTTON7:
 		makeSong(frequencies_fullStep, sizeVectors_fullStep,
 			 lengths_fullStep, wave);
-		turnOffLEDs();
 		break;
+		
 	case BUTTON8:
 		makeSong(frequencies_mikkelRev, sizeVectors_mikkelRev,
 			 lengths_mikkelRev, wave);
-		turnOffLEDs();
 		break;
 	}
 }
