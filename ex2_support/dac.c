@@ -5,7 +5,8 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
-/*------------SET UP-------------*/
+//------------ DAC -------------//
+//Here we have functions related to the DAC. In addition to function operating on the DACs registers, this will include sound generating functions
 
 /*
 name: setup_DAC
@@ -61,42 +62,6 @@ void stopDAC()
 }
 
 /*
-name: startUpSong
-purpose: plays a song when the microcontrollers is turned on 
-argument(s): none
-return value: none
-*/
-/*
-void startUpSong(int wave)
-{
-
-	int sizeVectors = 5;
-	int frequencies[5] = { Hl, A, Gh, D, E };
-	int lengthPerfrequency[5] = { 80, 80, 80, 80, 80 };
-
-	makeSong(frequencies, sizeVectors, lengthPerfrequency, wave);
-
-}
-
-/*------------WAVE SELECT---------------*/
-
-/*
-name: updatewave
-purpose: changes the value of wave so the microcontroller uses another waveformat when playing songs. It also shows which wave that it uses by ligth up leds accordingly
-argument(s): none
-return value: none
-*/
-/*
-void updatewave(int *wave)
-{
-	//*GPIO_PA_DOUT = 0xffff;
-	*wave += 1;
-	if (*wave == 4) {
-		*wave = 0;
-	}
-}
-
-/*
 name: makeSound
 purpose: make sound, but chooses what kind of sound to make depending on the value of wave
 argument(s):
@@ -129,40 +94,7 @@ void makeSound(int freqency, int length, int wave)
 	}
 }
 
-/*
-name: makeSong
-purpose: makes a song of the frequencies and lengths given
-argument(s):
-	freqencyVector:
-		range: contains 0 to infty frequencies
-		purpose: hold the frequencies that will be played in spesified order
-	sizeVectors:
-		range: the size of the frequencyVector and lengthVector
-		purpose: contains the size of the vectors so we will play all the frequencies, nothing more, nothing less.
-	lengthVector:
-		range: contains 0 to infty lengths
-		purpose: hold the length of the frequencies that will be played in same order as the frequencies that are supposed to be played in that length.
-	wave: 
-		range: 0, 1, 2, 3
-		purpose: determend which waveformat the sound will be played in
-return value: none
-*/
-/*
-void
-makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
-	 int wave)
-{
-	//play the song
-	for (int i = 0; i < sizeVectors; i++) {
-		if (i == sizeVectors - 1){
-			makeSound(frecquencyVector[i], 2*lengthFrequencyVector[i], wave);
-		} else{
-			makeSound(frecquencyVector[i], lengthFrequencyVector[i], wave);
-		}
-	}
-}
 
-/*-------------SQARE WAVE-------------------*/
 /*
 name: makeSound_square
 purpose: generate sound from a square wave
@@ -213,16 +145,43 @@ void makeSound_square(int freq, int length)
 	}
 }
 
-/*---------------SABERTHOOT-------------------*/
 
-void makeSound_saberthoot(int freq, int length)
+/*
+name: makeSound_sawtooth
+purpose: generate sound from a sawtooth wave
+argument(s):
+	freq:
+		range: 20 to 2000 (which will translate to 20 Hz to 2000 Hz)??????
+		purpose: determend the harmonic frequency for the wave we want to ganerate
+	length:
+		range: 0 to infty. Specified in mili seconds.
+		purpose: determend how long the generated sound wave schould last 
+return value: none
+*/
+void makeSound_sawtooth(int freq, int length)
 {
+	//holds the count of number of ticks
 	int count = 1;
+
+	//holds the strength of the sound 
 	int dacvolt = 0;
+
+	//Number of samples the microcontroller generates per second.
 	int samplesPerSecond = 44100;
+
+	//Number of tics per periode
 	int countperiod = samplesPerSecond / freq;
-	int dacUpTime = countperiod / 100;	//calculates how often i must update voltage to swing between 0 and 100
+
+	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
+	length = length * (14000 / 7);
+	
+	//calculates how often i must update voltage to swing between 0 and 100
+	int dacUpTime = countperiod / 100;
+	
+	//holds how the increment of samples is, the bigger rate the bigger incrementing steps
 	int rate = 1;
+	
+	//set rate depending on the frequency
 	if (dacUpTime < 1) {
 		dacUpTime = 1;
 		if (freq > 1323) {
@@ -231,11 +190,10 @@ void makeSound_saberthoot(int freq, int length)
 			rate = 2;
 		}
 	}
+	
+	//MAREN - GJERNE FORKALR HVA SOM SKJER HER!
 	int dacUpCount = 1;
-	
-	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
-	length = length * (14000/10);
-	
+
 	while (count < length) {
 		if (count % countperiod == 0) {
 			dacvolt = 0;
@@ -251,7 +209,7 @@ void makeSound_saberthoot(int freq, int length)
 	}
 }
 
-/*------------------TRIANGLE WAVE---------------------*/
+
 /*
 name: makeSound_triangle
 purpose: generate sound from a triangle wave
@@ -288,11 +246,10 @@ void makeSound_triangle(int freq, int length)
 	//deside how often the dacVolt shuld be updated to get a value between 0 and 100 for each half period
 	int dacUpTime = countperiod / 200;
 	
-	//
-	//int dacUpCount = 0;
+	//holds how the increment of samples is, the bigger rate the bigger incrementing steps
 	int rate = 1;
 
-	//Decides the amplitude of how much the samples change from one sample value to next depending on the frequency  
+	//decides the rate depending on the frequency 
 	if (dacUpTime < 1) {
 		dacUpTime = 1;
 		if (freq > 1102) {
@@ -313,21 +270,24 @@ void makeSound_triangle(int freq, int length)
 		//Give a sample to the DAC 
 		*DAC0_CH0DATA = dacVolt;
 		*DAC0_CH1DATA = dacVolt;
-		if ((count % dacUpTime) == 0) {  //update the value at correct time to swing between 0 and 100 in half of a period
+		
+		//update the value at correct time to swing between 0 and 100 in half of a period
+		if ((count % dacUpTime) == 0) {  
 			//dacUpCount = 0;
 			dacVolt = dacVolt + (dacdir * rate);
-			if (dacVolt>100){   		//checks if value have gone outside range, and cut the triangle signal if it have
+			//checks if value have gone outside range, and cut the triangle signal if it have ?????
+			if (dacVolt>100){   		
 			      dacVolt=100;
 			} else if (dacVolt < 0) {
 				dacVolt = 0;
 			}
 			count++;
-			//dacUpCount++;
+			//dacUpCount++; ?????
 		}
 	}
 }
 
-/*---------------SINUS WAVE-------------------*/
+
 /*
 name: makeSound_sinus
 purpose: generate sound from a sinus wave by using a lookup table. The periode to the wave will be divided into 28 parts with equal amount of ticks, where the first part will generate samples of the lookup tables first cell, the second from the lookup table from the second cell, and so on.
@@ -384,7 +344,7 @@ return value: none
 
 			}
 			//Write a sample to DAC 
-			*DAC0_CH0DATA = dacvolt;	//skriver voltverdien til utgangen
+			*DAC0_CH0DATA = dacvolt;
 			*DAC0_CH1DATA = dacvolt;
 
 			//increace the count, to ceep track of note-length
