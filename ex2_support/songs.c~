@@ -1,34 +1,80 @@
+
+
 #include <stdint.h>
 #include <stdbool.h>
 
 #include "efm32gg.h"
 #include "ex2.h"
 
- /*
-    name: setup_GPIO
-    purpose: sets up GPIO mode and interrupts by configure registers. 
-    argument(s): none
-    return value: none
-  */
-void setup_GPIO()
+// ------------- SONGS ------------- //
+//functions that use the other modules to make the songs
+/*
+
+
+/*
+name: startUpSong
+purpose: plays a song when the microcontrollers is turned on 
+argument(s): none
+return value: none
+*/
+
+void startUpSong(int wave)
 {
-	//enable high frequency peripheral clock for the timer
-	*CMU_HFPERCLKEN0 |= CMU2_HFPERCLKEN0_GPIO;
 
-	//set lowest drive strength
-	*GPIO_PA_CTRL = 1;
+	int sizeVectors = 5;
+	int frequencies[5] = { Hl, A, Gh, D, E };
+	int lengthPerfrequency[5] = { 80, 80, 80, 80, 80 };
 
-	//set pins A8-15 as output
-	*GPIO_PA_MODEH = 0x55555555;
+	makeSong(frequencies, sizeVectors, lengthPerfrequency, wave);
 
-	//turn all LEDs off
-	*GPIO_PA_DOUT = 0xffff;
+}
 
-	//set buttons as output
-	*GPIO_PC_MODEL = 0x33333333;
+/*
+name: updatewave
+purpose: changes the value of wave so the microcontroller uses another waveformat when playing songs. It also shows which wave that it uses by ligth up leds accordingly
+argument(s): none
+return value: none
+*/
 
-	//enable internal pull up
-	*GPIO_PC_DOUT = 0xff;
+void updatewave(int *wave)
+{
+	//*GPIO_PA_DOUT = 0xffff;
+	*wave += 1;
+	if (*wave == 4) {
+		*wave = 0;
+	}
+}
+/*
+name: makeSong
+purpose: makes a song of the frequencies and lengths given
+argument(s):
+	freqencyVector:
+		range: contains 0 to infty frequencies
+		purpose: hold the frequencies that will be played in spesified order
+	sizeVectors:
+		range: the size of the frequencyVector and lengthVector
+		purpose: contains the size of the vectors so we will play all the frequencies, nothing more, nothing less.
+	lengthVector:
+		range: contains 0 to infty lengths
+		purpose: hold the length of the frequencies that will be played in same order as the frequencies that are supposed to be played in that length.
+	wave: 
+		range: 0, 1, 2, 3
+		purpose: determend which waveformat the sound will be played in
+return value: none
+*/
+
+void
+makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
+	 int wave)
+{
+	//play the song
+	for (int i = 0; i < sizeVectors; i++) {
+		if (i == sizeVectors - 1){
+			makeSound(frecquencyVector[i], 2*lengthFrequencyVector[i], wave);
+		} else{
+			makeSound(frecquencyVector[i], lengthFrequencyVector[i], wave);
+		}
+	}
 }
 
  /*
@@ -58,82 +104,6 @@ void buttonPressed(int buttonX, int *wave)
 	}
 }
 
-/*
-name: setLEDs_waveFormat
-purpose: Lighting LEDs to indicate which waveform is being used.
-argument(s): none
-return value: none
-*/
-
-void setLEDs_waveFormat(int wave)
-{
-	// choosing which LEDs to light, and lighting them
-	switch (wave) {
-	case 3:
-		*GPIO_PA_DOUT = (0x00ff);
-		break;
-	case 2:
-		*GPIO_PA_DOUT = (0x03ff);
-		break;
-	case 1:
-		*GPIO_PA_DOUT = (0x0fff);
-		break;
-	case 0:
-		*GPIO_PA_DOUT = (0x3fff);
-		break;
-	case 4:
-		*GPIO_PA_DOUT = (0x3fff);
-		break;
-	}
-}
-
-/*
-name: setLEDs_songs
-purpose: Lighting a LED to indicate which song is being played.
-argument(s):
-		buttonX:
-			range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
-			purpose: Identify which song is being played so that the corresponding LED can be lit.
-return value: none
-*/
-void setLEDs_songs(int buttonX)
-{
-	// choosing which LED to light, and lighting it
-	switch (buttonX) {
-	case BUTTON2:
-		*GPIO_PA_DOUT = LED2;
-		break;
-	case BUTTON3:
-		*GPIO_PA_DOUT = LED3;
-		break;
-	case BUTTON4:
-		*GPIO_PA_DOUT = LED4;
-		break;
-	case BUTTON5:
-		*GPIO_PA_DOUT = LED5;
-		break;
-	case BUTTON6:
-		*GPIO_PA_DOUT = LED6;
-		break;
-	case BUTTON7:
-		*GPIO_PA_DOUT = LED7;
-		break;
-	case BUTTON8:
-		*GPIO_PA_DOUT = LED8;
-		break;
-	}
-}
-
-/*
-name: turnOffLEDs
-purpose: Turn off all the LEDs.
-argument(s): none
-return value: none
-*/
-void turnOffLEDs()
-{
-	*GPIO_PA_DOUT = 0xffff;
-}
 
 /*
 name: playSong
@@ -144,7 +114,6 @@ argument(s):
 		purpose: choose song to play
 return value: none
 */
-/*
 void playSong(int buttonX, int wave)
 {
 	int sizeVectors_fail = 3;
@@ -232,64 +201,5 @@ void playSong(int buttonX, int wave)
 	}
 }
 
- /*
-    name: buttonPressed
-    purpose: Run different procedures. Either it changes the wave used to play songs, or it plays a song.
-    argument(s):
-    buttonX:
-    range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
-    purpose: choose which kind of procedure will run, change wave or play a song
 
-    return value: none
-  */
 
-void buttonPressed(int buttonX, int *wave)
-{
-	//changing waveformat
-	if (buttonX == BUTTON1) {
-		updatewave(wave);
-		setLEDs_waveFormat(*wave);
-		Delay_C(10);
-	}
-	//playing a song
-	else {
-		//setLEDs_songs(buttonX);
-		setLEDs_waveFormat(*wave);
-		playSong(buttonX, *wave);
-	}
-}
-
-/*
-name: Time
-purpose: Count the time specified by uS
-argument(s):
-		uS:
-			range: 0 to 4294967296
-			purpose: Specify the value to count up to
-	
-return value: none
-*/
-void Time(uint32_t uS)
-{
-	uint32_t i, s = 0;
-
-	for (i = 0; i < uS; i++)
-		s++;
-}
-
-/*
-name: Delay_C
-purpose: Delay by mS times 10 milliseconds.
-argument(s):
-		mS:
-			range: 0 to 4294967296
-			purpose: Specify the delay in milliseconds.
-return value: none
-*/
-void Delay_C(uint32_t mS)
-{
-	uint32_t i;
-	for (i = 0; i < mS; i++) {
-		Time(10000);
-	};
-}

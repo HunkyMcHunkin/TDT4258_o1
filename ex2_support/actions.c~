@@ -1,4 +1,4 @@
-/*
+
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -6,9 +6,9 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
-
 // ------------- ACTIONS ------------- //
 //functions that use the other modules to do some sort of action
+/*
 void startUpSong(int wave);
 void updatewave(int *wave);
 void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector, int wave);
@@ -21,34 +21,33 @@ purpose: plays a song when the microcontrollers is turned on
 argument(s): none
 return value: none
 */
-/*
+
 void startUpSong(int wave)
 {
-	
-	int sizeVectors = 3;
-	int frequencies[3] = { Hl, Dl, F };
-	int lengthPerfrequency[3] = { 60, 60, 60};
-	
-	makeSong(&frequencies, sizeVectors, &lengthPerfrequency, wave);
+
+	int sizeVectors = 5;
+	int frequencies[5] = { Hl, A, Gh, D, E };
+	int lengthPerfrequency[5] = { 80, 80, 80, 80, 80 };
+
+	makeSong(frequencies, sizeVectors, lengthPerfrequency, wave);
 
 }
-*/
+
 /*
 name: updatewave
 purpose: changes the value of wave so the microcontroller uses another waveformat when playing songs. It also shows which wave that it uses by ligth up leds accordingly
 argument(s): none
 return value: none
 */
-/*
+
 void updatewave(int *wave)
 {
 	//*GPIO_PA_DOUT = 0xffff;
 	*wave += 1;
-	if(*wave == 4){
+	if (*wave == 4) {
 		*wave = 0;
 	}
 }
-*/
 /*
 name: makeSong
 purpose: makes a song of the frequencies and lengths given
@@ -67,18 +66,49 @@ argument(s):
 		purpose: determend which waveformat the sound will be played in
 return value: none
 */
-/*
-void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector, int wave)
+
+void
+makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
+	 int wave)
 {
 	//play the song
 	for (int i = 0; i < sizeVectors; i++) {
-		makeSound(frecquencyVector[i], lengthFrequencyVector[i], wave);
+		if (i == sizeVectors - 1){
+			makeSound(frecquencyVector[i], 2*lengthFrequencyVector[i], wave);
+		} else{
+			makeSound(frecquencyVector[i], lengthFrequencyVector[i], wave);
+		}
 	}
-	//make sound to symbolixe the end of the song
-	makeSound(frecquencyVector[sizeVectors - 1], lengthFrequencyVector[sizeVectors-1] * 2, wave);
 }
 
-*/
+ /*
+    name: buttonPressed
+    purpose: Run different prosedures. Either it changes the wave used to play songs, or it plays a song.
+    argument(s):
+    buttonX:
+    range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
+    purpose: choose which kind of prosedure will run, change wave or play a song
+
+    return value: none
+  */
+
+void buttonPressed(int buttonX, int *wave)
+{
+	//changing waveformat
+	if (buttonX == BUTTON1) {
+		updatewave(wave);
+		setLEDs_waveFormat(*wave);
+		Delay_C(10);
+	}
+	//playing a song
+	else {
+		//setLEDs_songs(buttonX);
+		setLEDs_waveFormat(*wave);
+		playSong(buttonX, *wave);
+	}
+}
+
+
 /*
 name: playSong
 purpose: play a song. Which song is determined by the argument.
@@ -88,7 +118,7 @@ argument(s):
 		purpose: choose song to play
 return value: none
 */
-/*
+
 void playSong(int buttonX, int wave){
 	
 	int sizeVectors_fail = 3;
@@ -106,7 +136,6 @@ void playSong(int buttonX, int wave){
 	int sizeVectors_londonBridge = 24;
 	int frequencies_londonBridge[24] = { C, D, C, H, A, H, C, G, A, H, A, H, C, C, D, C, H, A, H, C, G, C, A, F };
 	int lengths_londonBridge [24] = { 70, 70, 70, 70, 70, 70, 140, 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 70, 70, 140, 95, 95, 95};
-
 
 	int sizeVectors_zelda = 11;
 	int frequencies_zelda[11] = { E, G, Dl, E, G, Dl, E, G, D, C, G };
@@ -151,30 +180,6 @@ void playSong(int buttonX, int wave){
 			break;
 	}
 }
-*/
- /*
-    name: buttonPressed
-    purpose: Run different prosedures. Either it changes the wave used to play songs, or it plays a song.
-    argument(s):
-    buttonX:
-    range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
-    purpose: choose which kind of prosedure will run, change wave or play a song
 
-    return value: none
-  */
-/*
-void buttonPressed(int buttonX, int *wave)
-{
-	//changing waveformat
-	if(buttonX == BUTTON1){
-		setLEDs_waveFormat(*wave);
-		updatewave(wave);
-		
-	//playing a song
-	}else{		
-		setLEDs_songs(buttonX);
-		playSong(buttonX, *wave);
-	}
-}
 
-*/
+

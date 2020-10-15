@@ -17,10 +17,10 @@ ex2.bin : ex2.elf
 ex2_interrupt.bin : ex2_interrupt.elf
 	${OBJCOPY} -O binary $< $@
 
-ex2.elf : ex2.o timer.o dac.o gpio.o interrupt_handlers.o
+ex2.elf : ex2.o timer.o dac.o gpio.o songs.o
 	${LD} -T ${LINKERSCRIPT} $^ -o $@ ${LDFLAGS} 
 
-ex2_interrupt.elf : ex2_interrupt.o timer.o dac.o gpio.o interrupt_handlers.o
+ex2_interrupt.elf : ex2_interrupt.o timer.o dac.o gpio.o interrupt_handlers.o songs.o
 	${LD} -T ${LINKERSCRIPT} $^ -o $@ ${LDFLAGS} 
 
 %.o : %.c

@@ -19,18 +19,18 @@ void makeSound_sinus(int freqency, int length);
 //function that plays the sound
 void makeSound(int freqency, int length, int wave);
 
-// ------------- ACTIONS ------------- //
+// ------------- songs ------------- //
 //functions that use the other modules to do some sort of action
 void startUpSong(int wave);
 void updatewave(int *wave);
 void makeSong(int *frecquencyVector, int sizeVectors,
 	      int *lengthFrequencyVector, int wave);
 void playSong(int buttonX, int wave);
-void buttonPressed(int buttonX, int *wave);
 
 // ------------- GPIO ------------- //
 //preperation function
 void setup_GPIO();
+void buttonPressed(int buttonX, int *wave);
 void Time(uint32_t uS);
 void Delay_C(uint32_t mS);
 
@@ -53,7 +53,7 @@ void setup_interruptGPIO();	//setupNVIC
 void setup_interrupt();		//setupNVIC
 void setup_sleep();
 
-/*songs*/
+/*notes*/
 #define Hl 123
 #define Cl 131
 #define Dl 147

@@ -66,6 +66,7 @@ purpose: plays a song when the microcontrollers is turned on
 argument(s): none
 return value: none
 */
+/*
 void startUpSong(int wave)
 {
 
@@ -85,6 +86,7 @@ purpose: changes the value of wave so the microcontroller uses another waveforma
 argument(s): none
 return value: none
 */
+/*
 void updatewave(int *wave)
 {
 	//*GPIO_PA_DOUT = 0xffff;
@@ -187,7 +189,7 @@ void makeSound_square(int freq, int length)
 	int countperiod = samplesPerSecond / freq;
 
 	//turn length into length in milli seconds. length = {determed length} * 1ms
-	length = length * 1500;
+	length = length * 2000;
 
 	//Does this loop as long as the wave havent reaches its length.
 	while (count < length) {

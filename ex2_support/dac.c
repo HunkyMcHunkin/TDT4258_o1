@@ -66,6 +66,7 @@ purpose: plays a song when the microcontrollers is turned on
 argument(s): none
 return value: none
 */
+/*
 void startUpSong(int wave)
 {
 
@@ -85,6 +86,7 @@ purpose: changes the value of wave so the microcontroller uses another waveforma
 argument(s): none
 return value: none
 */
+/*
 void updatewave(int *wave)
 {
 	//*GPIO_PA_DOUT = 0xffff;
@@ -145,6 +147,7 @@ argument(s):
 		purpose: determend which waveformat the sound will be played in
 return value: none
 */
+/*
 void
 makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
 	 int wave)
