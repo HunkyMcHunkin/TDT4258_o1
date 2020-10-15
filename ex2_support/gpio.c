@@ -61,7 +61,10 @@ void buttonPressed(int buttonX, int *wave)
 /*
 name: setLEDs_waveFormat
 purpose: Lighting LEDs to indicate which waveform is being used.
-argument(s): none
+argument(s):
+	wave:
+		range: 0, 1, 2, 3
+		purpose: define which waveform is being used
 return value: none
 */
 
@@ -236,9 +239,13 @@ void playSong(int buttonX, int wave)
     name: buttonPressed
     purpose: Run different procedures. Either it changes the wave used to play songs, or it plays a song.
     argument(s):
-    buttonX:
-    range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
-    purpose: choose which kind of procedure will run, change wave or play a song
+    	buttonX:
+    		range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
+    		purpose: choose which kind of procedure will run, change wave or play a song
+  	  wave:
+		range: 0, 1, 2, 3
+		purpose: determend which waveformat to play the song in
+    
 
     return value: none
   */
