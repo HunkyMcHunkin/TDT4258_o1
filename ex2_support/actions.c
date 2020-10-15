@@ -85,10 +85,13 @@ makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
     name: buttonPressed
     purpose: Run different prosedures. Either it changes the wave used to play songs, or it plays a song.
     argument(s):
-    buttonX:
-    range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
+    	buttonX:
+   		 range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
+		 purpose: 
+	wave: 
+		 range: 0, 1, 2, 3
+		 purpose: 
     purpose: choose which kind of prosedure will run, change wave or play a song
-
     return value: none
   */
 
@@ -116,6 +119,10 @@ argument(s):
 	buttonX:
 		range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
 		purpose: choose song to play
+	wave:
+		wave: 
+		range: 0, 1, 2, 3
+		purpose: choose wave to use when playing the song
 return value: none
 */
 
