@@ -6,9 +6,9 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
-// ------------- SONGS ------------- //
+// ------------- SONGS ------------- // TODO: må enten slette funksjoner fra action filen i såfall! 
 //functions that use the other modules to make the songs
-/*
+
 
 
 /*
@@ -83,7 +83,7 @@ makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
 	}
 }
 
- /*
+ /* TODO: Mangler wave variabelen!!
     name: buttonPressed
     purpose: Run different procedures. Either it changes the wave used to play songs, or it plays a song.
     argument(s):

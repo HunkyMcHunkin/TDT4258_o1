@@ -5,13 +5,13 @@
 #include "ex2.h"
 
 /*
-name: setup_timer
-purpose: sets up timer by configure registers. 
-argument(s):
-	periode:
-		range: 0 to 65535
-		purpose: set how far the counter counts untill it resets to 0, and if configures set an interrupt flag.
-return value: none
+	name: setup_timer
+	purpose: sets up timer by configure registers. 
+	argument(s):
+		periode:
+			range: 0 to 65535
+			purpose: set how far the counter counts untill it resets to 0, and if configures set an interrupt flag.
+	return value: none
 */
 void setup_timer(uint16_t period)
 {

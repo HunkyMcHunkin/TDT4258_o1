@@ -9,10 +9,10 @@
 //Here we have functions related to the DAC. In addition to function operating on the DACs registers, this will include sound generating functions
 
 /*
-name: setup_DAC
-purpose: sets up a digial to analog converter (DAC) by configure registers. 
-argument(s): none
-return value: none
+	name: setup_DAC
+	purpose: sets up a digial to analog converter (DAC) by configure registers. 
+	argument(s): none
+	return value: none
 */
 
 void setup_DAC()
@@ -25,10 +25,10 @@ void setup_DAC()
 }
 
 /*
-name: startDAC
-purpose: start the digital to analog converter (DAC) by configure registers. 
-argument(s): none
-return value: none
+	name: startDAC
+	purpose: start the digital to analog converter (DAC) by configure registers. 
+	argument(s): none
+	return value: none
 */
 
 void startDAC()
@@ -44,14 +44,14 @@ void startDAC()
 }
 
 /*
-name: stopDAC
-purpose: stop the digital to analog converter (DAC) from operating by configure registers. 
-argument(s): none
-return value: none
+	name: stopDAC
+	purpose: stop the digital to analog converter (DAC) from operating 
+	argument(s): none
+	return value: none
 */
 void stopDAC()
 {
-	//disable DAC output to pin and ADC, and set the frequency to high frequency peripheral clock frecuency 
+	//disable DAC output to pin and ADC, and set the frequency to high frequency peripheral clock frecuency TODO
 	*DAC0_CTRL &= ~(1 << 1);
 
 	//disable channel 0
@@ -62,19 +62,19 @@ void stopDAC()
 }
 
 /*
-name: makeSound
-purpose: make sound, but chooses what kind of sound to make depending on the value of wave
-argument(s):
-	freqency:
-		range: min frequency to max frequency
-		purpose: the prosedyre makes sound this frequency
-	length:
-		range: 0, infy
-		purpose: determend how long the sound will play
-	wave: 
-		range: 0, 1, 2, 3
-		purpose: determend which waveformat the sound will be played in
-return value: none
+	name: makeSound
+	purpose: make sound, but chooses what kind of sound to make depending on the value of wave
+	argument(s):
+		freqency:
+			range: minimum frequency to maximum frequency
+			purpose: the prosedyre makes sound this frequency
+		length:
+			range: 0 to infy
+			purpose: determend how long the sound will play
+		wave: 
+			range: 0, 1, 2, 3
+			purpose: determend which waveformat the sound will be played in
+	return value: none
 */
 void makeSound(int freqency, int length, int wave)
 {
@@ -83,7 +83,7 @@ void makeSound(int freqency, int length, int wave)
 		makeSound_square(freqency, length);
 		break;
 	case 1:
-		makeSound_saberthoot(freqency, length);
+		makeSound_sawtooth(freqency, length);
 		break;
 	case 2:
 		makeSound_triangle(freqency, length);
@@ -96,18 +96,18 @@ void makeSound(int freqency, int length, int wave)
 
 
 /*
-name: makeSound_square
-purpose: generate sound from a square wave
-argument(s):
-	freq:
-		range: 20 to 2000 (which will translate to 20 Hz to 2000 Hz)??????
-		purpose: determend the harmonic frequency for the wave we want to ganerate
-	length:
-		range: 0 to infty. Specified in mili seconds.
-		purpose: determend how long the generated sound wave schould last 
-return value: none
+	name: makeSound_square
+	purpose: generate sound from a square wave
+	argument(s):
+		frequency:
+			range: 20 to 2000 (which will translate to 20 Hz to 2000 Hz)??????
+			purpose: determend the harmonic frequency for the wave we want to ganerate
+		length:
+			range: 0 to infty. Specified in mili seconds.
+			purpose: determend how long the generated sound wave schould last 
+	return value: none
 */
-void makeSound_square(int freq, int length)
+void makeSound_square(int frequency, int length)
 {
 	//holds the count of number of ticks
 	int count = 1;
@@ -119,9 +119,9 @@ void makeSound_square(int freq, int length)
 	int samplesPerSecond = 44100;
 
 	//Number of tics per periode
-	int countperiod = samplesPerSecond / freq;
+	int countperiod = samplesPerSecond / frequency;
 
-	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
+	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time} TODO: gjerne sett 14000 som en variabel og 7 som en variabel sånn at vi skjønner hva de faktisk er og gjør, akkurat nå er det bare 2 tilfeldige tall
 	length = length * (14000 / 7);
 
 	//Does this loop as long as the wave havent reaches its length.
@@ -147,18 +147,18 @@ void makeSound_square(int freq, int length)
 
 
 /*
-name: makeSound_sawtooth
-purpose: generate sound from a sawtooth wave
-argument(s):
-	freq:
-		range: 20 to 2000 (which will translate to 20 Hz to 2000 Hz)??????
-		purpose: determend the harmonic frequency for the wave we want to ganerate
-	length:
-		range: 0 to infty. Specified in mili seconds.
-		purpose: determend how long the generated sound wave schould last 
-return value: none
+	name: makeSound_sawtooth
+	purpose: generate sound from a sawtooth wave
+	argument(s):
+		frequency:
+			range: 20 to 2000 (which will translate to 20 Hz to 2000 Hz)??????
+			purpose: determend the harmonic frequency for the wave we want to ganerate
+		length:
+			range: 0 to infty. Specified in mili seconds.
+			purpose: determend how long the generated sound wave schould last 
+	return value: none
 */
-void makeSound_sawtooth(int freq, int length)
+void makeSound_sawtooth(int frequency, int length)
 {
 	//holds the count of number of ticks
 	int count = 1;
@@ -170,7 +170,7 @@ void makeSound_sawtooth(int freq, int length)
 	int samplesPerSecond = 44100;
 
 	//Number of tics per periode
-	int countperiod = samplesPerSecond / freq;
+	int countperiod = samplesPerSecond / frequency;
 
 	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
 	length = length * (14000 / 7);
@@ -184,14 +184,14 @@ void makeSound_sawtooth(int freq, int length)
 	//set rate depending on the frequency
 	if (dacUpTime < 1) {
 		dacUpTime = 1;
-		if (freq > 1323) {
+		if (frequency > 1323) {
 			rate = 3;
-		} else if (freq > 882) {
+		} else if (frequency > 882) {
 			rate = 2;
 		}
 	}
 	
-	//MAREN - GJERNE FORKALR HVA SOM SKJER HER!
+	//MAREN - GJERNE FORKALR HVA SOM SKJER HER! TODO
 	int dacUpCount = 1;
 
 	while (count < length) {
@@ -211,18 +211,18 @@ void makeSound_sawtooth(int freq, int length)
 
 
 /*
-name: makeSound_triangle
-purpose: generate sound from a triangle wave
-argument(s):
-	freq:
-		range: 20 to 2000 (which will translate to 20 Hz to 2000 Hz)??????
-		purpose: determend the harmonic frequency for the wave we want to ganerate
-	length:
-		range: 0 to infty. Specified in mili seconds.
-		purpose: determend how long the generated sound wave schould last 
-return value: none
+	name: makeSound_triangle
+	purpose: generate sound from a triangle wave
+	argument(s):
+		frequency:
+			range: 20 to 2000 (which will translate to 20 Hz to 2000 Hz)??????
+			purpose: determend the harmonic frequency for the wave we want to ganerate
+		length:
+			range: 0 to infty. Specified in mili seconds.
+			purpose: determend how long the generated sound wave schould last 
+	return value: none
 */
-void makeSound_triangle(int freq, int length)
+void makeSound_triangle(int frequency, int length)
 {
 
 	//holds the count of number of ticks
@@ -235,7 +235,7 @@ void makeSound_triangle(int freq, int length)
 	int samplesPerSecond = 44100;
 
 	//Number of tics per periode
-	int countperiod = samplesPerSecond / freq;
+	int countperiod = samplesPerSecond / frequency;
 
 	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
 	length = length * (14000/11);
@@ -252,19 +252,21 @@ void makeSound_triangle(int freq, int length)
 	//decides the rate depending on the frequency 
 	if (dacUpTime < 1) {
 		dacUpTime = 1;
-		if (freq > 1102) {
+		if (frequency > 1102) {
 			rate = 5;
-		} else if (freq > 882) {
+		} else if (frequency > 882) {
 			rate = 4;
-		} else if (freq > 662) {
+		} else if (frequency > 662) {
 			rate = 3;
-		} else if (freq > 441) {
+		} else if (frequency > 441) {
 			rate = 2;
 		}
 	}
 	//Does this loop as long as the wave havent reaches its length.
-	while (count < length) {	
-		if (count % (countperiod / 2) == 0) { //for each half period, change direction of DacVoltage
+	while (count < length) {
+	
+		//for each half period, change direction of DacVoltage	
+		if (count % (countperiod / 2) == 0) { 
 			dacdir = dacdir * (-1);
 		}
 		//Give a sample to the DAC 
@@ -289,18 +291,18 @@ void makeSound_triangle(int freq, int length)
 
 
 /*
-name: makeSound_sinus
-purpose: generate sound from a sinus wave by using a lookup table. The periode to the wave will be divided into 28 parts with equal amount of ticks, where the first part will generate samples of the lookup tables first cell, the second from the lookup table from the second cell, and so on.
-argument(s):
-	freq:
-		range: 20??? to 2000??? (which will translate to 20 Hz to 2000 Hz)??????
-		purpose: determend the harmonic frequency for the wave we want to ganerate 
-	length:
-		range: 0 to infty. Specified in mili seconds.
-		purpose: determend how long the generated sound wave schould last
-return value: none
+	name: makeSound_sinus
+	purpose: generate sound from a sinus wave by using a lookup table. The periode to the wave will be divided into 28 parts with equal amount of ticks, where the first part will generate samples of the lookup tables first cell, the second from the lookup table from the second cell, and so on.
+	argument(s):
+		frequency:
+			range: minimum frequency to maximum frequency
+			purpose: determend the harmonic frequency for the wave we want to ganerate 
+		length:
+			range: 0 to infty. Specified in mili seconds.
+			purpose: determend how long the generated sound wave schould last
+	return value: none
 */
-	void makeSound_sinus(int freq, int length) {
+	void makeSound_sinus(int frequency, int length) {
 		//aThe size and the array for a lookup table used to generate the sinus wave
 		int sinusVecLength = 28;
 		int sinusVec[28] =
@@ -322,7 +324,7 @@ return value: none
 		int samplesPerSecond = 44100;
 
 		//Number of tics per periode
-		int countperiod = samplesPerSecond / freq;
+		int countperiod = samplesPerSecond / frequency;
 		
 		//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
 		length = length * (14000/9);

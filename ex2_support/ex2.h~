@@ -1,7 +1,8 @@
 #ifndef ex2
 #define ex2
 
-#define SAMPLE_PERIOD 318	//The period between sound samples, in clock cycles
+//The period between sound samples, in clock cycles
+#define SAMPLE_PERIOD 318
 
 
 // ------------- DAC ------------- //
@@ -32,7 +33,7 @@ void playSong(int buttonX, int wave);
 void setup_GPIO();
 void buttonPressed(int buttonX, int *wave);
 void Time(uint32_t uS);
-void Delay_C(uint32_t mS);
+void delay_C(uint32_t mS); //HVA STÅR DELAY_C FOR???? TODO
 
 //LEDs functions
 void turnOffLEDs();
@@ -45,15 +46,13 @@ void setup_timer(uint16_t period);
 
 // ------------- INTERRUPTS ------------- //
 //preperation function
-//void setupNVIC ();
-//void Sleep ();
 
 void disableRam();
 void setup_interruptGPIO();	//setupNVIC
 void setup_interrupt();		//setupNVIC
 void setup_sleep();
 
-/*notes*/
+//notes
 #define Hl 123
 #define Cl 131
 #define Dl 147

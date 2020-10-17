@@ -5,10 +5,10 @@
 #include "ex2.h"
 
 /*
-name: TIMER1_IRQHandler
-purpose: handles interrupt provoked by the timer
-argument(s): none
-return value: none
+	name: TIMER1_IRQHandler
+	purpose: handles interrupt provoked by the timer
+	argument(s): none
+	return value: none
 */
 
 void __attribute__ ((interrupt)) TIMER1_IRQHandler()
@@ -19,10 +19,10 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 }
 
 /*
-name: GPIO_EVEN_IRQHandler
-purpose: handles interrupt provoked by the even GPIO pins, and run a functionality accorrding to which pin that is/was pressed.
-argument(s): none
-return value: none
+	name: GPIO_EVEN_IRQHandler
+	purpose: handles interrupt provoked by the even GPIO pins, and run a functionality accorrding to which pin that is pressed.
+	argument(s): none
+	return value: none
  */
 void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler(int *wave)
 {
@@ -39,10 +39,10 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler(int *wave)
 }
 
 /*
-name: GPIO_EVEN_IRQHandler
-purpose: handles interrupt provoked by the odd GPIO pins, and run a functionality accorrding to which pin that is/was pressed.
-argument(s): none
-return value: none
+	name: GPIO_EVEN_IRQHandler
+	purpose: handles interrupt provoked by the odd GPIO pins, and run a functionality accorrding to which pin that is pressed.
+	argument(s): none
+	return value: none
  */
 void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler(int *wave)
 {
@@ -57,6 +57,6 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler(int *wave)
 	buttonPressed(*GPIO_PC_DIN, wave);
 
 	//prepering to go back to sleep
-	//stopDAC();
-	//turnOffLEDs();
+	stopDAC();
+	turnOffLEDs();
 }

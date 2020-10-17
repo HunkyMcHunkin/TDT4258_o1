@@ -32,7 +32,7 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler(int *wave)
 	setup_DAC();
 	startDAC();
 	//run functionality specified by pushed button
-	buttonPressed(*GPIO_PC_DIN, *wave);
+	buttonPressed(*GPIO_PC_DIN, wave);
 	//prepering to go back to sleep
 	stopDAC();
 	turnOffLEDs();
@@ -54,7 +54,7 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler(int *wave)
 	startDAC();
 
 	//run functionality specified by pushed button
-	buttonPressed(*GPIO_PC_DIN, *wave);
+	buttonPressed(*GPIO_PC_DIN, wave);
 
 	//prepering to go back to sleep
 	//stopDAC();

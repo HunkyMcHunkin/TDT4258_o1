@@ -5,20 +5,18 @@
 #include "ex2.h"
 
 /*
-name: main
-purpose: program the microcontroller runs. Sets up nessesary settings, sleeps if it is not interrupted by interrupt signals.
-argument(s): none
-return value: none
+	name: main
+	purpose: program the microcontroller start running. Sets up nessesary settings, and sleeps if it is not interrupted by interrupt signals.
+	argument(s): none
+	return value: none
 */
 int main(void)
 {
-
-	//int waveValue = 0;
-	int *wave;		// = ¥waveValue;
+	int *wave;
 	*wave = 2;
 
 	//setup configurations
-	//disableRam ();
+	//disableRam (); TODO - sjekk om denne funker!
 	setup_GPIO();		//seupGPIO
 	setup_interruptGPIO();	//setupNVIC
 	setup_interrupt();	//setupNVIC
@@ -74,7 +72,7 @@ void setup_interruptGPIO()
 
 }
 
-//Kan nå erstattes av de to setup-funksjonene over
+//Kan nå erstattes av de to setup-funksjonene over TODO!!
 void setup_NVIC()
 {
 	*GPIO_EXTIPSELL = 0x22222222;
@@ -93,7 +91,7 @@ void setup_NVIC()
   */
 void setup_sleep()
 {
-	//enable SLEEPONEXIT 
+	//enable SLEEPONEXIT TODO SJEKK OM DISSE FUNKER!
 	//*SCR |= (1 << 1);
 
 	//enable SLEEPDEEP

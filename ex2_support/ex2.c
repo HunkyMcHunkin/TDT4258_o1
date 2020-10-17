@@ -14,6 +14,7 @@ int main(void)
 {
 	//set up a pointer to a variabel that will hold what waveformat the microcontroller use to play songs
 	int *wave;
+	
 	//set to waveformat 2, which correspond to triangle sound waves
 	*wave = 2;
 	
