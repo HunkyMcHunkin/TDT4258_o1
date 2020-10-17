@@ -51,7 +51,7 @@ void startDAC()
 */
 void stopDAC()
 {
-	//disable DAC output to pin and ADC, and set the frequency to high frequency peripheral clock frecuency TODO
+	//disable DAC output to pin and ADC, and set the frequency to high frequency peripheral clock frecuency TODO (? we never disable the timer, so the frequency is set)
 	*DAC0_CTRL &= ~(1 << 1);
 
 	//disable channel 0
@@ -79,16 +79,16 @@ void stopDAC()
 void makeSound(int freqency, int length, int wave)
 {
 	switch (wave) {
-	case SQUARE:
+	case 0:
 		makeSound_square(freqency, length);
 		break;
-	case SAWTOOTH:
+	case 1:
 		makeSound_sawtooth(freqency, length);
 		break;
-	case TRIANGLE:
+	case 2:
 		makeSound_triangle(freqency, length);
 		break;
-	case SINUS:
+	case 3:
 		makeSound_sinus(freqency, length);
 		break;
 	}
@@ -109,7 +109,7 @@ void makeSound(int freqency, int length, int wave)
 */
 void makeSound_square(int frequency, int length)
 {
-	//holds the count of number of ticks
+	//holds the count of number of while iterations
 	int count = 1;
 
 	//holds the strength of the sound 
@@ -118,11 +118,17 @@ void makeSound_square(int frequency, int length)
 	//Number of samples the microcontroller generates per second.
 	int samplesPerSecond = 44100;
 
-	//Number of tics per periode
+	//Number of counts per periode
 	int countperiod = samplesPerSecond / frequency;
 
-	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time} TODO: gjerne sett 14000 som en variabel og 7 som en variabel sånn at vi skjønner hva de faktisk er og gjør, akkurat nå er det bare 2 tilfeldige tall.
-	length = length * (14000 / 7);
+	//the CMU clock frequency
+	int clockFrequency = 14000000; // ALTERNATIV clockFrequency = 140000 MhZ SLIK AT VI KAN DROPPE 1000 ETTERPÅ
+	
+	// the average clock periods needed to compleat one while iteration
+	int clockPeriodsWhileLoop = 6;
+	
+	//turn length into length in ms into corresponding while itterations. length = {determed length in milli second} / {average while loop time in milli seconds}
+	length = length* (clockFrequency / (1000*clockPeriodsWhileLoop)); //( Må JEG FORKLARE AT 1000 KOMMER FRA TRANSFORMASJONEN MELLOM SEKUNDER TIL MILLI SEKUNDER?)
 
 	//Does this loop as long as the wave havent reaches its length.
 	while (count < length) {
@@ -136,11 +142,11 @@ void makeSound_square(int frequency, int length)
 				dacvolt = 100;
 			}
 
-			//Give a sample to the DAC 
+			//Write the voltage to the DAC 
 			*DAC0_CH0DATA = dacvolt;
 			*DAC0_CH1DATA = dacvolt;
 		}
-		//Write a sample to DAC 
+		//increace the count, to ceep track of note-length
 		count++;
 	}
 }
@@ -160,7 +166,7 @@ void makeSound_square(int frequency, int length)
 */
 void makeSound_sawtooth(int frequency, int length)
 {
-	//holds the count of number of ticks
+	//holds the count of number of while iterations
 	int count = 1;
 
 	//holds the strength of the sound 
@@ -169,11 +175,17 @@ void makeSound_sawtooth(int frequency, int length)
 	//Number of samples the microcontroller generates per second.
 	int samplesPerSecond = 44100;
 
-	//Number of tics per periode
+	//Number of counts per periode
 	int countperiod = samplesPerSecond / frequency;
 
-	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
-	length = length * (14000 / 7);
+	//the CMU clock frequency in milli hertz
+	int clockFrequency = 14000;
+	
+	// the average clock periods needed to compleat one while iteration
+	int clockPeriodsWhileLoop = 10;
+	
+	//turn length into length into corresponding while itterations. length = {determed length in second} / {average while loop time}
+	length = length * (clockFrequency / clockPeriodsWhileLoop); 
 	
 	//calculates how often i must update voltage to swing between 0 and 100
 	int dacUpTime = countperiod / 100;
@@ -190,22 +202,22 @@ void makeSound_sawtooth(int frequency, int length)
 			rate = 2;
 		}
 	}
-	
-	//MAREN - GJERNE FORKALR HVA SOM SKJER HER! TODO
-	int dacUpCount = 1;
-
+	//Does this loop as long as the wave havent reaches its length.
 	while (count < length) {
+		//Checks if a periode is reached
 		if (count % countperiod == 0) {
+			//if so reset voltage to start value
 			dacvolt = 0;
 		}
+		//Write the voltage to the DAC 
 		*DAC0_CH0DATA = dacvolt;
 		*DAC0_CH1DATA = dacvolt;
-		if (dacUpCount >= dacUpTime) {
+		//checks if we should update voltage
+		if ((count % dacUpTime) == 0) {
 			dacvolt = dacvolt + (1 * rate);
-			dacUpCount = 0;
 		}
+		//increace the count, to ceep track of note-length
 		count++;
-		dacUpCount++;
 	}
 }
 
@@ -225,7 +237,7 @@ void makeSound_sawtooth(int frequency, int length)
 void makeSound_triangle(int frequency, int length)
 {
 
-	//holds the count of number of ticks
+	//holds the count of number of while iterations
 	int count = 1;
 
 	//holds the strength of the sound 
@@ -234,11 +246,17 @@ void makeSound_triangle(int frequency, int length)
 	//Number of samples the microcontroller generates per second.
 	int samplesPerSecond = 44100;
 
-	//Number of tics per periode
+	//Number of counts per periode
 	int countperiod = samplesPerSecond / frequency;
 
-	//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
-	length = length * (14000/11);
+	//the CMU clock frequency in milli hertz
+	int clockFrequency = 14000;
+	
+	// the average clock periods needed to compleat one while iteration
+	int clockPeriodsWhileLoop = 11;
+	
+	//turn length into length in ms into corresponding while itterations. length = {determed length in second} / {average while loop time}
+	length = length * (clockFrequency / clockPeriodsWhileLoop);
 
 	//variable for increacing/decresing dacVolt
 	int dacdir = 1;
@@ -277,14 +295,14 @@ void makeSound_triangle(int frequency, int length)
 		if ((count % dacUpTime) == 0) {  
 			//dacUpCount = 0;
 			dacVolt = dacVolt + (dacdir * rate);
-			//checks if value have gone outside range, and cut the triangle signal if it have ?????
+			//checks if value have gone outside range, and cut the triangle signal if it have (THE VOLTAGE WILL GO OUTSIDE THE RANGE FOR LOW FREQUANCIES, MAKING THE SOUND UNBARABLE LOUD)
 			if (dacVolt>100){   		
 			      dacVolt=100;
 			} else if (dacVolt < 0) {
 				dacVolt = 0;
 			}
+			//increace the count, to ceep track of note-length
 			count++;
-			//dacUpCount++; ?????
 		}
 	}
 }
@@ -326,8 +344,14 @@ void makeSound_triangle(int frequency, int length)
 		//Number of tics per periode
 		int countperiod = samplesPerSecond / frequency;
 		
-		//turn length into length into corresponding while itterations. length = {determed length} / {average while loop time}
-		length = length * (14000/9);
+		//the CMU clock frequency in milli hertz
+		int clockFrequency = 14000;
+	
+		// the average clock periods needed to compleat one while iteration
+		int clockPeriodsWhileLoop = 9;
+	
+		//turn length into length in ms into corresponding while itterations. length = {determed length in second} / {average while loop time}
+		length = length* (clockFrequency / clockPeriodsWhileLoop);
 
 		//Does this loop as long as the wave havent reaches its length
 		while (count < length) {

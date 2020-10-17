@@ -13,7 +13,7 @@ void stopDAC();
 
 //functions that generate sounds
 void makeSound_square(int freqency, int length);
-void makeSound_saberthoot(int freqency, int length);
+void makeSound_sawtooth(int freqency, int length);
 void makeSound_triangle(int freqency, int length);
 void makeSound_sinus(int freqency, int length);
 
@@ -26,12 +26,14 @@ void startUpSong(int wave);
 void updatewave(int *wave);
 void makeSong(int *frecquencyVector, int sizeVectors,
 	      int *lengthFrequencyVector, int wave);
+	      
+void buttonPressed(int buttonX, int *wave);
+
 void playSong(int buttonX, int wave);
 
 // ------------- GPIO ------------- //
 //preperation function
 void setup_GPIO();
-void buttonPressed(int buttonX, int *wave);
 void Time(uint32_t uS);
 void delay_C(uint32_t mS); //HVA STÅR DELAY_C FOR???? TODO
 

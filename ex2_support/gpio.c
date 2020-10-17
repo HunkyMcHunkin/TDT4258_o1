@@ -127,7 +127,7 @@ void turnOffLEDs()
 
     return value: none
   */
-/* TODO sjekk dette, for denne funksjonen er definert 2 ganger.
+/* TODO sjekk dette, for denne funksjonen er definert 2 ganger. (HADDE OPRINNELIG BRUKT SONGS.C FILEN ISTEDET FOR ACTIONS.C (DA VAR FREMDELES BUTTONPRESSED FUNKSJONEN HER), MEN ENDRA DET TILBAKE)
 void buttonPressed(int buttonX, int *wave)
 {
 	//changing waveformat
@@ -149,6 +149,7 @@ void buttonPressed(int buttonX, int *wave)
 /*
 	name: Time
 	purpose: Count the time specified by uS TODO: uS ???? Skjønner at det er en parameter, men hva står uS for? er det mulig med et bedre forklart navn eller forklaring til variablene?
+	JEG TROR DET STÅR FOR TID I MIKRO SEKUNDER (10^-6 sekunder =\MU sekunder)
 	argument(s):
 			uS:
 				range: 0 to 4294967296
