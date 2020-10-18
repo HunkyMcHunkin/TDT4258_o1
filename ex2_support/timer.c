@@ -7,7 +7,6 @@
 //------------ ex2 -------------//
 //Here we have functions related to timing. This includes a setup of the timer, and delay functions
 
-
 /*
 	name: setup_timer
 	purpose: sets up timer by configure registers. 
@@ -45,7 +44,7 @@ void delayMicroSeconds(uint32_t microSeconds)
 {
 	uint32_t i, s = 0;
 
-	for (i = 0; i < microSeconds; i++){
+	for (i = 0; i < microSeconds; i++) {
 		s++;
 	}
 }
@@ -66,4 +65,3 @@ void delayMilliSeconds(uint32_t milliSeconds)
 		delayMicroSeconds(1000);
 	};
 }
-

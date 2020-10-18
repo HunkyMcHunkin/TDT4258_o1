@@ -59,7 +59,7 @@ void startUpSong()
 
 	//set waveformat
 	int waveFormat = SINUS;
-	
+
 	//play the song
 	makeSong(frequencies, sizeArrays, lengths, waveFormat);
 
@@ -75,7 +75,7 @@ void updateWaveFormat()
 {
 	//Change the waveformat by increasing the waveformat held by the gloabal variable by one
 	waveFormat_globalVariable += 1;
-	
+
 	//checks if the value of the wave is outside the range to the variabel, and if so set the value to SQUARE.
 	if (waveFormat_globalVariable == 4) {
 		waveFormat_globalVariable = SQUARE;
@@ -101,14 +101,12 @@ void updateWaveFormat()
 	return value: none
 */
 
-void
-makeSong(int *frequencies, int sizeArrays, int *lengths,
-	 int waveFormat)
+void makeSong(int *frequencies, int sizeArrays, int *lengths, int waveFormat)
 {
 
 	//play a song by generating the sounds of certain frequencies and waveformat for a given amount of time
 	for (int i = 0; i < sizeArrays; i++) {
-			playSound(frequencies[i], lengths[i], waveFormat);
+		playSound(frequencies[i], lengths[i], waveFormat);
 	}
 }
 
@@ -116,31 +114,29 @@ makeSong(int *frequencies, int sizeArrays, int *lengths,
     name: buttonPressed
     purpose: Run different prosedures. Either it changes the wave format used to play songs, or it plays a song with wave format determend by the gloabal variable that holdes the wave format. Set ligths to symbolize what waveformat that is currently in use. Turn off all LEDs when finished playing a song.
     argument(s):
-    	buttonX:
-    		range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
-    		purpose: choose which kind of prosedure will run, change wave or play a song
+    buttonX:
+    range: BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8
+    purpose: choose which kind of prosedure will run, change wave or play a song
     return value: none
   */
 void buttonPressed(int buttonX)
-{		
+{
 	//changing waveformat
 	if (buttonX == BUTTON1) {
 		updateWaveFormat();
 		setLEDs_waveFormat(waveFormat_globalVariable);
-				
+
 		//delay so the waveformats dont change in a blink of an eye
 		delayMilliSeconds(100);
 	}
-	
 	//play a song
 	else {
 		setLEDs_waveFormat(waveFormat_globalVariable);
 		playSong(buttonX, waveFormat_globalVariable);
 	}
-	
+
 	turnOffLEDs();
 }
-
 
 /*
 name: playSong
@@ -170,30 +166,41 @@ void playSong(int buttonX, int waveFormat)
 	int frequencies_twinkleTwinkleLittleStar[14] =
 	    { E, E, C, C, D, D, C, H, H, A, A, G, G, F };
 	int lengths_twinkleTwinkleLittleStar[14] =
-	    { 100, 100, 100, 100, 100, 100, 180, 100, 100, 100, 100, 100, 100, 200 };
+	    { 100, 100, 100, 100, 100, 100, 180, 100, 100, 100, 100, 100, 100,
+200 };
 
 	int sizeVectors_londonBridge = 24;
 	int frequencies_londonBridge[24] =
-	    { C, D, C, H, A, H, C, G, A, H, A, H, C, C, D, C, H, A, H, C, G, C, A, F };
+	    { C, D, C, H, A, H, C, G, A, H, A, H, C, C, D, C, H, A, H, C, G, C,
+A, F };
 	int lengths_londonBridge[24] =
-	    { 65, 60, 60, 60, 60, 60, 90, 60, 60, 90, 60, 60, 90, 60, 60, 60, 60,
-		60, 60, 90, 65, 60, 60, 150 };
+	    { 65, 60, 60, 60, 60, 60, 90, 60, 60, 90, 60, 60, 90, 60, 60, 60,
+60,
+		60, 60, 90, 65, 60, 60, 150
+	};
 
 	int sizeVectors_zelda = 11;
 	int frequencies_zelda[11] = { E, G, Dl, E, G, Dl, E, G, D, C, G };
-	int lengths_zelda[11] = { 120, 120, 180, 120, 120, 180, 120, 120, 120, 100, 200 };
+	int lengths_zelda[11] =
+	    { 120, 120, 180, 120, 120, 180, 120, 120, 120, 100, 200 };
 
 	int sizeVectors_mikkelRev = 24;
 	int frequencies_mikkelRev[24] =
 	    { E, G, Cl, E, G, Cl, F, A, C, A, A, G, E, G, Cl, E, G, Cl, Dl, E,
-		F, Hl, Dl, Cl};
+		F, Hl, Dl, Cl
+	};
 	int lengths_mikkelRev[24] =
 	    { 70, 70, 140, 70, 70, 140, 70, 70, 70, 70, 140, 140, 70, 70, 140,
-		70, 70, 140, 70, 70, 70, 70, 140, 200};
+		70, 70, 140, 70, 70, 70, 70, 140, 200
+	};
 
 	int sizeVectors_harryPotter = 30;
-	int frequencies_harryPotter[30] = {E, A, C, H, A, Eh, D, H, A, C, H, G, H, E, A, C, H, A, Eh, Gh, Fh, Fh, C, Fh, Eh, Eh, E, C, A, A};
-	int lengths_harryPotter[30] ={80, 90, 80, 80, 90, 80, 120, 120, 80, 80, 80, 80, 80, 120, 80, 80, 80, 80, 80, 80, 80, 80, 100, 80, 80, 80, 80, 80, 80, 200};
+	int frequencies_harryPotter[30] =
+	    { E, A, C, H, A, Eh, D, H, A, C, H, G, H, E, A, C, H, A, Eh, Gh, Fh,
+Fh, C, Fh, Eh, Eh, E, C, A, A };
+	int lengths_harryPotter[30] =
+	    { 80, 90, 80, 80, 90, 80, 120, 120, 80, 80, 80, 80, 80, 120, 80, 80,
+80, 80, 80, 80, 80, 80, 100, 80, 80, 80, 80, 80, 80, 200 };
 
 	//Chooses which song to play
 	switch (buttonX) {
@@ -201,38 +208,36 @@ void playSong(int buttonX, int waveFormat)
 		makeSong(frequencies_fail, sizeVectors_fail, lengths_fail,
 			 waveFormat);
 		break;
-		
+
 	case BUTTON3:
-		makeSong(frequencies_win, sizeVectors_win, lengths_win, waveFormat);
+		makeSong(frequencies_win, sizeVectors_win, lengths_win,
+			 waveFormat);
 		break;
-		
+
 	case BUTTON4:
 		makeSong(frequencies_twinkleTwinkleLittleStar,
 			 sizeVectors_twinkleTwinkleLittleStar,
 			 lengths_twinkleTwinkleLittleStar, waveFormat);
 		break;
-		
+
 	case BUTTON5:
 		makeSong(frequencies_londonBridge, sizeVectors_londonBridge,
 			 lengths_londonBridge, waveFormat);
 		break;
-		
+
 	case BUTTON6:
 		makeSong(frequencies_zelda, sizeVectors_zelda, lengths_zelda,
 			 waveFormat);
 		break;
-		
+
 	case BUTTON7:
-		makeSong(frequencies_harryPotter, sizeVectors_harryPotter, lengths_harryPotter,
-			 waveFormat);
+		makeSong(frequencies_harryPotter, sizeVectors_harryPotter,
+			 lengths_harryPotter, waveFormat);
 		break;
-		
+
 	case BUTTON8:
 		makeSong(frequencies_mikkelRev, sizeVectors_mikkelRev,
 			 lengths_mikkelRev, waveFormat);
 		break;
 	}
 }
-
-
-

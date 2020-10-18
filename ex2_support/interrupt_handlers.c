@@ -30,10 +30,10 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 {
 	int buttonStatus = *GPIO_PC_DIN;
-	
+
 	//clear interrupt
 	*GPIO_IFC = *GPIO_IF;
-	
+
 	setup_DAC();
 	startDAC();
 	buttonPressed(buttonStatus);
@@ -49,10 +49,10 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 {
 	int buttonStatus = *GPIO_PC_DIN;
-	
+
 	//clear interrupt
 	*GPIO_IFC = *GPIO_IF;
-	
+
 	setup_DAC();
 	startDAC();
 	buttonPressed(buttonStatus);

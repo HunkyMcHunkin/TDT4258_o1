@@ -7,7 +7,6 @@
 //------------ ex2 -------------//
 //Here we have the main function the interrupt solution uses
 
-
 /*
 	name: main
 	purpose: program the microcontroller start running. Sets up nessesary settings, and sleeps if it is not interrupted by interrupt signals.
@@ -17,10 +16,9 @@
 int main(void)
 {
 
-
 	//setup configurations
 	setup_GPIO();
-	
+
 	//setup NVIC
 	setup_interruptGPIO();
 	setup_interrupt();
@@ -30,9 +28,9 @@ int main(void)
 	setup_sleep();
 
 	startDAC();
-	startUpSong();	
+	startUpSong();
 	stopDAC();
-	
+
 	//sleeps while waiting for interrupts
 	while (1) {
 		__asm("WFI");
@@ -74,7 +72,6 @@ void setup_interruptGPIO()
 	*GPIO_IEN = 0xff;
 
 }
-
 
 /*
     name: setup_sleep

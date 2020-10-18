@@ -1,0 +1,16 @@
+READ ME
+
+To test busy wait polling solution make sure you are in the correct directory and write this to the linux terminal:
+
+make ex2.bin
+
+make upload
+
+
+To test interrupt solution make sure you are in the correct directory and write this to the linux terminal:
+
+make ex2_interrupt.bin
+
+make upload2
+
+

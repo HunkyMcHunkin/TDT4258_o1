@@ -46,8 +46,6 @@ void delayMilliSeconds(uint32_t milliSeconds);
 
 // ------------- INTERRUPTS ------------- //
 //preperation function
-
-void disableRam();
 void setup_interruptGPIO();	//setup NVIC
 void setup_interrupt();		//setup NVIC
 void setup_NVIC();

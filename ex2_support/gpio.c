@@ -7,7 +7,6 @@
 //------------ GPIO -------------//
 //Here we have functions related to the GPIO pins. This includes setup functions for GPIO pins, and set and clear functions for LEDs.
 
-
  /*
     name: setup_GPIO
     purpose: sets up GPIO mode and interrupts by configure registers. 
@@ -35,7 +34,6 @@ void setup_GPIO()
 	*GPIO_PC_DOUT = 0xff;
 }
 
- 
 /*
 	name: setLEDs_waveFormat
 	purpose: Lighting LEDs to indicate which wave format is being used.
@@ -68,7 +66,6 @@ void setLEDs_waveFormat(int waveFormat)
 	}
 }
 
-
 /*
 	name: turnOffLEDs
 	purpose: Turn off all the LEDs.
@@ -79,5 +76,3 @@ void turnOffLEDs()
 {
 	*GPIO_PA_DOUT = 0xffff;
 }
-
-

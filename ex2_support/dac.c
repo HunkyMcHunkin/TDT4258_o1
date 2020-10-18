@@ -61,7 +61,6 @@ void stopDAC()
 	*DAC0_CH1CTRL = 0;
 }
 
-
 /*
 	name: makeSound_square
 	purpose: generate sound from a square wave
@@ -81,13 +80,15 @@ void makeSound_square(int frequency, int length)
 	int samplesPerSecond = 44100;
 	int countsPerPeriod = samplesPerSecond / frequency;
 	int cmuClockFrequencyInMHz = 14000;
-	
+
 	// the average clock periods needed to compleat one while iteration
 	int clockPeriodsPerWhileLoopIteration = 6;
-	
+
 	//turn length into length in ms into corresponding while itterations. 
 	//length = {determed length in milli second} / {average while loop time in milli seconds}
-	length = length * (cmuClockFrequencyInMHz / (clockPeriodsPerWhileLoopIteration));
+	length =
+	    length * (cmuClockFrequencyInMHz /
+		      (clockPeriodsPerWhileLoopIteration));
 
 	while (count < length) {
 		//Checks if a half periode is reached
@@ -99,12 +100,11 @@ void makeSound_square(int frequency, int length)
 				dacVoltage = 100;
 			}
 
-
 		}
 		//Write the voltage to the DAC 
 		*DAC0_CH0DATA = dacVoltage;
 		*DAC0_CH1DATA = dacVoltage;
-		
+
 		//increace the count, to ceep track of note-length
 		count++;
 	}
@@ -131,15 +131,16 @@ void makeSound_sawtooth(int frequency, int length)
 	int cmuClockFrequencyInMHz = 14000;
 	int clockPeriodsPerWhileLoopIteration = 10;
 	int incrementRate = 1;
-	
+
 	//turn length into length into corresponding while itterations. 
 	//length = {determed length in second} / {average while loop time}
-	length = length * (cmuClockFrequencyInMHz / clockPeriodsPerWhileLoopIteration); 
-	
+	length =
+	    length * (cmuClockFrequencyInMHz /
+		      clockPeriodsPerWhileLoopIteration);
+
 	//calculates how often i must update voltage to swing between 0 and 100
 	int dacUpTime = countsPerPeriod / 100;
-	
-	
+
 	if (dacUpTime < 1) {
 		dacUpTime = 1;
 		if (frequency > 1323) {
@@ -154,21 +155,18 @@ void makeSound_sawtooth(int frequency, int length)
 		if (count % countsPerPeriod == 0) {
 			dacVoltage = 0;
 		}
-		
 		//checks if we should update voltage
 		if ((count % dacUpTime) == 0) {
 			dacVoltage = dacVoltage + (1 * incrementRate);
 		}
-		
 		//Write the voltage to the DAC 
 		*DAC0_CH0DATA = dacVoltage;
 		*DAC0_CH1DATA = dacVoltage;
-		
+
 		//increace the count, to ceep track of note-length
 		count++;
 	}
 }
-
 
 /*
 	name: makeSound_triangle
@@ -192,18 +190,19 @@ void makeSound_triangle(int frequency, int length)
 	int cmuClockFrequencyInMHz = 14000;
 	int clockPeriodsPerWhileLoopIteration = 11;
 	int incrementRate = 1;
-	
+
 	//turn length into length into corresponding while itterations. 
 	//length = {determed length in second} / {average while loop time}
-	length = length * (cmuClockFrequencyInMHz / clockPeriodsPerWhileLoopIteration); 
+	length =
+	    length * (cmuClockFrequencyInMHz /
+		      clockPeriodsPerWhileLoopIteration);
 
 	//variable that determends dacVoltage should increacing or decresing
 	int dacDirection = 1;
-	
+
 	//deside how often the dacVolt shuld be updated to get a value between 0 and 100 for each half period
-	int dacUpTime = (countsPerPeriod/2) / 100;
-	
-	
+	int dacUpTime = (countsPerPeriod / 2) / 100;
+
 	if (dacUpTime < 1) {
 		dacUpTime = 1;
 		if (frequency > 1102) {
@@ -218,33 +217,31 @@ void makeSound_triangle(int frequency, int length)
 	}
 
 	while (count < length) {
-	
-		//for each half period, change direction of DacVoltage	
-		if (count % (countsPerPeriod / 2) == 0) { 
+
+		//for each half period, change direction of DacVoltage  
+		if (count % (countsPerPeriod / 2) == 0) {
 			dacDirection = dacDirection * (-1);
 		}
-		
 		//update the value at correct time to swing between 0 and 100 in half of a period
-		if ((count % dacUpTime) == 0) {  
-			dacVoltage = dacVoltage + (dacDirection * incrementRate);
-			
+		if ((count % dacUpTime) == 0) {
+			dacVoltage =
+			    dacVoltage + (dacDirection * incrementRate);
+
 			//checks if value have gone outside range, and cut the triangle signal if it have
-			if (dacVoltage>100){   		
-			      dacVoltage=100;
+			if (dacVoltage > 100) {
+				dacVoltage = 100;
 			} else if (dacVoltage < 0) {
 				dacVoltage = 0;
 			}
-			
 			//Give a sample to the DAC 
 			*DAC0_CH0DATA = dacVoltage;
 			*DAC0_CH1DATA = dacVoltage;
-			
+
 			//increace the count, to ceep track of note-length
 			count++;
 		}
 	}
 }
-
 
 /*
 	name: makeSound_sinus
@@ -258,7 +255,8 @@ void makeSound_triangle(int frequency, int length)
 			purpose: determend how long the generated sound wave schould last
 	return value: none
 */
-void makeSound_sinus(int frequency, int length) {
+void makeSound_sinus(int frequency, int length)
+{
 
 	int count = 1;
 	int dacVoltage = 0;
@@ -266,35 +264,38 @@ void makeSound_sinus(int frequency, int length) {
 	int countsPerPeriod = samplesPerSecond / frequency;
 	int cmuClockFrequencyInMHz = 14000;
 	int clockPeriodsPerWhileLoopIteration = 9;
-	
+
 	//turn length into length into corresponding while itterations. 
 	//length = {determed length in second} / {average while loop time}
-	length = length * (cmuClockFrequencyInMHz / clockPeriodsPerWhileLoopIteration); 
+	length =
+	    length * (cmuClockFrequencyInMHz /
+		      clockPeriodsPerWhileLoopIteration);
 
 	//Lookup table for sinus
 	int sizeSinusLookupTable = 28;
-	int sinusLookupTable[28] = { 100, 98, 95, 89, 81, 71, 61, 50, 38, 28, 18, 10, 4, 1, 0, 1, 4, 10, 18, 28, 38, 49, 61, 71, 81, 89, 95, 98};
+	int sinusLookupTable[28] =
+	    { 100, 98, 95, 89, 81, 71, 61, 50, 38, 28, 18, 10, 4, 1, 0, 1, 4,
+10, 18, 28, 38, 49, 61, 71, 81, 89, 95, 98 };
 	int indexsinusLookupTable = 0;
 
-
-		while (count < length) {
+	while (count < length) {
 		//update the value at correct time to the next value in the sinus look up table.
-			if (count % (countsPerPeriod / sizeSinusLookupTable) == 0) {
-			
-				//Checks if we have reached the end of the look up table and start over if so
-				if (indexsinusLookupTable == sizeSinusLookupTable) {
-					indexsinusLookupTable = 0;
-				}
+		if (count % (countsPerPeriod / sizeSinusLookupTable) == 0) {
 
-				dacVoltage = sinusLookupTable[indexsinusLookupTable];
-				indexsinusLookupTable++;
-
+			//Checks if we have reached the end of the look up table and start over if so
+			if (indexsinusLookupTable == sizeSinusLookupTable) {
+				indexsinusLookupTable = 0;
 			}
-			//Write a sample to DAC 
-			*DAC0_CH0DATA = dacVoltage;
-			*DAC0_CH1DATA = dacVoltage;
 
-			//increace the count, to ceep track of note-length
-			count++;
+			dacVoltage = sinusLookupTable[indexsinusLookupTable];
+			indexsinusLookupTable++;
+
 		}
+		//Write a sample to DAC 
+		*DAC0_CH0DATA = dacVoltage;
+		*DAC0_CH1DATA = dacVoltage;
+
+		//increace the count, to ceep track of note-length
+		count++;
 	}
+}

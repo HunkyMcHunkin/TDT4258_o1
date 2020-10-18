@@ -121,9 +121,6 @@ makeSong(int *frequencies, int sizeArrays, int *lengths,
     		purpose: choose which kind of prosedure will run, change wave or play a song
     return value: none
   */
-
-int waveTest = 3;
-
 void buttonPressed(int buttonX)
 {		
 	//changing waveformat
@@ -133,7 +130,6 @@ void buttonPressed(int buttonX)
 				
 		//delay so the waveformats dont change in a blink of an eye
 		delayMilliSeconds(100);
-		
 	}
 	
 	//play a song

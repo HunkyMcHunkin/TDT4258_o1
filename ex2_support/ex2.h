@@ -4,8 +4,6 @@
 //The period between sound samples, in clock cycles
 #define SAMPLE_PERIOD 318
 
-
-
 // ------------- DAC ------------- //
 //preperation functions
 void setup_DAC();
@@ -18,13 +16,13 @@ void makeSound_sawtooth(int freqency, int length);
 void makeSound_triangle(int freqency, int length);
 void makeSound_sinus(int freqency, int length);
 
-
 // ------------- actions ------------- //
 //functions that use the other modules to do some sort of action
 void playSound(int freqency, int length, int wave);
 void startUpSong();
 void updateWaveFormat();
-void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector, int wave);
+void makeSong(int *frecquencyVector, int sizeVectors,
+	      int *lengthFrequencyVector, int wave);
 void buttonPressed(int buttonX);
 void playSong(int buttonX, int wave);
 
