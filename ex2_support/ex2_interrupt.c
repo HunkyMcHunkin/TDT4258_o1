@@ -62,7 +62,7 @@ void setup_interrupt()
   */
 void setup_interruptGPIO()
 {
-	//set external interrupt mode on pin 0 to 7 in port B.
+	//set external interrupt mode on pin 0 to 7 in port C.
 	*GPIO_EXTIPSELL = 0x22222222;
 
 	//enable falling edge trigger on pin 0 to 15
