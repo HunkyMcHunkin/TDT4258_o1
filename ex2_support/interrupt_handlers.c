@@ -24,22 +24,17 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 	argument(s): none
 	return value: none
  */
-void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler(int *wave)
+void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 {
-	int buttonIn = *GPIO_PC_DIN;
+	int buttonStatus = *GPIO_PC_DIN;
+	
 	//clear interrupt
 	*GPIO_IFC = *GPIO_IF;
-	//prepering DAC in case a song will be played
+	
 	setup_DAC();
 	startDAC();
-	//run functionality specified by pushed button
-	*GPIO_PA_DOUT = 0xAAff;
-	delay_C(100);
-	
-	buttonPressed(buttonIn, &wave);
-	//prepering to go back to sleep
+	buttonPressed(buttonStatus);
 	stopDAC();
-	//turnOffLEDs();
 }
 
 /*
@@ -48,22 +43,15 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler(int *wave)
 	argument(s): none
 	return value: none
  */
-void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler(int *wave)
+void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 {
-	int buttonIn = *GPIO_PC_DIN;
-	//clrear interrupt
+	int buttonStatus = *GPIO_PC_DIN;
+	
+	//clear interrupt
 	*GPIO_IFC = *GPIO_IF;
-
-	//prepering DAC in case a song will be played
+	
 	setup_DAC();
 	startDAC();
-
-	*GPIO_PA_DOUT = 0xAAff;
-	delay_C(100);
-	//run functionality specified by pushed button
-	buttonPressed(buttonIn, &wave);
-
-	//prepering to go back to sleep
+	buttonPressed(buttonStatus);
 	stopDAC();
-	//turnOffLEDs();
 }
