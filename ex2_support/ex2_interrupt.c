@@ -19,7 +19,6 @@ int main(void)
 
 
 	//setup configurations
-	//disableRam ();
 	setup_GPIO();
 	
 	//setup NVIC
@@ -88,16 +87,3 @@ void setup_sleep()
 	//enable SLEEPONEXIT and SLEEPDEEP
 	*SCR = 6;
 }
-
- /*
-    name: disableRam
-    purpose: configure registers to disable RAM blocks
-    argument(s): none
-    return value: none
-  */
-void disableRam()
-{
-	//power down RAM blocks 1-3
-	*EMU_MEMCTRL = 7;
-}
-
