@@ -5,10 +5,10 @@
 #include "ex2.h"
 
 /*
-name: TIMER1_IRQHandler
-purpose: handles interrupt provoked by the timer
-argument(s): none
-return value: none
+	name: TIMER1_IRQHandler
+	purpose: handles interrupt provoked by the timer
+	argument(s): none
+	return value: none
 */
 
 void __attribute__ ((interrupt)) TIMER1_IRQHandler()
@@ -19,33 +19,39 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 }
 
 /*
-name: GPIO_EVEN_IRQHandler
-purpose: handles interrupt provoked by the even GPIO pins, and run a functionality accorrding to which pin that is/was pressed.
-argument(s): none
-return value: none
+	name: GPIO_EVEN_IRQHandler
+	purpose: handles interrupt provoked by the even GPIO pins, and run a functionality accorrding to which pin that is pressed.
+	argument(s): none
+	return value: none
  */
 void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler(int *wave)
 {
+	wave = &wavevalue;
+	int buttonIn = *GPIO_PC_DIN;
 	//clear interrupt
 	*GPIO_IFC = *GPIO_IF;
 	//prepering DAC in case a song will be played
 	setup_DAC();
 	startDAC();
 	//run functionality specified by pushed button
-	buttonPressed(*GPIO_PC_DIN, wave);
+	*GPIO_PA_DOUT = 0xAAff;
+	delay_C(100);
+	
+	buttonPressed(buttonIn, &wave);
 	//prepering to go back to sleep
 	stopDAC();
-	turnOffLEDs();
+	//turnOffLEDs();
 }
 
 /*
-name: GPIO_EVEN_IRQHandler
-purpose: handles interrupt provoked by the odd GPIO pins, and run a functionality accorrding to which pin that is/was pressed.
-argument(s): none
-return value: none
+	name: GPIO_EVEN_IRQHandler
+	purpose: handles interrupt provoked by the odd GPIO pins, and run a functionality accorrding to which pin that is pressed.
+	argument(s): none
+	return value: none
  */
 void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler(int *wave)
 {
+	int buttonIn = *GPIO_PC_DIN;
 	//clrear interrupt
 	*GPIO_IFC = *GPIO_IF;
 
@@ -53,10 +59,12 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler(int *wave)
 	setup_DAC();
 	startDAC();
 
+	*GPIO_PA_DOUT = 0xAAff;
+	delay_C(100);
 	//run functionality specified by pushed button
-	buttonPressed(*GPIO_PC_DIN, wave);
+	buttonPressed(buttonIn, &wave);
 
 	//prepering to go back to sleep
-	//stopDAC();
+	stopDAC();
 	//turnOffLEDs();
 }

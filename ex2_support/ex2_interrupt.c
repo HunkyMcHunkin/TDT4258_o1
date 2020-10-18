@@ -4,6 +4,8 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
+
+
 /*
 	name: main
 	purpose: program the microcontroller start running. Sets up nessesary settings, and sleeps if it is not interrupted by interrupt signals.
@@ -12,14 +14,17 @@
 */
 int main(void)
 {
-	int *wave;
+	int wavevalue = 0;
+	int *wave = &wavevalue;
 	*wave = 2;
+
 
 	//setup configurations
 	//disableRam (); TODO - sjekk om denne funker!
 	setup_GPIO();		//seupGPIO
-	setup_interruptGPIO();	//setupNVIC
-	setup_interrupt();	//setupNVIC
+	//setup_interruptGPIO();	//setupNVIC
+	//setup_interrupt();	//setupNVIC
+	setup_NVIC();
 
 	setup_DAC();
 	setup_timer(SAMPLE_PERIOD);
@@ -28,8 +33,8 @@ int main(void)
 
 	startDAC();
 	startUpSong(*wave);
-	stopDAC();
-
+	//stopDAC();
+	*GPIO_PA_DOUT = 0xEEff;
 	//sleeps while waiting for interrupts
 	while (1) {
 		__asm("WFI");

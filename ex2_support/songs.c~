@@ -20,7 +20,7 @@ argument(s):
 		purpose: determine which waveformat to play the song in
 return value: none
 */
-
+/*
 void startUpSong(int wave)
 {
 
@@ -41,7 +41,7 @@ argument(s):
 		purpose: determine which waveformat to play the song in
 return value: none
 */
-
+/*
 void updatewave(int *wave)
 {
 	//*GPIO_PA_DOUT = 0xffff;
@@ -68,7 +68,7 @@ argument(s):
 		purpose: determine which waveformat the sound will be played in
 return value: none
 */
-
+/*
 void
 makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector,
 	 int wave)
@@ -122,7 +122,7 @@ argument(s):
 		range: 0, 1, 2, 3
 		purpose: determine which waveformat to play the song in
 return value: none
-*/
+*//*
 void playSong(int buttonX, int wave)
 {
 	int sizeVectors_fail = 3;
@@ -208,7 +208,7 @@ void playSong(int buttonX, int wave)
 		turnOffLEDs();
 		break;
 	}
-}
+}*/
 
 
 

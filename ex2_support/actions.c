@@ -94,25 +94,36 @@ makeSong(int *frequencies, int sizeArrays, int *lengths,
     return value: none
   */
 
+int waveTest = 3;
+
 void buttonPressed(int buttonX, int *wave)
 {
+	*GPIO_PA_DOUT = 0x00ff;
+	//delay_C(100);
 	//set LEDs according to which waveformat that is currentliy in use
 	setLEDs_waveFormat(*wave);
+	
 	
 	//changing waveformat
 	if (buttonX == BUTTON1) {
 		updatewave(wave);
+		//*GPIO_PA_DOUT = 0x00ff;
+	//delay_C(100);
 		
 		//update LEDs to show the new waveformat
-		setLEDs_waveFormat(*wave);
+		//setLEDs_waveFormat(*wave);
 		
 		//delay so the waveformats dont change in a blink of an eye
-		Delay_C(10);
+		//delay_C(10);
+		//turnOffLEDs();
 	}
 	
 	//play a song and turn off all LEDs when finished
 	else {
-		playSong(buttonX, *wave);
+		//*GPIO_PA_DOUT = 0xf0ff;
+		//delay_C(100);
+		
+		playSong(buttonX, 2);
 		turnOffLEDs();
 	}
 }

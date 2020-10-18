@@ -5,6 +5,7 @@
 #define SAMPLE_PERIOD 318
 
 
+
 // ------------- DAC ------------- //
 //preperation functions
 void setup_DAC();
@@ -20,7 +21,7 @@ void makeSound_sinus(int freqency, int length);
 //function that plays the sound
 void makeSound(int freqency, int length, int wave);
 
-// ------------- songs ------------- //
+// ------------- actions ------------- //
 //functions that use the other modules to do some sort of action
 void startUpSong(int wave);
 void updatewave(int *wave);
@@ -34,7 +35,7 @@ void playSong(int buttonX, int wave);
 // ------------- GPIO ------------- //
 //preperation function
 void setup_GPIO();
-void Time(uint32_t uS);
+void time_microSeconds(uint32_t uS);
 void delay_C(uint32_t mS); //HVA STÅR DELAY_C FOR???? TODO
 
 //LEDs functions
@@ -52,6 +53,7 @@ void setup_timer(uint16_t period);
 void disableRam();
 void setup_interruptGPIO();	//setupNVIC
 void setup_interrupt();		//setupNVIC
+void setup_NVIC();
 void setup_sleep();
 
 //notes

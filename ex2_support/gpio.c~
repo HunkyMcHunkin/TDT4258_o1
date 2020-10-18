@@ -157,7 +157,7 @@ void buttonPressed(int buttonX, int *wave)
 	
 	return value: none
 */
-void Time(uint32_t uS)
+void time(uint32_t uS)
 {
 	uint32_t i, s = 0;
 
@@ -174,10 +174,10 @@ void Time(uint32_t uS)
 				purpose: Specify the delay in milliseconds.
 	return value: none
 */
-void Delay_C(uint32_t mS)
+void delay_C(uint32_t mS)
 {
 	uint32_t i;
 	for (i = 0; i < mS; i++) {
-		Time(10000);
+		time(10000);
 	};
 }
