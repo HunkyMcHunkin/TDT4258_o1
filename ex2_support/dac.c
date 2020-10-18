@@ -85,7 +85,8 @@ void makeSound_square(int frequency, int length)
 	// the average clock periods needed to compleat one while iteration
 	int clockPeriodsPerWhileLoopIteration = 6;
 	
-	//turn length into length in ms into corresponding while itterations. length = {determed length in milli second} / {average while loop time in milli seconds}
+	//turn length into length in ms into corresponding while itterations. 
+	//length = {determed length in milli second} / {average while loop time in milli seconds}
 	length = length * (cmuClockFrequencyInMHz / (clockPeriodsPerWhileLoopIteration));
 
 	while (count < length) {
@@ -131,7 +132,8 @@ void makeSound_sawtooth(int frequency, int length)
 	int clockPeriodsPerWhileLoopIteration = 10;
 	int incrementRate = 1;
 	
-	//turn length into length into corresponding while itterations. length = {determed length in second} / {average while loop time}
+	//turn length into length into corresponding while itterations. 
+	//length = {determed length in second} / {average while loop time}
 	length = length * (cmuClockFrequencyInMHz / clockPeriodsPerWhileLoopIteration); 
 	
 	//calculates how often i must update voltage to swing between 0 and 100
@@ -191,7 +193,8 @@ void makeSound_triangle(int frequency, int length)
 	int clockPeriodsPerWhileLoopIteration = 11;
 	int incrementRate = 1;
 	
-	//turn length into length into corresponding while itterations. length = {determed length in second} / {average while loop time}
+	//turn length into length into corresponding while itterations. 
+	//length = {determed length in second} / {average while loop time}
 	length = length * (cmuClockFrequencyInMHz / clockPeriodsPerWhileLoopIteration); 
 
 	//variable that determends dacVoltage should increacing or decresing
@@ -264,7 +267,8 @@ void makeSound_sinus(int frequency, int length) {
 	int cmuClockFrequencyInMHz = 14000;
 	int clockPeriodsPerWhileLoopIteration = 9;
 	
-	//turn length into length into corresponding while itterations. length = {determed length in second} / {average while loop time}
+	//turn length into length into corresponding while itterations. 
+	//length = {determed length in second} / {average while loop time}
 	length = length * (cmuClockFrequencyInMHz / clockPeriodsPerWhileLoopIteration); 
 
 	//Lookup table for sinus
