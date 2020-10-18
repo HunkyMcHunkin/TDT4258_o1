@@ -4,6 +4,10 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
+//------------ GPIO -------------//
+//Here we have functions related to the GPIO pins. This includes setup functions for GPIO pins, and set and clear functions for LEDs.
+
+
  /*
     name: setup_GPIO
     purpose: sets up GPIO mode and interrupts by configure registers. 

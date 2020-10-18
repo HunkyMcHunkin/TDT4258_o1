@@ -5,7 +5,7 @@
 #include "ex2.h"
 
 //------------ ex2 -------------//
-//Here we have the main function the busy wait polling solution use
+//Here we have the main function the busy wait polling solution uses
 
  /*
     name: main

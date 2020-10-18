@@ -28,7 +28,7 @@ int main(void)
 	//operate on buttonpress
 	while (1) {
 
-		button_in = *GPIO_PC_DIN;
+		buttonStatus = *GPIO_PC_DIN;
 		buttonPressed(buttonStatus);
 
 	}
