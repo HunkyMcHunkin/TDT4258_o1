@@ -4,6 +4,10 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
+//------------ GPIO -------------//
+//Here we have functions related to the GPIO pins. This includes setup functions for GPIO pins, and set and clear functions for LEDs.
+
+
  /*
     name: setup_GPIO
     purpose: sets up GPIO mode and interrupts by configure registers. 
@@ -76,40 +80,4 @@ void turnOffLEDs()
 	*GPIO_PA_DOUT = 0xffff;
 }
 
-/*
-	name: Time
-	purpose: Count the time specified by uS TODO: uS ???? Skjønner at det er en parameter, men hva står uS for? er det mulig med et bedre forklart navn eller forklaring til variablene?
-	JEG TROR DET STÅR FOR TID I MIKRO SEKUNDER (10^-6 sekunder =\MU sekunder)
-	argument(s):
-			uS:
-				range: 0 to 4294967296
-				purpose: Specify the value to count up to
-	
-	return value: none
-*/
-void delayMicroSeconds(uint32_t uS)
-{
-	uint32_t i, s = 0;
 
-	for (i = 0; i < uS; i++){
-		s++;
-}
-}
-
-/*
-	name: Delay_C TODO: hvorfor delay_C og ikke bare delay? Konvensjonen er at funksjoner starter med små bokstaver
-	purpose: Delay by mS times 10 milliseconds.
-	argument(s):
-			mS:
-				range: 0 to 4294967296
-				purpose: Specify the delay in milliseconds.
-	return value: none
-*/
-void delayMilliSeconds(uint32_t mS)
-{
-		*GPIO_PA_DOUT = (0x3fff);
-	uint32_t i;
-	for (i = 0; i < mS; i++) {
-		delayMicroSeconds(10000);
-	};
-}

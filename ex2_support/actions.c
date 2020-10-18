@@ -7,7 +7,8 @@
 // ------------- ACTIONS ------------- //
 //functions that use the other modules to do some sort of action
 
-int waveFormat_globalVariable = 0;
+//global variable to hold what kind of wave format the system currently use
+int waveFormat_globalVariable = SQUARE;
 
 /*
 	name: playSound
@@ -131,8 +132,7 @@ void buttonPressed(int buttonX)
 		setLEDs_waveFormat(waveFormat_globalVariable);
 				
 		//delay so the waveformats dont change in a blink of an eye
-		delayMicroSeconds(20);
-		
+		delayMilliSeconds(100);
 		
 	}
 	

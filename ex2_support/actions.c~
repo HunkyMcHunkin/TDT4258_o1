@@ -131,7 +131,8 @@ void buttonPressed(int buttonX)
 		setLEDs_waveFormat(waveFormat_globalVariable);
 				
 		//delay so the waveformats dont change in a blink of an eye
-		delayMicroSeconds(20);
+		delayMilliSeconds(100);
+		
 	}
 	
 	//play a song

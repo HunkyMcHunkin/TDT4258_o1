@@ -37,7 +37,6 @@ void setup_GPIO();
 
 //LEDs functions
 void turnOffLEDs();
-void setLEDs_songs(int buttonX);
 void setLEDs_waveFormat(int wave);
 
 // ------------- TIMER ------------- //
@@ -45,6 +44,8 @@ void setLEDs_waveFormat(int wave);
 void setup_timer(uint16_t period);
 
 //delay functions
+//void delayMicroSeconds(uint32_t uS);// microSeconds);
+//void delayMilliSeconds(uint32_t ms); //milliSeconds);
 void delayMicroSeconds(uint32_t microSeconds);
 void delayMilliSeconds(uint32_t milliSeconds);
 

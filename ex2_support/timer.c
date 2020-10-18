@@ -4,6 +4,10 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
+//------------ ex2 -------------//
+//Here we have functions related to timing. This includes a setup of the timer, and delay functions
+
+
 /*
 	name: setup_timer
 	purpose: sets up timer by configure registers. 
@@ -29,43 +33,6 @@ void setup_timer(uint16_t period)
 }
 
 /*
-	name: time_microseconds
-	purpose: count tics specified by the time specified by uS TODO: uS ???? Skjønner at det er en parameter, men hva står uS for? er det mulig med et bedre forklart navn eller forklaring til variablene?
-	JEG TROR DET STÅR FOR TID I MIKRO SEKUNDER (10^-6 sekunder =\MU sekunder)
-	argument(s):
-			uS:
-				range: 0 to 4294967296
-				purpose: Specify the value to count up to
-	
-	return value: none
-*//*
-void delayMicroSeconds(uint32_t uS)
-{
-	uint32_t i, s = 0;
-
-	for (i = 0; i < uS; i++)
-		s++;
-}
-
-/*
-	name: Delay_C TODO: hvorfor delay_C og ikke bare delay? Konvensjonen er at funksjoner starter med små bokstaver
-	purpose: Delay by mS times 10 milliseconds.
-	argument(s):
-			mS:
-				range: 0 to 4294967296
-				purpose: Specify the delay in milliseconds.
-	return value: none
-*//*
-void delayMilliSeconds(uint32_t mS)
-{
-	uint32_t i;
-	for (i = 0; i < mS; i++) {
-		delayMicroSeconds(10000);
-	};
-}
-
-/////////////////
-/*
 	name: delayMicroSeconds
 	purpose: give a delay in micro seconds specified by the argument by counting where each count takes approximatly 1 micro second
 	argument(s):
@@ -73,12 +40,13 @@ void delayMilliSeconds(uint32_t mS)
 				range: 0 to 4294967296
 				purpose: Specify how long the delay in micro seconds is
 	return value: none
-*//*
-void delayMicroSeconds(uint32_t microSeconds) 
+*/
+void delayMicroSeconds(uint32_t microSeconds)
 {
-	uint32_t count = 0;
-	while (count < microSeconds){
-		count++;
+	uint32_t i, s = 0;
+
+	for (i = 0; i < microSeconds; i++){
+		s++;
 	}
 }
 
@@ -90,11 +58,12 @@ void delayMicroSeconds(uint32_t microSeconds)
 				range: 0 to 4294967296
 				purpose: Specify the delay in milli seconds.
 	return value: none
-*//*
+*/
 void delayMilliSeconds(uint32_t milliSeconds)
 {
 	uint32_t i;
 	for (i = 0; i < milliSeconds; i++) {
-		delayMicroSeconds(1000*10);
+		delayMicroSeconds(1000);
 	};
-}*/
+}
+

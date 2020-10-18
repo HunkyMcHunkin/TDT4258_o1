@@ -51,7 +51,7 @@ void startDAC()
 */
 void stopDAC()
 {
-	//disable DAC output to pin and ADC, and set the frequency to high frequency peripheral clock frecuency TODO (? we never disable the timer, so the frequency is set)
+	//disable DAC output to pin and ADC, and set the frequency to high frequency peripheral clock frecuency
 	*DAC0_CTRL &= ~(1 << 1);
 
 	//disable channel 0
@@ -98,11 +98,11 @@ void makeSound_square(int frequency, int length)
 				dacVoltage = 100;
 			}
 
-			//Write the voltage to the DAC 
-			*DAC0_CH0DATA = dacVoltage;
-			*DAC0_CH1DATA = dacVoltage;
+
 		}
-		
+		//Write the voltage to the DAC 
+		*DAC0_CH0DATA = dacVoltage;
+		*DAC0_CH1DATA = dacVoltage;
 		
 		//increace the count, to ceep track of note-length
 		count++;
@@ -153,14 +153,14 @@ void makeSound_sawtooth(int frequency, int length)
 			dacVoltage = 0;
 		}
 		
-		//Write the voltage to the DAC 
-		*DAC0_CH0DATA = dacVoltage;
-		*DAC0_CH1DATA = dacVoltage;
-		
 		//checks if we should update voltage
 		if ((count % dacUpTime) == 0) {
 			dacVoltage = dacVoltage + (1 * incrementRate);
 		}
+		
+		//Write the voltage to the DAC 
+		*DAC0_CH0DATA = dacVoltage;
+		*DAC0_CH1DATA = dacVoltage;
 		
 		//increace the count, to ceep track of note-length
 		count++;
@@ -220,9 +220,6 @@ void makeSound_triangle(int frequency, int length)
 		if (count % (countsPerPeriod / 2) == 0) { 
 			dacDirection = dacDirection * (-1);
 		}
-		//Give a sample to the DAC 
-		*DAC0_CH0DATA = dacVoltage;
-		*DAC0_CH1DATA = dacVoltage;
 		
 		//update the value at correct time to swing between 0 and 100 in half of a period
 		if ((count % dacUpTime) == 0) {  
@@ -234,6 +231,11 @@ void makeSound_triangle(int frequency, int length)
 			} else if (dacVoltage < 0) {
 				dacVoltage = 0;
 			}
+			
+			//Give a sample to the DAC 
+			*DAC0_CH0DATA = dacVoltage;
+			*DAC0_CH1DATA = dacVoltage;
+			
 			//increace the count, to ceep track of note-length
 			count++;
 		}

@@ -4,6 +4,9 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
+//------------ ex2 -------------//
+//Here we have the main function the busy wait polling solution uses
+
  /*
     name: main
     purpose: program the microcontroller runs. Set up nessesary settings, checks for buttonpresses, and operate on according to the status of the buttons

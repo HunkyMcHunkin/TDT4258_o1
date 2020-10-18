@@ -24,11 +24,8 @@ void makeSound_sinus(int freqency, int length);
 void playSound(int freqency, int length, int wave);
 void startUpSong();
 void updateWaveFormat();
-void makeSong(int *frecquencyVector, int sizeVectors,
-	      int *lengthFrequencyVector, int wave);
-	      
+void makeSong(int *frecquencyVector, int sizeVectors, int *lengthFrequencyVector, int wave);
 void buttonPressed(int buttonX);
-
 void playSong(int buttonX, int wave);
 
 // ------------- GPIO ------------- //
@@ -51,8 +48,8 @@ void delayMilliSeconds(uint32_t milliSeconds);
 //preperation function
 
 void disableRam();
-void setup_interruptGPIO();	//setupNVIC
-void setup_interrupt();		//setupNVIC
+void setup_interruptGPIO();	//setup NVIC
+void setup_interrupt();		//setup NVIC
 void setup_NVIC();
 void setup_sleep();
 

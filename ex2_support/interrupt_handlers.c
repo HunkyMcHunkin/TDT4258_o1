@@ -4,6 +4,9 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
+//------------ interrupt_handlers -------------//
+//Here we have functions that handles different kind of interrupts 
+
 /*
 	name: TIMER1_IRQHandler
 	purpose: handles interrupt provoked by the timer

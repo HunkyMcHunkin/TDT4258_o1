@@ -4,6 +4,8 @@
 #include "efm32gg.h"
 #include "ex2.h"
 
+//------------ ex2 -------------//
+//Here we have the main function the interrupt solution uses
 
 
 /*
