@@ -1,0 +1,21 @@
+# vim: set fdm=marker fdl=1:
+{{{ 2020-10-21T12:48:28+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist select configs/ptxconfig
+{{{ 2020-10-21T12:48:28+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist select configs/ptxconfig
+
+}}} 2020-10-21T12:48:28+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist select configs/ptxconfig; (exit value: 0)
+
+
+
+{{{ 2020-10-21T12:50:40+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist platform configs/platform-energymicro-efm32gg-dk3750/platformconfig
+{{{ 2020-10-21T12:50:40+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist platform configs/platform-energymicro-efm32gg-dk3750/platformconfig
+
+}}} 2020-10-21T12:50:40+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist platform configs/platform-energymicro-efm32gg-dk3750/platformconfig; (exit value: 0)
+
+
+
+{{{ 2020-10-21T12:56:56+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist toolchain /opt/ex3/
+
+}}} 2020-10-21T12:56:56+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist toolchain /opt/ex3/; (exit value: 0)
+
+
+
