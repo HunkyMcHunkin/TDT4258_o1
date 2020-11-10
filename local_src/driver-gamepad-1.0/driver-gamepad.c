@@ -99,7 +99,10 @@ static int __init template_init(void)
 
 static void __exit template_cleanup(void)
 {
-	 printk("Short life for a small module...\n");
+	release_mem_region(GPIO_PC_MODEL, 1)
+	release_mem_region(GPIO_PC_DOUT, 1)
+	release_mem_region(GPIO_PC_DIN, 1)
+	printk("Short life for a small module...\n");
 }
 
 
