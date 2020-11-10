@@ -15,8 +15,8 @@
 
 
 # define DRIVER_NAME "group_2"  //måtte lage et navn 
-dev_t devise_num;
-struct cdev my_cdev;  //devise setup
+dev_t device_num;
+struct cdev my_cdev;  //device setup
 struct class *cl;
 
 static struct file_operations my_fo = {
@@ -43,29 +43,48 @@ static int __init template_init(void)
 {
 	printk("Hello World local, here is your module speaking\n");
 	
-	//finner en ledig devise nummer og lagrer det i devise_num(returnerer 0 hvis sucsessfull). "minor nummeret" er satt til defalt = 0, starter count på 1, navn = driver navn
-	int devise_num_status = alloc_chrdev_region(&devise_num, 0, 1, DRIVER_NAME); 
-	if (devise_num_status < 0){
+	// Finds an available device number and saves it in device_num(returns 0 if it is successfull). "minor nummeret" is assigned to defalt = 0, starts count on 1, name = driver name
+	int device_num_status = alloc_chrdev_region(&device_num, 0, 1, DRIVER_NAME); 
+	if (device_num_status < 0){
 		printk("feil ved driver nummer \n");
 	}
 	
-	//setter opp char device
+	// The char device is set up.
 	cdev_init(&my_cdev, &my_fo);
 	my_cdev.owner = THIS_MODULE;
 	
 	
 	
-	//forteller kernel at denne devicen eksisterer
+	// Tells the kernel that this device exists.
 	int char_dev_status = cdev_add(&my_cdev, devise_num, 1);
 	if (char_dev_status < 0){
 		printk("feil ved char driver \n");
 	}
 	
-	//gir oss tilgang til å skrive til char devisen 
+	// Gives us access to write to the char device.
 	cl = class_create(THIS_MODULE, DRIVER_NAME);
-	device_create(cl, NULL, devise_num, NULL, DRIVER_NAME);
+	device_create(cl, NULL, device_num, NULL, DRIVER_NAME);
 	
-
+	// Tries to allocate memory to GPIO_PC_MODEL and tells the kernel if this fails.
+	req_GPIO = request_mem_region(GPIO_PC_MODEL,1,DEVICE_NAME) //returns null pointer
+    	if (req_GPIO == NULL)
+             printk("Could not alloctate memory region for GPIO_PC_MODEL")
+             return -1
+       
+	// Tries to allocate memory to GPIO_PC_DOUT and tells the kernel if this fails.
+    	req_GPIO = request_mem_region(GPIO_PC_DOUT,1,DEVICE_NAME) //returns null pointer
+        if (req_GPIO == NULL)
+            printk("Could not alloctate memory region for GPIO_PC_DOUT")
+            return -1
+            
+	// Tries to allocate memory to GPIO_PC_DIN and tells the kernel if this fails.
+    	req_GPIO = request_mem_region(GPIO_PC_DIN,1,DEVICE_NAME) //returns null pointer
+        if (req_GPIO == NULL)
+             printk("Could not alloctate memory region for GPIO_PC_DIN")
+             return -1
+        
+        iowrite32(0x33333333, GPIO_PC_MODEL)
+        iowrite32(0xff, GPIO_PC_DOUT)
 	
 	printk("fulført med set opp!");
 	return 0;
