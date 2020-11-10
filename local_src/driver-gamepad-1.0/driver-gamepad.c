@@ -18,6 +18,7 @@
 #include <linus/sched.h>  //pointer to struct task_struct
 #include <asm/current.h> //can access current process
 #include <asm/io.h> //to access io ports
+#include <linux/interrupt.h>
 
 
 
@@ -61,8 +62,6 @@ static int __init template_init(void)
 	// The char device is set up.
 	cdev_init(&my_cdev, &my_fo);
 	my_cdev.owner = THIS_MODULE;
-	
-	
 	
 	// Tells the kernel that this device exists.
 	int char_dev_status = cdev_add(&my_cdev, devise_num, 1);
