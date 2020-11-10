@@ -11,6 +11,14 @@
 #include <linux/device.h>
 #include <linux/fb.h>  //graphic
 
+#include <linux/ioport.h> //allocation of io memory
+#include <asm/system.h> // adds barriers
+#include <linux/stat.h> //who can access the rep. of module param. in sysfs, define you own param.
+#include <linux/errno.h> //for error handling, use goto
+#include <linus/sched.h>  //pointer to struct task_struct
+#include <asm/current.h> //can access current process
+#include <asm/io.h> //to access io ports
+
 
 
 
