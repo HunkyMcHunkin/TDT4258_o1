@@ -66,19 +66,19 @@ static int __init template_init(void)
 	device_create(cl, NULL, device_num, NULL, DRIVER_NAME);
 	
 	// Tries to allocate memory to GPIO_PC_MODEL and tells the kernel if this fails.
-	req_GPIO = request_mem_region(GPIO_PC_MODEL,1,DEVICE_NAME) //returns null pointer
+	req_GPIO = request_mem_region(GPIO_PC_MODEL,1,DRIVER_NAME)
     	if (req_GPIO == NULL)
              printk("Could not alloctate memory region for GPIO_PC_MODEL")
              return -1
        
 	// Tries to allocate memory to GPIO_PC_DOUT and tells the kernel if this fails.
-    	req_GPIO = request_mem_region(GPIO_PC_DOUT,1,DEVICE_NAME) //returns null pointer
+    	req_GPIO = request_mem_region(GPIO_PC_DOUT,1,DRIVER_NAME) 
         if (req_GPIO == NULL)
             printk("Could not alloctate memory region for GPIO_PC_DOUT")
             return -1
             
 	// Tries to allocate memory to GPIO_PC_DIN and tells the kernel if this fails.
-    	req_GPIO = request_mem_region(GPIO_PC_DIN,1,DEVICE_NAME) //returns null pointer
+    	req_GPIO = request_mem_region(GPIO_PC_DIN,1,DRIVER_NAME) 
         if (req_GPIO == NULL)
              printk("Could not alloctate memory region for GPIO_PC_DIN")
              return -1
