@@ -18,6 +18,7 @@
 dev_t device_num;
 struct cdev my_cdev;  //device setup
 struct class *cl;
+struct resource *req_GPIO;
 
 static struct file_operations my_fo = {
 	.owner = THIS_MODULE,
@@ -66,21 +67,9 @@ static int __init template_init(void)
 	device_create(cl, NULL, device_num, NULL, DRIVER_NAME);
 	
 	// Tries to allocate memory to GPIO_PC_MODEL and tells the kernel if this fails.
-	req_GPIO = request_mem_region(GPIO_PC_MODEL,1,DRIVER_NAME)
+	req_GPIO = request_mem_region(GPIO_PC_BASE, 0x24, DRIVER_NAME)
     	if (req_GPIO == NULL)
-             printk("Could not alloctate memory region for GPIO_PC_MODEL")
-             return -1
-       
-	// Tries to allocate memory to GPIO_PC_DOUT and tells the kernel if this fails.
-    	req_GPIO = request_mem_region(GPIO_PC_DOUT,1,DRIVER_NAME) 
-        if (req_GPIO == NULL)
-            printk("Could not alloctate memory region for GPIO_PC_DOUT")
-            return -1
-            
-	// Tries to allocate memory to GPIO_PC_DIN and tells the kernel if this fails.
-    	req_GPIO = request_mem_region(GPIO_PC_DIN,1,DRIVER_NAME) 
-        if (req_GPIO == NULL)
-             printk("Could not alloctate memory region for GPIO_PC_DIN")
+             printk("Could not allocate memory region for GPIO_PC")
              return -1
         
         iowrite32(0x33333333, GPIO_PC_MODEL)
@@ -99,9 +88,7 @@ static int __init template_init(void)
 
 static void __exit template_cleanup(void)
 {
-	release_mem_region(GPIO_PC_MODEL, 1)
-	release_mem_region(GPIO_PC_DOUT, 1)
-	release_mem_region(GPIO_PC_DIN, 1)
+	release_mem_region(GPIO_PC_BASE, 0x24)
 	printk("Short life for a small module...\n");
 }
 
