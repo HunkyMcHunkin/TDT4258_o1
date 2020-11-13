@@ -19,6 +19,7 @@
 #include <asm/current.h> //can access current process
 #include <asm/io.h> //to access io ports
 #include <linux/interrupt.h>
+#include <asm/uaccess.h>
 
 
 
@@ -78,9 +79,23 @@ static int __init template_init(void)
     	if (req_GPIO == NULL)
              printk("Could not allocate memory region for GPIO_PC")
              return -1
-        
+		
+	// Tries to allocate memory for interrupt and tells the kernel if this fails.
+        req_GPIO = request_mem_region(GPIO_EXTIPSELL, 0x24 , DRIVER_NAME)
+        if (req_GPIO == NULL)
+             printk("Could not allocate memory region for interrupt handling")
+             return -1	
+		
+	
+	// Set up the GPIO buttons
         iowrite32(0x33333333, GPIO_PC_MODEL)
         iowrite32(0xff, GPIO_PC_DOUT)
+	                    
+        //Set up the interrupt handler
+        iowrite32(0x22222222, GPIO_EXTIPSELL);
+        iowrite32(0xff, GPIO_EXTIFALL);
+        iowrite32(0xff, GPIO_EXTIRISE);
+        iowrite32(0xff, GPIO_IEN);
 	
 	printk("fulført med set opp!");
 	return 0;
@@ -97,6 +112,25 @@ static void __exit template_cleanup(void)
 {
 	release_mem_region(GPIO_PC_BASE, 0x24)
 	printk("Short life for a small module...\n");
+}
+
+
+static int request_irq(unsigned int irq, irqreturn_t (*handler)(int, void *, struct pt_regs *), unsigned long flags, const char *dev_name, void *dev_id);
+{
+        uint32_t source = ioread32(GPIO_IF);
+        iowrite32(source, GPIO_IFC);
+}
+void free_irq(unsigned int irq, void *dev_id);
+{
+                            
+}
+
+static ssize_t read(struct file *filp, char __user *buff, size_t count, loff_t *offp)
+{
+	uint32_t button_input = ioread32(GPIO_PC_DIN);
+        copy_to_user(buff, &button_input, unsigned long count);
+                            
+        return
 }
 
 
