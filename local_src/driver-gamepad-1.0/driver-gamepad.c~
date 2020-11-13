@@ -5,25 +5,39 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/init.h>
+#include <linux/fs.h>  //to allocate and freeing devise numbers and use file opperations
+#include <linux/kdev_t.h>
+#include <linux/cdev.h>  //make the kernel a char devise
+#include <linux/device.h>
+#include <linux/fb.h>  //graphic
+
+#include <linux/ioport.h> //allocation of io memory
+#include <asm/system.h> // adds barriers
+#include <linux/stat.h> //who can access the rep. of module param. in sysfs, define you own param.
+#include <linux/errno.h> //for error handling, use goto
+#include <linus/sched.h>  //pointer to struct task_struct
+#include <asm/current.h> //can access current process
+#include <asm/io.h> //to access io ports
+#include <linux/interrupt.h>
+#include <asm/uaccess.h>
 
 
 
-//functions chare kernel normaly use
-/*
-int register_chrdev_region(dev_t first, unsigned int count, *name); //return 0 if sucsessfull
 
-int alloc_chrdev_region(dev_t *dev, unsigned int firstminor, unsigned int count, char *name); //allocate devise number
+# define DRIVER_NAME "group_2"  //måtte lage et navn 
+dev_t device_num;
+struct cdev my_cdev;  //device setup
+struct class *cl;
+struct resource *req_GPIO;
 
-void unregister_chrdev_region(dev_t first, unsigned int count); //free devise number
-
-struct cdev *my_cdev - cdev_alloc();  //set up char devise
-my_cdev -> ops = &my_fops
-
-void cdev_init(struct cdev *dev, dev_t num, unsigned int count);  //tels the kernel to call the char devise
-
-void cdev_del(struct cdev *dev);  // remove a char devise
-
-*/
+static struct file_operations my_fo = {
+	.owner = THIS_MODULE,
+ 	//.read = my_read,
+ 	//.write = my_write,
+ 	//.ioctl = my_ioctl,
+ 	//.open = my_open,
+ 	//.release = my_release,
+};
 
 
 /*
@@ -38,9 +52,52 @@ void cdev_del(struct cdev *dev);  // remove a char devise
 
 static int __init template_init(void)
 {
-	printk("Hello Worlds, here is your module speaking\n");
+	printk("Hello World local, here is your module speaking\n");
 	
-
+	// Finds an available device number and saves it in device_num(returns 0 if it is successfull). "minor nummeret" is assigned to defalt = 0, starts count on 1, name = driver name
+	int device_num_status = alloc_chrdev_region(&device_num, 0, 1, DRIVER_NAME); 
+	if (device_num_status < 0){
+		printk("feil ved driver nummer \n");
+	}
+	
+	// The char device is set up.
+	cdev_init(&my_cdev, &my_fo);
+	my_cdev.owner = THIS_MODULE;
+	
+	// Tells the kernel that this device exists.
+	int char_dev_status = cdev_add(&my_cdev, devise_num, 1);
+	if (char_dev_status < 0){
+		printk("feil ved char driver \n");
+	}
+	
+	// Gives us access to write to the char device.
+	cl = class_create(THIS_MODULE, DRIVER_NAME);
+	device_create(cl, NULL, device_num, NULL, DRIVER_NAME);
+	
+	// Tries to allocate memory to GPIO_PC_MODEL and tells the kernel if this fails.
+	req_GPIO = request_mem_region(GPIO_PC_BASE, 0x24, DRIVER_NAME)
+    	if (req_GPIO == NULL)
+             printk("Could not allocate memory region for GPIO_PC")
+             return -1
+		
+	// Tries to allocate memory for interrupt and tells the kernel if this fails.
+        req_GPIO = request_mem_region(GPIO_EXTIPSELL, 0x24 , DRIVER_NAME)
+        if (req_GPIO == NULL)
+             printk("Could not allocate memory region for interrupt handling")
+             return -1	
+		
+	
+	// Set up the GPIO buttons
+        iowrite32(0x33333333, GPIO_PC_MODEL)
+        iowrite32(0xff, GPIO_PC_DOUT)
+	                    
+        //Set up the interrupt handler
+        iowrite32(0x22222222, GPIO_EXTIPSELL);
+        iowrite32(0xff, GPIO_EXTIFALL);
+        iowrite32(0xff, GPIO_EXTIRISE);
+        iowrite32(0xff, GPIO_IEN);
+	
+	printk("fulført med set opp!");
 	return 0;
 }
 
@@ -53,8 +110,30 @@ static int __init template_init(void)
 
 static void __exit template_cleanup(void)
 {
-	 printk("Short life for a small module...\n");
+	release_mem_region(GPIO_PC_BASE, 0x24)
+	printk("Short life for a small module...\n");
 }
+
+
+static int request_irq(unsigned int irq, irqreturn_t (*handler)(int, void *, struct pt_regs *), unsigned long flags, const char *dev_name, void *dev_id);
+{
+        uint32_t source = ioread32(GPIO_IF);
+        iowrite32(source, GPIO_IFC);
+}
+void free_irq(unsigned int irq, void *dev_id);
+{
+                            
+}
+
+static ssize_t read(struct file *filp, char __user *buff, size_t count, loff_t *offp)
+{
+	uint32_t button_input = ioread32(GPIO_PC_DIN);
+        copy_to_user(buff, &button_input, unsigned long count);
+                            
+        return
+}
+
+
 
 
 
