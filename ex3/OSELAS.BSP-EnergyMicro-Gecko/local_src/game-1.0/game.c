@@ -64,7 +64,7 @@ void deinit_gamepad()
   fclose(device);
 }
 
-int checkwin()
+int check_win()
 {/*
   if (square[1] == square[2] && square[2] == square[3])
   {
@@ -122,9 +122,9 @@ int checkwin()
 
 */
 
-void buttonpress_handler(int signal)
+void buttonpress_handler(int signo)
 {
-  int input = map_buttons(fgetc(device));
+  int input = map_buttons((int)getc(device));
   switch (input)
   {
     case 1:

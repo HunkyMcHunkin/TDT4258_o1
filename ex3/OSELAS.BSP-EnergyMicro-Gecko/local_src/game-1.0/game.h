@@ -12,6 +12,8 @@ int init();
 void deinit();
 int init_gamepad();
 void deinit_gamepad();
-void sigio_handler();
+int check_win();
+int map_buttons(int)
+void buttonpress_handler(int);
 int main();
 
