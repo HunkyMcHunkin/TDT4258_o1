@@ -108,7 +108,7 @@ void fill_block(int maxR, int minR, int maxC, int minC, int player)
   int i;
   for (i = 0; i < screensize_pixels; i++)
   {
-    if (((col < maxC) && (col > minC)) && ((row < maxR) && (row > minR)))
+    if (((col < maxC) && (col >= minC)) && ((row < maxR) && (row >= minR)))
     {
       if (player)
       {
