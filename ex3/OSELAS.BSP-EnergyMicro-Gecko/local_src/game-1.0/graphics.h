@@ -20,5 +20,6 @@ int init_framebuffer();
 void deinit_framebuffer();
 void refresh_fb();
 void draw_grid();
-void draw_cross(int pos);
-void draw_circle(int pos);
+void fill_block(int maxR, int minR, int maxC, int minC, int player);
+int get_row(int pixel);
+int get_col(int pixel, int row);
