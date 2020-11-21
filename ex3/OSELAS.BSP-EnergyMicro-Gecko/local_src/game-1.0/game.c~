@@ -215,8 +215,8 @@ void buttonpress_handler(int signal){
       }
       last_input = input;
       break;
-      delay(1);
-      //delayMilliSeconds(100);
+    delay(1);
+    //delayMilliSeconds(100);
   }
 }
 
@@ -242,7 +242,7 @@ int main()	{
     printf("[INIT] ERROR: Couldn't init...\n");
     return EXIT_FAILURE;
   }
-  
+  draw_grid();
   last_input = 0;
   last_player = true;
   running = true;
