@@ -46,7 +46,6 @@ static struct file_operations my_fo = {
 	.owner = THIS_MODULE,
  	.read = my_read,
  	.write = my_write,
- 	//.ioctl = my_ioctl,
  	.open = my_open,
  	.release = my_release,
 };
@@ -55,7 +54,7 @@ static irqreturn_t interrupt_handler(int irq, void* dev_id, struct pt_regs* regs
 {
         uint32_t source = ioread32(GPIO_IF);
         iowrite32(ioread32(GPIO_IF), GPIO_IFC);
-            if (async_queue) { //DIES
+            if (async_queue) {
         kill_fasync(&async_queue, SIGIO, POLL_IN);
     }
     return IRQ_HANDLED;
@@ -136,39 +135,24 @@ static int __init template_init(void)
  * code from a running kernel
  */
 
-//////////////
+
 static void __exit template_cleanup(void)
 {
-///////////////////////
-//DIES
-	iowrite32(0x00, mem_gpio_int + IEN_OFFSET);
-	
 	free_irq(GPIO_EVEN_IRQ_LINE, &my_cdev);
     free_irq(GPIO_ODD_IRQ_LINE, &my_cdev);
 
-	//iounmap(mem_gpio_port_c);
-	//iounmap(mem_gpio_int);
-	//release_mem_region(GPIO_PA_BASE, 0x01C);
-	//release_mem_region(GPIO_PC_BASE, 0x020);
-	//release_mem_region(GPIO_INT_BASE, 0x020);
-	release_mem_region(GPIO_EXTIPSELL, 0x20);
-	release_mem_region(GPIO_PC_BASE, 0x20);
+	release_mem_region(GPIO_EXTIPSELL, 0x24);
+	release_mem_region(GPIO_PC_BASE, 0x24);
 	
-	//class_destroy(cl);
-	//cdev_del(&gamepad_cdev);
 	class_destroy(cl);
 	cdev_del(&my_cdev);
 	
-	//unregister_chrdev_region(device_nr, DEV_NR_COUNT);
 	unregister_chrdev_region(device_num, 1);
 	
-//////////////////////
-	//Se på dies!!!!	
 	printk("Short life for a small module...\n");
 	
-	//device_destroy(cl, device_num);
+	device_destroy(cl, device_num);
 	
-
 	
 }
 
@@ -189,7 +173,7 @@ static int my_release (struct inode *inode, struct file *filp){
 
 static ssize_t my_write (struct file *filp, const char __user *buff, size_t count, loff_t *offp){
 	return 1;
-}/////////
+}
 
 //fc-en sette flagg
 
