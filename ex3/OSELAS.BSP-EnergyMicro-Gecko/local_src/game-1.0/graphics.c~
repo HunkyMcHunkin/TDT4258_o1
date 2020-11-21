@@ -103,7 +103,7 @@ void draw_grid()
   }
 }
 
-void fill_block(int maxR, int minR, int maxC, int minC, bool player)
+void fill_block(int maxR, int minR, int maxC, int minC, int player)
 {
   int i;
   for (i = 0; i < screensize_pixels; i++)
