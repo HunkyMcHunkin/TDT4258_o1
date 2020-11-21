@@ -6,15 +6,20 @@
 # add more flags here,
 # but don't remove the "+="
 #
-CFLAGS += -O2 -g -Wall #-Wsign-compare -Wfloat-equal -Wformat-security #-Werror
+CC = arm-cortexm3-uclinuxeabi-gcc
+CFLAGS += -O2 -g -Wall -W -std=c99 #-Wsign-compare -Wfloat-equal -Wformat-security #-Werror
 CPPFLAGS +=
-LDFLAGS +=
+LDFLAGS += -lm
 
+OBJECTS = graphics.o timer.o 
 
 all: game
 
+game: game.c ${OBJECTS}
+		${CC} ${CFLAGS} game.c ${OBJECTS} -o game ${LDFLAGS}
+
 clean:
-	-rm -f game
+	-rm -f game .o
 
 install:
 

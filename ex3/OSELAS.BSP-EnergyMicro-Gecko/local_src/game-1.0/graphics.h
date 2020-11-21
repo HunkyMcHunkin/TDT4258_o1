@@ -7,7 +7,6 @@
 #include <sys/mman.h>
 #include <linux/fb.h>
 #include <sys/ioctl.h>
-#include "font.h"
 
 #define Black		0x0000
 #define White 		0xFFFF

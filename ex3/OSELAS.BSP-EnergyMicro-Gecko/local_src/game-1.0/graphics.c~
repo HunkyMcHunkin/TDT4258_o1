@@ -103,11 +103,13 @@ void draw_grid()
   }
 }
 
-void fill_block(int maxR, int minR, int maxC, int minC, int player)
+void fill_block(int maxR, int minR, int maxC, int minC, bool player)
 {
   int i;
   for (i = 0; i < screensize_pixels; i++)
   {
+    int row = get_row(i);
+    int col = get_col(i, row);
     if (((col < maxC) && (col >= minC)) && ((row < maxR) && (row >= minR)))
     {
       if (player)

@@ -47,7 +47,7 @@ int init_framebuffer()
 
   framebuffer_pointer = (uint16_t*)mmap(NULL, screensize_bytes, PROT_READ | PROT_WRITE, MAP_SHARED, framebuffer_fd, 0);
 
-  if ((int)framebuffer_pointer == MAP_FAILED)
+  if (framebuffer_pointer == MAP_FAILED)
   {
     printf("[FRAMEBUFFER] ERROR: Failed to memorymap framebuffer...\n");
     return EXIT_FAILURE;
@@ -108,6 +108,8 @@ void fill_block(int maxR, int minR, int maxC, int minC, bool player)
   int i;
   for (i = 0; i < screensize_pixels; i++)
   {
+    int row = get_row(i);
+    int col = get_col(i, row);
     if (((col < maxC) && (col >= minC)) && ((row < maxR) && (row >= minR)))
     {
       if (player)

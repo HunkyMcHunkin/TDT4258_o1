@@ -13,8 +13,12 @@ void deinit();
 int init_gamepad();
 void deinit_gamepad();
 int check_win();
-int map_buttons(int)
-void buttonpress_handler(int);
+int map_buttons(int input);
+void buttonpress_handler(int signal);
 int main();
-void setup_timer(uint16_t period);
+
+void delay(int seconds);
+//void setup_timer(uint16_t period);
+//void delayMicroSeconds(uint32_t microSeconds);
+//void delayMilliSeconds(uint32_t milliSeconds);
 

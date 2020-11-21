@@ -1,4 +1,5 @@
 #include "game.h"
+#include <time.h>
 
 FILE* device;
 bool running;
@@ -6,13 +7,25 @@ bool running;
 uint8_t last_input;
 bool last_player;
 
-void new_game()
-{
+
+void new_game(){
   
 }
 
-int init()
-{
+void delay(int number_of_seconds) 
+{ 
+    // Converting time into milli_seconds 
+    int milli_seconds = 1000 * number_of_seconds; 
+  
+    // Storing start time 
+    clock_t start_time = clock(); 
+  
+    // looping till required time is not achieved 
+    while (clock() < start_time + milli_seconds) 
+        ; 
+}
+
+int init(){
   if (init_gamepad() == EXIT_FAILURE)
   {
     printf("[GAMEPAD] ERROR: Couldn't initialize gamepad...\n");
@@ -27,20 +40,17 @@ int init()
   return EXIT_SUCCESS;
 }
 
-void deinit()
-{
+void deinit(){
   deinit_gamepad();
   deinit_framebuffer();
 }
 
-int init_gamepad()
-{
+int init_gamepad(){
   device = fopen("/dev/gamepad", "rb");
   if (!device) {
-    printf("[GAMEPAD] ERROR: Couldn't open gamepad device...\n");
-    close(framebuffer_fd)  
+    printf("[GAMEPAD] ERROR: Couldn't open gamepad device...\n"); 
   return EXIT_FAILURE;
-  }
+  }/*
   if (signal(SIGIO, &buttonpress_handler) == SIG_ERR)
   {
     printf("[GPIO] ERROR: Signal handler error...\n");
@@ -55,17 +65,15 @@ int init_gamepad()
   {
     printf("[FLAG] ERROR: Couldn't set FASYNC flag...\n");
     return EXIT_FAILURE;
-  }
+  }*/
   return EXIT_SUCCESS;
 }
 
-void deinit_gamepad()
-{
+void deinit_gamepad(){
   fclose(device);
 }
 
-int check_win()
-{/*
+int check_win(){/*
   if (square[1] == square[2] && square[2] == square[3])
   {
     return 1;
@@ -99,6 +107,7 @@ int check_win()
   }
 
   */
+  return 0;
 }
 
 /*
@@ -122,8 +131,7 @@ int check_win()
 
 */
 
-void buttonpress_handler(int signo)
-{
+void buttonpress_handler(int signal){
   int input = map_buttons((int)getc(device));
   switch (input)
   {
@@ -207,13 +215,12 @@ void buttonpress_handler(int signo)
       }
       last_input = input;
       break;
-      
-      delayMilliSeconds(100);
+      delay(1);
+      //delayMilliSeconds(100);
   }
 }
 
-int map_buttons(int input)
-{
+int map_buttons(int input){
   switch (input)
   {
     case 0xFD:
@@ -223,10 +230,12 @@ int map_buttons(int input)
     case 0xDF:
       return 3;
   }
+  return 0;
 }
 
-int main(int argc, char *argv[])
-{
+int main()	{
+
+  //setup_timer(SAMPLE_PERIOD);
   
   if (init() == EXIT_FAILURE)
   {
@@ -240,7 +249,7 @@ int main(int argc, char *argv[])
   
   while (running)
   {
-    if (checkwin())
+    if (check_win())
     {
       printf("Finito\n");
       running = false;
