@@ -46,11 +46,19 @@ static struct file_operations my_fo = {
 	.owner = THIS_MODULE,
  	.read = my_read,
  	.write = my_write,
- 	//.ioctl = my_ioctl,
  	.open = my_open,
  	.release = my_release,
 };
 
+static irqreturn_t interrupt_handler(int irq, void* dev_id, struct pt_regs* regs)
+{
+        uint32_t source = ioread32(GPIO_IF);
+        iowrite32(ioread32(GPIO_IF), GPIO_IFC);
+            if (async_queue) {
+        kill_fasync(&async_queue, SIGIO, POLL_IN);
+    }
+    return IRQ_HANDLED;
+}
 
 /*
  * template_init - function to insert this module into kernel space
@@ -118,12 +126,7 @@ static int __init template_init(void)
 	return 0;
 }
 
-static irqreturn_t interrupt_handler(int irq, void* dev_id, struct pt_regs* regs)
-{
-        uint32_t source = ioread32(GPIO_IF);
-        iowrite32(source, GPIO_IFC);
-        return IRQ_HANDLED;
-}
+
 
 /*
  * template_cleanup - function to cleanup this module from kernel space
@@ -132,10 +135,25 @@ static irqreturn_t interrupt_handler(int irq, void* dev_id, struct pt_regs* regs
  * code from a running kernel
  */
 
+
 static void __exit template_cleanup(void)
 {
+	free_irq(GPIO_EVEN_IRQ_LINE, &my_cdev);
+    free_irq(GPIO_ODD_IRQ_LINE, &my_cdev);
+
+	release_mem_region(GPIO_EXTIPSELL, 0x24);
 	release_mem_region(GPIO_PC_BASE, 0x24);
+	
+	class_destroy(cl);
+	cdev_del(&my_cdev);
+	
+	unregister_chrdev_region(device_num, 1);
+	
 	printk("Short life for a small module...\n");
+	
+	device_destroy(cl, device_num);
+	
+	
 }
 
 static ssize_t my_read (struct file *file_point, char __user *buff, size_t count, loff_t *off_poin){

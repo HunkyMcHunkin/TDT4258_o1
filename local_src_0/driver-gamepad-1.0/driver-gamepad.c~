@@ -9,22 +9,34 @@
 #include <linux/kdev_t.h>
 #include <linux/cdev.h>  //make the kernel a char devise
 #include <linux/device.h>
+#include "efm32gg.h"
+#include <linux/uaccess.h> //to use function copy_to_user -allows user access
+
 #include <linux/fb.h>  //graphic
 
 #include <linux/ioport.h> //allocation of io memory
 #include <asm/system.h> // adds barriers
 #include <linux/stat.h> //who can access the rep. of module param. in sysfs, define you own param.
 #include <linux/errno.h> //for error handling, use goto
-#include <linus/sched.h>  //pointer to struct task_struct
+//#include <linus/sched.h>  //pointer to struct task_struct
 #include <asm/current.h> //can access current process
 #include <asm/io.h> //to access io ports
 #include <linux/interrupt.h>
-#include <asm/uaccess.h>
+#include <asm/irq.h>
+
+//#include <linux/iqr.h>
+#include <asm/signal.h>
 
 
+static ssize_t my_read (struct file *file_point, char __user *buff, size_t count, loff_t *off_poin);
+static int my_release (struct inode *inode, struct file *filp);
+static int my_open (struct inode *inode, struct file *filp);
+static ssize_t my_write (struct file *filp, const char __user *buff, size_t count, loff_t *offp);
+static irqreturn_t interrupt_handler(int irq, void* dev_id, struct pt_regs* regs);
 
-
-# define DRIVER_NAME "group_2"  //måtte lage et navn 
+#define GPIO_IRQ_EVEN 17
+#define GPIO_IRQ_ODD 18
+# define DRIVER_NAME "gamepad_group_2"  //måtte lage et navn 
 dev_t device_num;
 struct cdev my_cdev;  //device setup
 struct class *cl;
@@ -32,13 +44,22 @@ struct resource *req_GPIO;
 
 static struct file_operations my_fo = {
 	.owner = THIS_MODULE,
- 	//.read = my_read,
- 	//.write = my_write,
+ 	.read = my_read,
+ 	.write = my_write,
  	//.ioctl = my_ioctl,
- 	//.open = my_open,
- 	//.release = my_release,
+ 	.open = my_open,
+ 	.release = my_release,
 };
 
+static irqreturn_t interrupt_handler(int irq, void* dev_id, struct pt_regs* regs)
+{
+        uint32_t source = ioread32(GPIO_IF);
+        iowrite32(ioread32(GPIO_IF), GPIO_IFC);
+            if (async_queue) { //DIES
+        kill_fasync(&async_queue, SIGIO, POLL_IN);
+    }
+    return IRQ_HANDLED;
+}
 
 /*
  * template_init - function to insert this module into kernel space
@@ -65,7 +86,7 @@ static int __init template_init(void)
 	my_cdev.owner = THIS_MODULE;
 	
 	// Tells the kernel that this device exists.
-	int char_dev_status = cdev_add(&my_cdev, devise_num, 1);
+	int char_dev_status = cdev_add(&my_cdev, device_num, 1);
 	if (char_dev_status < 0){
 		printk("feil ved char driver \n");
 	}
@@ -75,31 +96,38 @@ static int __init template_init(void)
 	device_create(cl, NULL, device_num, NULL, DRIVER_NAME);
 	
 	// Tries to allocate memory to GPIO_PC_MODEL and tells the kernel if this fails.
-	req_GPIO = request_mem_region(GPIO_PC_BASE, 0x24, DRIVER_NAME)
-    	if (req_GPIO == NULL)
-             printk("Could not allocate memory region for GPIO_PC")
-             return -1
-		
+	req_GPIO = request_mem_region(GPIO_PC_BASE, 0x24, DRIVER_NAME);
+    if (req_GPIO == NULL){
+        printk("Could not allocate memory region for GPIO_PC");
+        return -1;
+    }
 	// Tries to allocate memory for interrupt and tells the kernel if this fails.
-        req_GPIO = request_mem_region(GPIO_EXTIPSELL, 0x24 , DRIVER_NAME)
-        if (req_GPIO == NULL)
-             printk("Could not allocate memory region for interrupt handling")
-             return -1	
+    req_GPIO = request_mem_region(GPIO_EXTIPSELL, 0x24 , DRIVER_NAME);
+    if (req_GPIO == NULL){
+        printk("Could not allocate memory region for interrupt handling");
+        return -1;
+    }	
 		
+	request_irq(GPIO_IRQ_EVEN, (irq_handler_t) interrupt_handler, 0, DRIVER_NAME, &my_cdev);
+	request_irq(GPIO_IRQ_ODD,  (irq_handler_t) interrupt_handler, 0, DRIVER_NAME, &my_cdev);
 	
 	// Set up the GPIO buttons
-        iowrite32(0x33333333, GPIO_PC_MODEL)
-        iowrite32(0xff, GPIO_PC_DOUT)
+        iowrite32(0x33333333, GPIO_PC_MODEL);
+        iowrite32(0xff, GPIO_PC_DOUT);
 	                    
         //Set up the interrupt handler
         iowrite32(0x22222222, GPIO_EXTIPSELL);
         iowrite32(0xff, GPIO_EXTIFALL);
         iowrite32(0xff, GPIO_EXTIRISE);
         iowrite32(0xff, GPIO_IEN);
-	
+
+
+
 	printk("fulført med set opp!");
 	return 0;
 }
+
+
 
 /*
  * template_cleanup - function to cleanup this module from kernel space
@@ -108,34 +136,62 @@ static int __init template_init(void)
  * code from a running kernel
  */
 
+//////////////
 static void __exit template_cleanup(void)
 {
-	release_mem_region(GPIO_PC_BASE, 0x24)
+///////////////////////
+//DIES
+	iowrite32(0x00, mem_gpio_int + IEN_OFFSET);
+	
+	free_irq(GPIO_EVEN_IRQ_LINE, &my_cdev);
+    free_irq(GPIO_ODD_IRQ_LINE, &my_cdev);
+
+	//iounmap(mem_gpio_port_c);
+	//iounmap(mem_gpio_int);
+	//release_mem_region(GPIO_PA_BASE, 0x01C);
+	//release_mem_region(GPIO_PC_BASE, 0x020);
+	//release_mem_region(GPIO_INT_BASE, 0x020);
+	release_mem_region(GPIO_EXTIPSELL, 0x20);
+	release_mem_region(GPIO_PC_BASE, 0x20);
+	
+	//class_destroy(cl);
+	//cdev_del(&gamepad_cdev);
+	class_destroy(cl);
+	cdev_del(&my_cdev);
+	
+	//unregister_chrdev_region(device_nr, DEV_NR_COUNT);
+	unregister_chrdev_region(device_num, 1);
+	
+//////////////////////
+	//Se på dies!!!!	
 	printk("Short life for a small module...\n");
+	
+	//device_destroy(cl, device_num);
+	
+
+	
 }
 
-
-static int request_irq(unsigned int irq, irqreturn_t (*handler)(int, void *, struct pt_regs *), unsigned long flags, const char *dev_name, void *dev_id);
-{
-        uint32_t source = ioread32(GPIO_IF);
-        iowrite32(source, GPIO_IFC);
-}
-void free_irq(unsigned int irq, void *dev_id);
-{
-                            
-}
-
-static ssize_t read(struct file *filp, char __user *buff, size_t count, loff_t *offp)
-{
-	uint32_t button_input = ioread32(GPIO_PC_DIN);
-        copy_to_user(buff, &button_input, unsigned long count);
-                            
-        return
+static ssize_t my_read (struct file *file_point, char __user *buff, size_t count, loff_t *off_poin){
+	printk("started reading buttons");
+	uint32_t buttons = ioread32(GPIO_PC_DIN);  //leser knapper
+	copy_to_user(buff, &buttons, 1);  //to-from-long end
+	return 0;
+} 
+static int my_open (struct inode *inode, struct file *filp){
+	printk("sucessfull open kernel");
+	return 1;
 }
 
+static int my_release (struct inode *inode, struct file *filp){
+	return 0;
+}
 
+static ssize_t my_write (struct file *filp, const char __user *buff, size_t count, loff_t *offp){
+	return 1;
+}/////////
 
-
+//fc-en sette flagg
 
 module_init(template_init);
 module_exit(template_cleanup);
