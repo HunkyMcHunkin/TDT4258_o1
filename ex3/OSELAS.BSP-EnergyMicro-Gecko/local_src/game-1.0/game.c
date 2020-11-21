@@ -207,6 +207,8 @@ void buttonpress_handler(int signo)
       }
       last_input = input;
       break;
+      
+      delayMilliSeconds(100);
   }
 }
 

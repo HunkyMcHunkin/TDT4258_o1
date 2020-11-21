@@ -16,5 +16,4 @@ int check_win();
 int map_buttons(int)
 void buttonpress_handler(int);
 int main();
-void setup_timer(uint16_t period);
 
