@@ -4,22 +4,50 @@
 #include <stdint.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#include <stdbool.h>
+#include <signal.h>
+#include <unistd.h>
+#include <time.h>
+#include <math.h>
 
 //sett 
+
 
 struct fb_copyarea rect;  //draw on screen
 uint16_t *pixels;
 int button;
+FILE* device;
+
+
+int init_gamepad()
+{
+    device = fopen("/dev/gamepad_group_2", "rb");
+    if (device==NULL) {
+        printf("Unable to open driver device\n");
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
+}
 
 
 int main(int argc, char *argv[])
 {
 	printf("Hello World try, I'm game!\n");
-	
+	init_gamepad();
 	//åpner driveren vår bare lesing
-	int gamepad_fd = open("/dev/gamepad_group_2", 2);
-	int buttonspressed = (int)getc(gamepad_fd);  //henter knapptilstander
-	printf("button compleat");
+	//int gamepad_fd = open("/dev/gamepad_group_2", O_RDONLY);
+	/*if (gamepad_fd == 1){
+		printf("open driver success");
+	}
+	if (gamepad_fd == NULL){
+		printf("open driver failed");
+	}*/
+	printf("open done\n");
+	//int buttonspressed = (int)fgetc(device);  //henter knapptilstander
+	printf("button compleat\n");
 	
 	
 	//set up frame buffer-optaderer hele skjermen når ioctl blir kaldt
@@ -47,12 +75,15 @@ int main(int argc, char *argv[])
 	for (i=640; i<1278; i++){
 		pixels[i] = 0x000f; //tegner en blå strek linje 2
 	}
-	if(buttonspressed == 0xFD){
+	for (i=1280; i<10000; i++){
+		pixels[i] = 0x0ff0;
+	}
+/*	if(buttonspressed == 0xFD){
 		for (i=1500; i<10000; i++){
 			pixels[i] = 0xffff;
 		}
 	}
-	
+*/	
 	ioctl(fbfd, 0x4680, &rect);
 	
 	}
