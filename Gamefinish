@@ -1,0 +1,336 @@
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 1
+#define _GNU_SOURCE 1
+#endif
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <time.h>
+#include <math.h>
+#include <linux/fb.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+
+
+#include <time.h>
+
+
+// Define screen dimensions as constants
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
+#define SCR_BPP 2  //16 bits per pixel (in bytes)
+
+
+static FILE* device;
+static struct Paddle paddle_left;
+static struct Paddle paddle_right;
+//static struct Ball ball;
+uint8_t last_input;
+int last_player;
+bool toggle(bool in);
+void button_handler(int signo);
+void init_display();
+void flush_display_buffer();
+int get_row (int pixel);
+int get_col (int pixel, int row);
+void fill_block(int maxR, int minR, int maxC, int minC, int player);
+
+
+#define BUTTON1 0xFE
+#define BUTTON2 0xFD
+#define BUTTON3 0xFB
+#define BUTTON4 0xF7
+#define BUTTON5 0xEF
+#define BUTTON6 0xDF
+#define BUTTON7 0xBF
+#define BUTTON8 0x7F
+
+struct fb_copyarea frame;
+uint16_t *framebuffer;
+int fbfd = 0;
+
+
+#define Black		0x0000
+#define White 		0xFFFF
+#define LightGrey       0xC618
+#define Red 		0xF000
+#define Blue 0X000F
+
+
+int get_row (int pixel)
+{
+  return (int) pixel / 320;
+}
+
+int get_col (int pixel, int row)
+{
+  return (int) ((int)pixel - (row * 320));
+}
+
+
+void fill_block(int maxR, int minR, int maxC, int minC, int player)
+{
+  int i;
+  printf("player = %d\n", player);
+  for (i = 0; i < 240*320; i++)
+  {
+  	int row = get_row(i);
+  	int col = get_col(i, row);
+    if (((col < maxC) && (col >= minC)) && ((row < maxR) && (row >= minR)))
+    {
+      if (player)
+      {
+        framebuffer[i] = Red;
+      }
+      else
+      {
+        framebuffer[i] = Blue;
+      }
+    }
+  }
+}
+
+
+void init_display(){
+    // Init display driver
+    printf("init display 1 \n)");
+	frame.dx = 0;
+	frame.dy = 0;
+	frame.width = SCREEN_WIDTH;
+	frame.height = SCREEN_HEIGHT;
+	fbfd = open("/dev/fb0", O_RDWR);
+	
+	printf("init display 2 \n)");
+	if(fbfd == -1) {
+		// Failed to open file descriptor
+		printf("Error: unable to open framebuffer, exiting...\n)");
+		exit(EXIT_FAILURE);
+		printf("init display \n)");
+	}
+	printf("init display 3 \n)");
+	int screensize = SCREEN_WIDTH * SCREEN_HEIGHT * SCR_BPP; 	
+	framebuffer = (uint16_t*) mmap(NULL, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
+	printf("init display 4 \n)");
+	if(framebuffer == MAP_FAILED) { // Error, return
+		printf("Error: unable to map framebuffer, exiting...\n");
+		close(fbfd);
+		exit(EXIT_FAILURE);
+	}
+	printf("init display \n)");
+	int i;
+	
+	// Making the background white
+	for (i = 0; i < 320*240; i++){
+		framebuffer[i] = 0xffff;
+	}
+	
+	printf("init display 5 \n)");
+	//set up grid
+	
+	for (i=0; i<320*240; i++){
+		int row = get_row(i);
+		int col = get_col(i, row);
+		if((col >= 75 && col < 80) || (col >= 155 && col < 160) || (col >= 235 && col < 240)) {
+			framebuffer[i]=0x0000;
+		}
+		if((row >= 75 && row <80) || (row >= 155 && row <160)){
+			framebuffer[i]=0x0000;
+		}
+		if(col>=240){
+			framebuffer[i]= 0xffff;
+		}
+}
+}
+
+/*void set_screen_black(){
+	memset(framebuffer, 0, SCREEN_WIDTH * SCREEN_HEIGHT * SCR_BPP); // Fill screen with black
+}*/
+
+
+void flush_display_buffer() {
+    ioctl(fbfd, 0x4680, &frame);
+}
+
+
+void delay(int number_of_seconds) 
+{ 
+    // Converting time into milli_seconds 
+    int milli_seconds = 1000 * number_of_seconds; 
+  
+    // Storing start time 
+    clock_t start_time = clock(); 
+  
+    // looping till required time is not achieved 
+    while (clock() < start_time + milli_seconds) 
+        ; 
+}
+
+int main(int argc, char *argv[])
+{
+    init_display();
+	printf("Hello World, I'm game!\n");
+	printf("Main before init gamepad");
+	last_input = 0;
+	last_player = true;
+    int status = init_gamepad();
+    printf("Main after init gamepad");
+    if (status != EXIT_SUCCESS) {
+        exit(status);
+    
+    }
+    
+    while (true) {
+        flush_display_buffer();
+    }
+
+	exit(EXIT_SUCCESS);
+}
+
+
+int init_gamepad(){
+	printf("Open init gamepad");
+  device = fopen("/dev/gamepad", "rb");
+  printf("Print 1");
+  if (!device) {
+    printf("[GAMEPAD] ERROR: Couldn't open gamepad device...\n"); 
+  return EXIT_FAILURE;
+  }
+  printf("Print 2");
+  if (signal(SIGIO, &button_handler) == SIG_ERR)
+  {
+    printf("[GPIO] ERROR: Signal handler error...\n");
+    return EXIT_FAILURE; 
+  }
+  printf("Print 3");
+  if (fcntl(fileno(device), F_SETOWN, getpid()) == -1)
+  {
+    return EXIT_FAILURE;
+  }
+  printf("Print 4");
+  long oflags = fcntl(fileno(device), F_GETFL);
+  if (fcntl(fileno(device), F_SETFL, oflags | FASYNC) == -1)
+  {
+    printf("[FLAG] ERROR: Couldn't set FASYNC flag...\n");
+    return EXIT_FAILURE;
+  }
+  printf("Finished game init");
+  return EXIT_SUCCESS;
+}
+
+
+ bool toggle(bool in){
+ if(in){
+ return false;
+ }else{
+ return true;
+ }
+ }
+
+void button_handler(int signo)
+{
+	printf("button_handler");
+      printf("player = %d\n", last_player);
+    
+    int button = fgetc(device);
+    
+    //printf("input %d\n", input);
+     switch (button)
+  {
+    case BUTTON1:
+      //11
+      if (last_input == BUTTON1) 
+      {
+        fill_block(75,0,75,0,last_player);
+        last_input = 0;
+        last_player = toggle(last_player);
+        break;
+      }
+      //21
+      else if (last_input == BUTTON2)
+      {
+        fill_block(155,80,75,0,last_player);
+        last_input = 0;
+        last_player = toggle(last_player);
+        break;
+      }
+      //31
+      else if (last_input == BUTTON3)
+      {
+        fill_block(240,160,75,0,last_player);
+        last_input = 0;
+        last_player = toggle(last_player);
+        break;
+      }
+      last_input = button;      
+      break;
+      
+    case BUTTON2:
+      //12
+      if (last_input == BUTTON1)
+      {
+        fill_block(75,0,155,80,last_player);
+        last_input = 0;
+        last_player = toggle(last_player);
+        break;
+      }
+      //22
+      else if (last_input == BUTTON2)
+      {
+        fill_block(155,80,155,80,last_player);
+        last_input = 0;
+        last_player = toggle(last_player);
+        break;
+      }
+      //32
+      else if (last_input == BUTTON3)
+      {
+        fill_block(240,160,155,80,last_player);
+        last_input = 0;
+        last_player = toggle(last_player);
+        break;
+      }
+      last_input = button;
+      break;
+
+    case BUTTON3:
+      //13
+      if (last_input == BUTTON1)
+      {
+        fill_block(75,0,235,160,last_player);
+        last_input = 0;
+        last_player = toggle(last_player);
+        break;
+      }
+      //23
+      else if (last_input == BUTTON2)
+      {
+        fill_block(155,80,235,160,last_player);
+        last_input = 0;
+        last_player = toggle(last_player);
+        break;
+      }
+      //33
+      else if (last_input == BUTTON3)
+      {
+        fill_block(240,160,235,160,last_player);
+        last_input = 0;
+        last_player = toggle(last_player);
+        break;
+      }
+      last_input = button;
+      printf("player = %d\n", last_player);
+      break;
+    delay(0.2);
+    //delayMilliSeconds(100);
+  }
+}
