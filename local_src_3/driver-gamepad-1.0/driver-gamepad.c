@@ -55,7 +55,7 @@ static struct file_operations gamepad_fops = {
 };
 
 //MODULE SPECIFICATIONS
-MODULE_DESCRIPTION("Gamepad module, very useful.");
+MODULE_DESCRIPTION("Description gamepad kernel module");
 MODULE_LICENSE("GPL");
 module_init(gp_device_init);
 module_exit(gp_device_exit);
@@ -64,7 +64,7 @@ module_exit(gp_device_exit);
 //interrupt handler
 irqreturn_t interrupt_handler(int irq, void* dev_id, struct pt_regs* regs)
 {
-    printk(KERN_ALERT "Handling GPIO interrupt\n");
+    printk(KERN_ALERT "interrupt handler\n");
     iowrite32(ioread32(GPIO_IF), GPIO_IFC);
     if (queue) {
         kill_fasync(&queue, SIGIO, POLL_IN);
@@ -86,13 +86,13 @@ static int __init gp_device_init(void)
 	
 	if (alloc_chrdev_region(&device_number, 0, DEVICE_NUMBER, DRIVER_NAME) < 0)
 	{
-		printk(KERN_ALERT "Failed to allocate device numbers\n");
+		printk(KERN_ALERT "Device memory not allocated\n");
 		return -1;
 	}
 
 
 	if (request_mem_region(GPIO_PC_BASE, 0x020, DEVICE_NAME) == NULL){
-		printk(KERN_ALERT "Failed to access GPIO memory region");
+		printk(KERN_ALERT "GPIO_PC_BASE memory region unaccessable");
 		release_mem_region(GPIO_PC_BASE, 0x020);
 
 		return -1;
@@ -100,7 +100,7 @@ static int __init gp_device_init(void)
 
 	if (request_mem_region(GPIO_EXTIPSELL, 0x020, DEVICE_NAME) == NULL)
 	{
-		printk(KERN_ALERT "Failed to access GPIO memory region");
+		printk(KERN_ALERT "GPIO_EXTIPSELL memory region unaccessable");
 		release_mem_region(GPIO_PC_BASE, 0x020);
 		release_mem_region(GPIO_EXTIPSELL, 0x020);
 
@@ -134,7 +134,7 @@ static int __init gp_device_init(void)
 //Remove module from kernal space
 static void __exit gp_device_exit(void)
 {
-	printk("Unloading gamepad driver from kernel...\n");
+	printk("Exit gamepad driver\n");
 	
 	iowrite32(0x00, GPIO_IEN);
 	
@@ -153,14 +153,14 @@ static void __exit gp_device_exit(void)
 //run when calles open in userspace
 static int my_open(struct inode* inode, struct file* filp)
 {
-	printk(KERN_INFO "Gamepad driver has started\n");
+	printk(KERN_INFO "Open gamepad driver\n");
 	return 0;
 }
 
 //run when calles release in userspace
 static int my_release(struct inode* inode, struct file* filp)
 {
-	printk(KERN_INFO "Gamepad driver has been closed\n");
+	printk(KERN_INFO "Releasing gamepad driver\n");
 	return 0;
 }
 
@@ -177,5 +177,4 @@ static ssize_t my_write(struct file* filp, char* __user buff, size_t count, loff
 {
     return 1;
 }
-
 
