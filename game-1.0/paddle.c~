@@ -1,0 +1,48 @@
+#include "paddle.h"
+
+#define Black		0x0000
+#define White 		0xFFFF
+#define LightGrey       0xC618
+#define Red 		0xF000
+#define Blue 0X000F
+
+
+int red_square;
+
+void paddle_create(struct Paddle* paddle, int start_pos_x) {
+    paddle->pos_x=start_pos_x;
+    paddle->pos_y=GAME_HEIGHT / 2;
+}
+
+
+void paddle_move_up(struct Paddle* paddle) {
+    if (paddle->pos_y >= 2)
+        paddle->pos_y -= 2;
+}
+
+void paddle_move_down(struct Paddle* paddle) {
+    if (paddle->pos_y + PADDLE_WIDTH <= GAME_HEIGHT - 3)
+        paddle->pos_y += 2;
+}
+
+
+void fill_block(int maxR, int minR, int maxC, int minC, int player)
+{
+  int i;
+  for (i = 0; i < 240*320; i++)
+  {
+  	int row = get_row(i);
+  	int col = get_col(i, row);
+    if (((col < maxC) && (col >= minC)) && ((row < maxR) && (row >= minR)))
+    {
+      if (player)
+      {
+        framebuffer[i] = Red;
+      }
+      else
+      {
+        framebuffer[i] = Blue;
+      }
+    }
+  }
+}
